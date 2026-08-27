@@ -13,6 +13,12 @@
 # runs the tests (criteria 1-3) but NOT this script -- the Linux equivalent is
 # `unshare -rn`, unavailable on GitHub-hosted runners without privileges. The
 # criterion-4 evidence is therefore a local run, not a CI artifact.
+#
+# The criteria 4/5 numbers quoted in PR #2 (recommended_technical_score =
+# 0.722818) came from @JamisonTeng's local macOS run of this script -- not
+# from CI, and results_offline*.json is gitignored, so there's no committed
+# artifact to check them against (see issue #5). Ping him if those numbers
+# ever need to be reproduced or re-verified.
 set -u
 cd "$(dirname "$0")/.."
 PROFILE="scripts/no-network.sb"
