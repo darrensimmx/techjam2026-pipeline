@@ -1,0 +1,7 @@
+;; P1 offline-safety: revoke the process's actual networking capability.
+;; Kernel-enforced (macOS Seatbelt), not a Python-level stub -- a real connect()
+;; returns EPERM from the kernel, so nothing in our own except-handling can fake
+;; a pass. Filesystem access is untouched so the catalog still loads.
+(version 1)
+(allow default)
+(deny network*)
