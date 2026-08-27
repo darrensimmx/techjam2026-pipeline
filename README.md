@@ -146,4 +146,8 @@ techjam2026-pipeline/
 - [`docs/benchmark-tracking-plan.md`](docs/benchmark-tracking-plan.md) — how
   Hit Rate/MRR/MTTC get tracked across phases so each change's effect is
   visible in git history, not just in someone's terminal.
+- [`benchmarks/`](benchmarks/) — the actual ledger: `history.jsonl` (numbers
+  per run) and `findings.md` (what they meant). Run
+  `python3 scripts/benchmark.py --label "..."` after any change worth
+  measuring.
 - Competition kit: [`TechJam2026/techjam-conversational-search`](https://github.com/TechJam2026/techjam-conversational-search)

@@ -6,21 +6,24 @@
 (`TechJam2026/techjam-conversational-search`). Never edit — it's the local
 dev/eval signal.
 
-## `catalog.jsonl` — you need to fetch this yourself
+## `catalog.jsonl.gz` / `catalog.jsonl`
 
-Not committed here (50,000 rows, distributed as a GitHub Release asset, not a
-repo file). This sandbox's GitHub access is read-only git-clone for that repo,
-which doesn't cover release downloads — so this had to be left for a human
-with normal GitHub access:
+The real 50,000-row catalog, vendored into this repo as `catalog.jsonl.gz`
+(19MB, checksum-verified against the competition repo's published
+`SHA256SUMS` at the `participant-kit` release tag) so nobody has to leave
+this repo to fetch it. `catalog.jsonl` itself (60MB decompressed) is
+`.gitignore`d — generate it locally with:
 
 ```bash
-# from https://github.com/TechJam2026/techjam-conversational-search/releases
-gzip -dk catalog.jsonl.gz
-mv catalog.jsonl data/catalog.jsonl
+gzip -dk data/catalog.jsonl.gz
 ```
 
-Verify against the published `SHA256SUMS` file. Nothing in `starter/retrieval.py`
-or the two dev CLIs works without this file in place. Tests don't need it —
-they run against `tests/fixtures/catalog.jsonl`, a small synthetic catalog.
+`scripts/benchmark.py` does this automatically if `catalog.jsonl` is missing.
 
-Never commit the real `catalog.jsonl` — it's in `.gitignore`.
+To re-verify the vendored copy hasn't drifted from the organizer's release:
+
+```bash
+sha256sum -c data/SHA256SUMS --ignore-missing
+```
+
+Never commit the decompressed `catalog.jsonl` itself -- only the `.gz`.
