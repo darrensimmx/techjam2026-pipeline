@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  requirements-contract:
+    name: Requirements contract (schema, never-raises, no-network)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Contract + ledger/scheduler + offline tests
+        run: python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline -v
+
+  barebone-app-smoke:
+    name: Barebone app smoke test (CLI endpoint connects, session ends by turn 10)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: CLI integration + real-evaluator smoke tests
+        run: python -m unittest tests.test_cli_integration tests.test_evaluator_smoke -v
