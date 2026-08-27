@@ -143,4 +143,7 @@ techjam2026-pipeline/
 - Planning source of truth: [`darrensimmx/techjam2026-docs`](https://github.com/darrensimmx/techjam2026-docs)
   — see `pipeline/implementation-plan.md` there for the detailed DoD checklist
   behind Phase 1.
+- [`docs/benchmark-tracking-plan.md`](docs/benchmark-tracking-plan.md) — how
+  Hit Rate/MRR/MTTC get tracked across phases so each change's effect is
+  visible in git history, not just in someone's terminal.
 - Competition kit: [`TechJam2026/techjam-conversational-search`](https://github.com/TechJam2026/techjam-conversational-search)
