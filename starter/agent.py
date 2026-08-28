@@ -2,8 +2,9 @@
 
 Fixed six-attribute schedule + accumulated-constraint BM25 retrieval. Offline,
 local, no network calls, no LLM. respond() never raises — see
-`decisions/standing-findings.md` -> "Don't score zero" in the planning repo
-for why: the official evaluator swallows any exception into a silent zero.
+`project/standing-findings.md` -> "Don't score zero" in the planning repo
+(darrensimmx/techjam2026-docs) for why: the official evaluator swallows any
+exception into a silent zero.
 
 P1 (offline safety) additionally guards __init__ and reset(), which the
 evaluator does NOT wrap (local_evaluator.py:306 and :228 respectively) — a
@@ -128,7 +129,7 @@ class Agent:
         matches = self._index.search(query, _limit(top_k)) if self._index else []
         recommendations = [{"parent_asin": parent_asin} for parent_asin in matches]
 
-        attribute = next_attribute(state.asked_attributes)
+        attribute = next_attribute(state)
         if attribute is not None:
             state.mark_asked(attribute)
 
