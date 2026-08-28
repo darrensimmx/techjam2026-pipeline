@@ -6,3 +6,6 @@ data/catalog.jsonl
 results_offline.json
 results_offline_plain.json
 results_leak_controlled.json
+
+# Claude Code: share settings.json, keep personal overrides local
+.claude/settings.local.json

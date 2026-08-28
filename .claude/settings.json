@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m unittest:*)",
+      "Bash(python -m pytest:*)",
+      "Bash(python -m evaluator.local_evaluator:*)",
+      "Bash(python -m cli.agent_server:*)",
+      "Bash(python scripts/netprobe.py)",
+      "Bash(python scripts/verify_offline_safety.py)",
+      "Bash(python scripts/leak_controlled_benchmark.py:*)",
+      "Bash(python --version)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git branch:*)",
+      "Bash(git show:*)",
+      "Bash(git ls-files:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh issue view:*)",
+      "Bash(gh issue list:*)"
+    ],
+    "deny": [
+      "Read(./data/catalog.jsonl)",
+      "Edit(./evaluator/**)"
+    ]
+  }
+}
