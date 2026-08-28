@@ -5,3 +5,4 @@ results.json
 data/catalog.jsonl
 results_offline.json
 results_offline_plain.json
+results_leak_controlled.json
