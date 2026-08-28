@@ -49,8 +49,16 @@ enough.
 ## Current baseline
 
 ```
-phase1-baseline: HitRate@10 0.85, MRR 0.525, MTTC 3.99, TechnicalScore 0.7228
+phase1-baseline (leaky):     HitRate@10 0.80, MRR 0.526, MTTC 4.25, TechnicalScore 0.6926
+phase1-baseline (controlled): HitRate@10 0.26, MRR 0.100, MTTC 8.95, TechnicalScore 0.1984
+organizer's official baseline:                                      TechnicalScore 0.1067
 ```
 
-See `findings.md` for what this number means and why it's higher than the
-planning repo projected.
+**Read `phase1-baseline (leaky)` as an upper bound, not the real number.**
+It's inflated by a leak in the vendored customer simulator — the simulator
+recites text lifted from the target product's own listing, so a
+keyword-matching agent scores well without doing anything close to real
+intent inference. `phase1-baseline (controlled)` re-runs the same 200
+sessions with that leak mostly closed. See the 2026-08-28 entry in
+`findings.md` for the mechanism, the measurement, and why the true number is
+somewhere between the two rows above rather than at either one.
