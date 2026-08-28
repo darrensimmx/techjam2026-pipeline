@@ -60,6 +60,28 @@ intent_override    30    0.8333   0.657262   4.8667
 `recommended_technical_score` is the number that matters:
 `0.50*hit@10 + 0.30*mrr + 0.20*efficiency`.
 
+## The run log
+
+**Every `eval` and `check` appends a row to `results.md`** (tracked, newest
+first) with the timestamp, commit, branch, score, and the delta from the
+previous run. Attach a note so a row is readable six weeks later:
+
+```bash
+python3 .claude/skills/run-sol/bench.py eval --note "widened ask schedule to 8"
+python3 .claude/skills/run-sol/bench.py check --note "pre-merge gate"
+```
+
+`--no-record` skips the row. `check` records on **both** outcomes — a
+regression is the single most important row to keep.
+
+A `*` after the commit sha means tracked files were modified, so that row
+reflects the worktree rather than the commit alone. Untracked files are ignored
+(`results.md` and the catalog are always untracked or gitignored, and would
+otherwise mark every row dirty).
+
+Commit `results.md` along with whatever change produced the row — that is what
+makes the log a history rather than a scratch file.
+
 ## Test
 
 ```bash

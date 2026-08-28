@@ -10,6 +10,7 @@ Run from the repo root:  python3 .claude/skills/run-sol/bench.py <command>
 from __future__ import annotations
 
 import argparse
+import datetime
 import hashlib
 import json
 import os
@@ -26,6 +27,7 @@ sys.stdout.reconfigure(line_buffering=True)
 ROOT = Path(__file__).resolve().parents[3]
 SKILL_DIR = Path(__file__).resolve().parent
 CATALOG = ROOT / "data" / "catalog.jsonl"
+RESULTS_MD = ROOT / "results.md"
 DATASET = ROOT / "data" / "public_set.jsonl"
 
 # The catalog is gitignored and absent from main. It is NOT necessary to
@@ -103,6 +105,71 @@ def assert_index_loads() -> None:
     if proc.returncode != 0:
         die("BM25 index did not build from data/catalog.jsonl:\n" + proc.stderr.strip())
     print(f"{GREEN}ok{RESET} index builds, sample hits: {proc.stdout.strip()}")
+
+
+RESULTS_HEADER = """# Benchmark results
+
+Auto-updated by `.claude/skills/run-sol/bench.py` on every `eval` and `check`.
+Newest run first. `score` is `recommended_technical_score` over the 200-session
+public set: `0.50*hit@10 + 0.30*mrr + 0.20*efficiency`.
+
+Reference points — organizer weak-BM25 baseline `0.106710`; `phase1-baseline`
+@ `ecacc52` `0.722818`. See `docs/ledger-freeze-regression.md`.
+
+A `*` after the commit means the worktree had uncommitted changes, so that row
+does not correspond to the commit alone.
+
+| when (UTC) | commit | branch | score | delta | hit@10 | mrr | mttc | note |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+"""
+
+_ROW_SEPARATOR = "| --- |"
+
+
+def _git(*args: str) -> str:
+    proc = run(["git", *args], capture_output=True, text=True)
+    return proc.stdout.strip() if proc.returncode == 0 else ""
+
+
+def _previous_score() -> "float | None":
+    """Score from the newest existing row, for the delta column."""
+    if not RESULTS_MD.exists():
+        return None
+    for line in RESULTS_MD.read_text().splitlines():
+        if not line.startswith("| 20"):  # data rows begin with a date
+            continue
+        cells = [c.strip().strip("*`") for c in line.strip("|").split("|")]
+        try:
+            return float(cells[3])
+        except (IndexError, ValueError):
+            return None
+    return None
+
+
+def record_result(res: dict, note: str = "") -> None:
+    """Prepend one row to results.md. Newest first, so the latest run reads first."""
+    prev = _previous_score()
+    score = res["recommended_technical_score"]
+    delta = "—" if prev is None else f"{score - prev:+.6f}"
+    sha = _git("rev-parse", "--short", "HEAD") or "?"
+    # Only tracked modifications count: results.md is itself untracked on its
+    # first run, and the catalog/results.json artifacts are always present.
+    if _git("status", "--porcelain", "--untracked-files=no"):
+        sha += "*"  # worktree dirty: the row is not attributable to this commit
+    branch = _git("rev-parse", "--abbrev-ref", "HEAD") or "?"
+    when = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M")
+    row = (f"| {when} | `{sha}` | `{branch}` | **{score:.6f}** | {delta} | "
+           f"{res['hit_rate_at_10']:.4f} | {res['mrr']:.6f} | {res['mttc']:.3f} | "
+           f"{note} |")
+
+    text = RESULTS_MD.read_text() if RESULTS_MD.exists() else RESULTS_HEADER
+    idx = text.find(_ROW_SEPARATOR)
+    if idx == -1:  # header missing or hand-mangled; rebuild it
+        text = RESULTS_HEADER
+        idx = text.find(_ROW_SEPARATOR)
+    eol = text.index("\n", idx) + 1
+    RESULTS_MD.write_text(text[:eol] + row + "\n" + text[eol:])
+    print(f"{DIM}recorded to {RESULTS_MD.name}{RESET}")
 
 
 # ---------------------------------------------------------------- tests
@@ -190,6 +257,8 @@ def cmd_eval(args) -> int:
         mark = f"{GREEN}+{delta:.6f}{RESET}" if delta >= 0 else f"{RED}{delta:.6f}{RESET}"
         print(f"  vs {ref['label']:<34} {ref['technical_score']:.6f}  {mark}")
     print(f"\nfull results: {out.relative_to(ROOT)}  {DIM}(gitignored){RESET}")
+    if not args.no_record:
+        record_result(res, args.note or "")
     return 0
 
 
@@ -201,6 +270,8 @@ def cmd_check(args) -> int:
     score = res["recommended_technical_score"]
     guard = args.min if args.min is not None else BASELINES["regression_guard"]
     print(fmt(res))
+    if not args.no_record:
+        record_result(res, args.note or "")
     if score + 1e-9 < guard:
         print(f"{RED}REGRESSION{RESET} {score:.6f} < guard {guard:.6f} "
               f"({score - guard:+.6f})")
@@ -264,10 +335,14 @@ def main() -> int:
     sp.set_defaults(func=cmd_test)
 
     sp = sub.add_parser("eval", help="score all 200 public sessions, with comparisons")
+    sp.add_argument("--note", help="note recorded alongside this run in results.md")
+    sp.add_argument("--no-record", action="store_true", help="skip the results.md row")
     sp.set_defaults(func=cmd_eval)
 
     sp = sub.add_parser("check", help="regression gate; exits 1 if score drops")
     sp.add_argument("--min", type=float, help="override the guard score")
+    sp.add_argument("--note", help="note recorded alongside this run in results.md")
+    sp.add_argument("--no-record", action="store_true", help="skip the results.md row")
     sp.set_defaults(func=cmd_check)
 
     sp = sub.add_parser("bisect", help="score one or more revisions in isolated trees")
