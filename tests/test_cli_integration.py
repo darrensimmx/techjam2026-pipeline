@@ -1,9 +1,22 @@
 """Integration-level proof, distinct from the in-process Agent tests: spawns
 the real cli/agent_server.py subprocess -- the actual "endpoint" cli/client.py
 talks to -- and drives a full scripted session over the same stdio JSON
-protocol. Proves two things the in-process tests can't: the process boundary
-is actually reachable ("endpoints can connect"), and a driven session
-terminates at exactly 10 turns.
+protocol.
+
+Scope: this is a smoke test of the *baseline offline spine* only -- the process
+boundary is reachable, and the agent survives a full 10-turn drive still
+returning schema-shaped, non-empty results. That is all it claims.
+
+It deliberately does NOT claim to prove the competition's termination rule
+("the session ends when the target appears in the scored Top 10 or after turn
+10"). The agent has no turn-limit logic at all, by design: the caller owns the
+turn counter and the stop condition (see cli/client.py's module docstring), and
+under grading that caller is the organizer's evaluator, which applies both
+halves of the rule itself at local_evaluator.py:238-256. A test that loops
+`range(1, 11)` and then asserts it looped ten times is asserting Python's
+`range`, not the agent's behaviour, so the loop bound here is a fixture, not
+the thing under test. Early termination on a hit is covered where it actually
+lives, through the real evaluator, in tests/test_evaluator_smoke.py.
 """
 from __future__ import annotations
 
@@ -48,7 +61,7 @@ class TestCliIntegration(unittest.TestCase):
         self.assertTrue(line, "agent_server produced no response -- endpoint did not connect")
         return json.loads(line)
 
-    def test_endpoint_connects_and_session_ends_by_turn_10(self) -> None:
+    def test_endpoint_connects_and_spine_survives_a_full_ten_turn_drive(self) -> None:
         session_id = uuid.uuid4().hex
         reset_response = self._send({
             "op": "reset",
@@ -63,7 +76,11 @@ class TestCliIntegration(unittest.TestCase):
         })
         self.assertTrue(reset_response.get("ok"), "reset did not succeed -- endpoint did not connect")
 
-        turns_completed = 0
+        # MAX_TURNS is the drive length, not an assertion target: nothing here
+        # stops at 10 on its own, so counting the iterations would only re-assert
+        # `range`. What each turn is actually checked for is that the endpoint
+        # answered at all, that the payload is shaped per the contract, and that
+        # the retrieval spine still produced results this deep into a session.
         for turn in range(1, MAX_TURNS + 1):
             message = "Looking for waterproof leather boots." if turn == 1 else "No strong preference."
             response = self._send({
@@ -76,9 +93,16 @@ class TestCliIntegration(unittest.TestCase):
             self.assertIn("message", response)
             self.assertIn("ask_attribute", response)
             self.assertIn("recommendations", response)
-            turns_completed += 1
+            self.assertLessEqual(len(response["recommendations"]), 10, f"turn {turn} exceeded top_k")
+            self.assertTrue(
+                response["recommendations"],
+                f"turn {turn} returned 0 recommendations -- the spine went dead mid-session",
+            )
 
-        self.assertEqual(turns_completed, MAX_TURNS, "session did not run for exactly the allotted 10 turns")
+        self.assertIsNone(
+            self.proc.poll(),
+            "agent_server died during the 10-turn drive",
+        )
 
 
 if __name__ == "__main__":

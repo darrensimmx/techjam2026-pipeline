@@ -20,7 +20,18 @@ from evaluator.local_evaluator import catalog_index, evaluate, load_jsonl  # noq
 import starter.agent as agent_module  # noqa: E402
 from starter.agent import Agent  # noqa: E402
 
-BASELINE_TECHNICAL_SCORE = 0.10671  # docs/baseline_results.json, weak_bm25
+# The organizer's published weak-BM25 starter baseline, from the competition kit
+# (TechJam2026/techjam-conversational-search): HitRate@10 0.125, MRR 0.068034,
+# MTTC 9.81. Restated here as a TechnicalScore so criterion 5 can compare like
+# with like, using the evaluator's own formula (local_evaluator.py:279-280):
+#
+#   efficiency = (11.0 - 9.81) / 10.0                        = 0.119
+#   score      = 0.50*0.125 + 0.30*0.068034 + 0.20*0.119     = 0.10671
+#
+# Derived, not measured locally — there is no committed baseline artifact in this
+# repo, and Phase 0 (reproduce the baseline ourselves) is still open. Recompute
+# from the three published numbers if the organizer ever revises them.
+BASELINE_TECHNICAL_SCORE = 0.10671
 
 # Read the contract rather than restate it: a transcription drift here would
 # make criterion 3 self-confirming against the wrong schema.
@@ -80,6 +91,10 @@ class InstrumentedAgent(Agent):
         self.reset_failures: list[str] = []
         self.respond_failures: list[str] = []
         self.schema_failures: list[str] = []
+        # Criterion 4 needs a signal that a *silently dead* agent fails. An empty
+        # recommendation list is schema-valid and raises nothing, so neither of
+        # the lists above catches it -- see the criterion 4 note in main().
+        self.empty_recommendation_turns: list[str] = []
 
     def reset(self, session_id: str, user_profile: dict) -> None:
         self.resets += 1
@@ -99,6 +114,11 @@ class InstrumentedAgent(Agent):
         error_text = schema_error(response)
         if error_text:
             self.schema_failures.append(f"respond #{self.responds}: {error_text}")
+        recommendations = response.get("recommendations") if isinstance(response, dict) else None
+        if not isinstance(recommendations, list) or not recommendations:
+            self.empty_recommendation_turns.append(
+                f"respond #{self.responds}: session {session_id} turn {turn} returned 0 recommendations"
+            )
         return response
 
 
@@ -130,8 +150,23 @@ def main() -> int:
          not agent.respond_failures, f"{agent.responds} calls, {len(agent.respond_failures)} raised"),
         ("3. every respond() value validates against turn_response",
          not agent.schema_failures, f"{agent.responds} responses, {len(agent.schema_failures)} invalid"),
-        ("4. full 200-session run completed without crashing",
-         result["sample_count"] == len(samples), f"{result['sample_count']}/{len(samples)} sessions scored"),
+        # `sample_count == len(samples)` on its own is structurally always true:
+        # evaluate() appends exactly one session row per sample unconditionally
+        # (local_evaluator.py:269), so the only way it can differ is an exception
+        # escaping -- which would have killed this script before the check ran. A
+        # fully dead agent (null index, zero recommendations, score 0.0) passed
+        # that check. The turn-level clause is what a dead agent actually fails:
+        # the organizer's rule is that a session ends when the target appears in
+        # the scored Top 10 or after turn 10, so an agent that never puts
+        # anything in the Top 10 is not "completing" sessions in any useful
+        # sense. Phase 5 depends on this criterion, so it has to bite.
+        ("4. all sessions ran AND every turn returned a non-empty Top-10",
+         result["sample_count"] == len(samples)
+         and agent.responds > 0
+         and not agent.empty_recommendation_turns,
+         f"{result['sample_count']}/{len(samples)} sessions scored, "
+         f"{agent.responds - len(agent.empty_recommendation_turns)}/{agent.responds} "
+         f"turns returned recommendations"),
         (f"5. score >= {BASELINE_TECHNICAL_SCORE} baseline and not 0.00000",
          score >= BASELINE_TECHNICAL_SCORE and round(score, 5) != 0.0,
          f"recommended_technical_score = {score}"),
@@ -140,7 +175,8 @@ def main() -> int:
     print("\n=== P1 acceptance criteria ===")
     for label, passed, detail in criteria:
         print(f"  [{'PASS' if passed else 'FAIL'}] {label}\n         {detail}")
-    for failures in (agent.reset_failures, agent.respond_failures, agent.schema_failures):
+    for failures in (agent.reset_failures, agent.respond_failures, agent.schema_failures,
+                     agent.empty_recommendation_turns):
         for failure in failures[:10]:
             print(f"    ! {failure}")
 
