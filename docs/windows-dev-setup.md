@@ -70,12 +70,17 @@ source .venv/Scripts/activate
 `data/catalog.jsonl` is ~50,000 rows and is **not** on `main` (gitignored,
 distributed as a GitHub Release asset).
 
-The quickest route: the unmerged `benchmark-tracking` branch has
-`data/catalog.jsonl.gz` and `data/SHA256SUMS` committed.
+The quickest route is the run-sol skill, which restores it, verifies the
+SHA-256, and confirms the index builds:
 
 ```powershell
-git checkout origin/benchmark-tracking -- data/catalog.jsonl.gz data/SHA256SUMS
+python .claude/skills/run-sol/bench.py setup
 ```
+
+It reads the blob from the unmerged `benchmark-tracking` branch with
+`git show`. Do **not** use `git checkout origin/benchmark-tracking --
+data/catalog.jsonl.gz`: `.gitignore` covers `data/catalog.jsonl` but not the
+`.gz`, so a checkout stages a 19 MB file into your index.
 
 Otherwise download `catalog.jsonl.gz` from the
 [competition kit's releases page](https://github.com/TechJam2026/techjam-conversational-search/releases).

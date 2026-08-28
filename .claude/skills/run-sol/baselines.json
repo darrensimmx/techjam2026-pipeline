@@ -16,7 +16,7 @@
       "hit_rate_at_10": 0.85,
       "mrr": 0.525395,
       "mttc": 3.99,
-      "source": "benchmarks/history.jsonl on origin/benchmark-tracking"
+      "source": "ported into results.md from benchmarks/history.jsonl (origin/benchmark-tracking); reproduced via `bench.py bisect`"
     },
     {
       "label": "main @ 2ba2747 (current)",

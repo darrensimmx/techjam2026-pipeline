@@ -10,6 +10,13 @@ Reference points — organizer weak-BM25 baseline `0.106710`; `phase1-baseline`
 A `*` after the commit means the worktree had uncommitted changes, so that row
 does not correspond to the commit alone.
 
+This is the single benchmark log. The `phase1-baseline` row below was ported
+from `benchmarks/history.jsonl` on the unmerged `benchmark-tracking` branch,
+which `scripts/benchmark.py` used to write; both are superseded by `bench.py`.
+That branch is **not** to be deleted — it is the only source of
+`data/catalog.jsonl.gz`, which `bench.py setup` reads.
+
 | when (UTC) | commit | branch | score | delta | hit@10 | mrr | mttc | note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-08-28 11:13 | `29455e3` | `skill/run-sol-benchmark-harness` | **0.692586** | — | 0.8000 | 0.525619 | 4.255 | harness landed; establishes the reference row |
+| 2026-08-28 11:13 | `29455e3` | `skill/run-sol-benchmark-harness` | **0.692586** | -0.030232 | 0.8000 | 0.525619 | 4.255 | harness landed; establishes the reference row |
+| 2026-08-27 12:52 | `ecacc52` | `benchmark-tracking` | **0.722818** | — | 0.8500 | 0.525395 | 3.990 | phase1-baseline; ported from `benchmarks/history.jsonl`, independently reproduced via `bench.py bisect` |
