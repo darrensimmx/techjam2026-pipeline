@@ -1,0 +1,30 @@
+{
+  "_comment": "Reference scores for `bench.py eval` / `check`. Measured on the 200-session public set with the verified 50k catalog. Raise regression_guard when a real improvement lands.",
+  "regression_guard": 0.69,
+  "references": [
+    {
+      "label": "organizer weak-BM25 baseline",
+      "technical_score": 0.10671,
+      "hit_rate_at_10": 0.125,
+      "mrr": 0.068034,
+      "mttc": 9.81,
+      "source": "docs/baseline_results.json in the organizer kit"
+    },
+    {
+      "label": "phase1-baseline @ ecacc52",
+      "technical_score": 0.722818,
+      "hit_rate_at_10": 0.85,
+      "mrr": 0.525395,
+      "mttc": 3.99,
+      "source": "benchmarks/history.jsonl on origin/benchmark-tracking"
+    },
+    {
+      "label": "main @ 2ba2747 (current)",
+      "technical_score": 0.692586,
+      "hit_rate_at_10": 0.8,
+      "mrr": 0.525619,
+      "mttc": 4.255,
+      "source": "measured 2026-08-28; see docs/ledger-freeze-regression.md"
+    }
+  ]
+}
