@@ -41,11 +41,23 @@ All rules were established 28 Aug 2026 against
    differs.
    *Binds:* `starter/ledger.py:23-31`.
 
-5. **Re-ask a burned attribute; never re-ask an exhausted one.** A refusal means the
-   customer declined to look, not that the bucket is empty — re-asking recovers
-   constraints in 25 of the 40 sessions that have a burned ask. An exhausted attribute
-   can never refill, because `disclosed` only grows. An attribute that returned exactly
-   2 may have been truncated by the `[:2]` cap and is also worth re-asking.
+5. **After a refusal, ALWAYS re-ask that attribute — unconditionally.** Not
+   conditionally, not "if the ledger looks thin". A refusal means the customer declined
+   to look, not that the bucket is empty: it returns at `local_evaluator.py:169` before
+   the constraint filter at `:178` runs. Re-asking recovers constraints in 8 of the 10
+   boundary sessions and 25 of the 40 sessions with a burned ask. You cannot predict
+   which will pay and you do not need to — the re-ask lands on an idle turn where the
+   alternative is a null ask that freezes the query, so a re-ask that recovers nothing
+   costs **zero**.
+   *Timing:* later, not immediately — the refusal consumed its turn either way, and an
+   immediate re-ask would displace a never-probed attribute. Put it on the first idle
+   turn (turn 7+ under the current schedule).
+   *Priority:* a burned attribute outranks an overflow candidate (one that returned
+   exactly 2 and may hold a third under the `[:2]` cap). At most one attribute per
+   session is ever burned, so this is a single slot, not a queue.
+   *The mirror image is equally binding:* **never re-ask an exhausted attribute.** The
+   filter ran and found nothing, and `disclosed` only grows, so it can never refill.
+   Provably worthless, not merely unlikely.
    *Binds:* `starter/scheduler.py` tail policy, `starter/ledger.py` yield tracking.
 
 6. **Accumulate constraints verbatim. Never erase on intent override.** `old_value` and
