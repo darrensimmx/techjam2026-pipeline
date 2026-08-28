@@ -48,12 +48,19 @@ order the evidence supports — not the order that sounds impressive. Concretely
    it's accumulating every disclosed constraint into the retrieval query,
    unconditionally, every turn (0.16 → 0.75 in prior review). That alone is
    worth more than any model choice in this project, so it comes first.
-2. **Fill the turns a fixed schedule can't reach** (ask-yield dynamic
-   ordering) — the six-attribute schedule runs dry after turn 6.
-3. **Verify the retrieval assumption before building on top of it further** —
-   the BM25-only decision is prior-evidence-backed but has never been
-   re-verified end to end; that bake-off is flagged as the single
-   highest-priority open item in the planning repo.
+2. **Verify the retrieval assumption before building on top of it further** —
+   the BM25-only decision is prior-evidence-backed; the bake-off that checks
+   it was the single highest-priority open item in the planning repo. It
+   gates 80% of TechnicalScore (HitRate 50% + MRR 30%), and the one confirmed
+   effect it produced — cross-encoder rerank at +0.047, CI excluding zero — is
+   an order of magnitude larger than the whole attribute-selection band
+   (≈0.004). Everything else is measured on top of whatever this settles.
+3. **Fill the turns a fixed schedule can't reach** (ask-yield dynamic
+   ordering) — the six-attribute schedule runs dry after turn 6. Sequenced
+   after retrieval on purpose: ask-yield's yield signal is defined partly as
+   *churn in the ranked candidate pool*, so it reads retrieval's output and
+   would need re-tuning if the spine changed underneath it. The dependency
+   runs one way.
 4. **Add the intent classifier / contradiction detection last** — its ceiling
    on the metric that's 80% of TechnicalScore is ≤0.0078 by the planning
    repo's own analysis. It still ships (it's in the rubric, it's the
@@ -85,20 +92,28 @@ showing a jump from baseline toward the ~0.17–0.23 stateful-BM25 range.
 **Branch:** `foundational-pipeline`.
 **Status:** in progress — see that branch.
 
-### Phase 2 — Ask-yield adaptive question ordering
+### Phase 2 — Retrieval verification & optional rerank
+*(Renumbered 28 Aug 2026 — was Phase 3. See "Phase numbering" below.)*
+**Goal:** re-run the stalled retrieval bake-off to confirm (or correct) the
+BM25-only decision; add local cross-encoder rerank only if the numbers
+justify it, and only as an optional layer that's never on the critical path.
+**Status:** verification done, rerank decision open. The bake-off has results
+(dense loses, rerank wins) — planning repo issue #7. The remaining call is
+whether to ship cross-encoder rerank at +0.047 for ~1.2s/turn, which is
+blocked on an unpublished organizer timeout — planning repo issue #9.
+
+### Phase 3 — Ask-yield adaptive question ordering
+*(Renumbered 28 Aug 2026 — was Phase 2. See "Phase numbering" below.)*
 **Goal:** replace the fixed six-attribute order with one that adapts to what's
 actually taught the most so far, filling turns 7–10 where the fixed schedule
 has no rule left.
 **Deliverables:** ask-yield layer swapped in behind the same scheduler
 interface used in Phase 1, with a try/except and fallback to the fixed order
 on failure.
-**Status:** not started.
-
-### Phase 3 — Retrieval verification & optional rerank
-**Goal:** re-run the stalled retrieval bake-off to confirm (or correct) the
-BM25-only decision; add local cross-encoder rerank only if the numbers
-justify it, and only as an optional layer that's never on the critical path.
-**Status:** not started.
+**Status:** not started — and the premise is under review. Planning repo
+issue #4 challenges "the schedule runs dry after turn 6"; measured against
+the vendored evaluator, only 40/200 public sessions reach turn 7 at all. Do
+not start this before that investigation reports.
 
 ### Phase 4 — Intent classifier & contradiction detection
 **Goal:** classify each turn Buying/Browsing/Override and detect when a
@@ -117,6 +132,36 @@ latency/token/cost disclosure; package per `docs/submission_rules.md`
 (entry file, requirements, one-command run instructions).
 **Status:** not started.
 
+## Phase numbering
+
+**This repo's `Phase 0`–`Phase 5` is the single canonical execution plan.** Cite
+it as "Phase N" in issues, PRs, branch names, and benchmark labels.
+
+Two other numbering schemes exist in the planning repo and are **not**
+interchangeable with this one — the same token means different things:
+
+| This repo | Planning repo `G1–G5` (architecture gates) | Planning repo `1–9` (superseded) |
+|---|---|---|
+| Phase 0 — Environment & baseline | — | 1 (partial) |
+| Phase 1 — Foundational pipeline | G1 offline safety · G2 ledger + ask · G3 fixed schedule | 1, 4 |
+| Phase 2 — Retrieval verification & rerank | — | 2, 3, 9 |
+| Phase 3 — Ask-yield | G4 ask-yield | — |
+| Phase 4 — Intent classifier & contradiction | G5 intent override | 5, 6, 7, 8 |
+| Phase 5 — Hardening & submission | — | — |
+
+The planning repo's key was relabelled `P1–P5` → `G1–G5` on 28 Aug 2026 to end a
+direct collision: its `P2` meant "ledger + ask" (shipped here in Phase 1) while
+this repo's `Phase 2` meant something entirely different. `G1–G5` describes
+*architecture gates* (what must be green before what) and deliberately has no
+slot for environment, retrieval, or hardening; it is not a delivery schedule.
+
+**Phases 2 and 3 were swapped on 28 Aug 2026** (retrieval was Phase 3, ask-yield
+was Phase 2). Retrieval gates 80% of TechnicalScore and ask-yield's yield signal
+reads retrieval's candidate-pool churn, so the dependency runs retrieval →
+ask-yield. Pre-28-Aug references to "Phase 2 / ask-yield" and "Phase 3 /
+retrieval" use the old numbering; the work item named alongside the number is
+authoritative where they disagree.
+
 ## Repo layout (target, mirrors the competition kit)
 
 ```
@@ -124,7 +169,7 @@ techjam2026-pipeline/
   starter/
     agent.py          # the graded Agent class
     ledger.py           # disclosed_constraints accumulation
-    scheduler.py         # fixed six-attribute order (Phase 1) -> ask-yield (Phase 2)
+    scheduler.py         # fixed six-attribute order (Phase 1) -> ask-yield (Phase 3)
     retrieval.py         # BM25 over the full ledger string
   evaluator/             # vendored from the competition repo, never edited
   data/
