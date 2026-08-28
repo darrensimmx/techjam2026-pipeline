@@ -1,7 +1,7 @@
 # Benchmark tracking plan
 
 **Goal:** answer "did this change help or hurt?" every time a feature lands
-(Phase 2 ask-yield, Phase 3 retrieval changes, any tuning pass), without
+(Phase 2 retrieval changes, Phase 3 ask-yield, any tuning pass), without
 re-deriving it from memory or eyeballing a `results.json` that gets
 overwritten on every run.
 
@@ -22,7 +22,7 @@ nothing new to calculate, just something to stop discarding:
 
 Plus metadata to make one row meaningful on its own: timestamp, git commit
 SHA, branch, and a short human label (`phase1-baseline`,
-`phase2-ask-yield-v1`, `phase3-hybrid-retrieval`, ...).
+`phase2-hybrid-retrieval`, `phase3-ask-yield-v1`, ...).
 
 ## Where it lives
 
@@ -45,7 +45,7 @@ sitting next to it.
 **1. Locally, whenever you tune something:**
 
 ```bash
-python3 scripts/benchmark.py --label "phase2-ask-yield-v1"
+python3 scripts/benchmark.py --label "phase3-ask-yield-v1"
 ```
 
 Runs the real evaluator against the real `data/catalog.jsonl` and the full
@@ -92,9 +92,9 @@ informing it.
 
 ## What this buys, concretely
 
-- **After Phase 2 (ask-yield):** does HitRate@10 move toward the ~0.68–0.75
+- **After Phase 3 (ask-yield):** does HitRate@10 move toward the ~0.68–0.75
   range the planning repo's review claims, or not? One row answers it.
-- **After Phase 3 (retrieval bake-off):** does hybrid retrieval or rerank
+- **After Phase 2 (retrieval bake-off):** does hybrid retrieval or rerank
   actually beat BM25-only, *per scenario type*, or was the prior assumption
   right all along? The scenario breakdown answers this without re-running
   anything by hand.
