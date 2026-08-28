@@ -15,10 +15,14 @@
 # criterion-4 evidence is therefore a local run, not a CI artifact.
 #
 # The criteria 4/5 numbers quoted in PR #2 (recommended_technical_score =
-# 0.722818) came from @JamisonTeng's local macOS run of this script -- not
-# from CI, and results_offline*.json is gitignored, so there's no committed
-# artifact to check them against (see issue #5). Ping him if those numbers
-# ever need to be reproduced or re-verified.
+# 0.722818) came from @JamisonTeng's local macOS run of this script, not from
+# CI. results_offline*.json is gitignored, but the run itself IS recorded:
+# benchmarks/history.jsonl on the `benchmark-tracking` branch (label
+# phase1-baseline) has the full per-scenario breakdown, and benchmarks/findings.md
+# has the write-up. Ping him if the run needs reproducing on a Mac.
+#
+# Issue #5 is a separate, still-open gap: CI cannot run the network block at
+# all. That is about coverage, not about missing numbers.
 set -u
 cd "$(dirname "$0")/.."
 PROFILE="scripts/no-network.sb"
