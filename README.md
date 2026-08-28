@@ -183,6 +183,28 @@ techjam2026-pipeline/
   requirements.txt
 ```
 
+## Cross-repo sync checks
+
+`.github/workflows/docs-sync.yml` runs `scripts/check_docs_sync.py` on every
+push to `main`, weekly, and on demand. It fetches `darrensimmx/techjam2026-docs`
+(private) and checks a small, curated table of facts against this repo's
+actual code — not general prose parsing, a regression net for specific claims
+that have already drifted once (see the script's `FACTS` table and the docstring
+on each check for the incident it guards). `techjam2026-docs` runs the mirror
+check, `scripts/check_pipeline_sync.py`, against this repo.
+
+**One-time setup (not done by CI itself):** both repos are private, so each
+workflow needs read access to the other. Create one fine-grained PAT scoped to
+read-only **Contents** on both `techjam2026-pipeline` and `techjam2026-docs`,
+then add it as a repository secret named `TECHJAM_CROSS_REPO_TOKEN` in *each*
+repo's Settings → Secrets and variables → Actions. Without it the workflow
+still runs and reports which checks it couldn't fetch, rather than failing
+silently.
+
+Extend `FACTS` (or the docs repo's mirror table) whenever a review — human or
+Claude — catches a claim in one repo that doesn't match the other's actual
+state; that's what turns a one-off correction into a standing guard.
+
 ## Related
 
 - Planning source of truth: [`darrensimmx/techjam2026-docs`](https://github.com/darrensimmx/techjam2026-docs)

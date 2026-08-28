@@ -1,0 +1,22 @@
+name: Docs sync check
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 3 * * 1"  # weekly, Monday 03:00 UTC — catches drift from docs-only edits
+  workflow_dispatch: {}
+
+jobs:
+  check-docs-sync:
+    name: Verify techjam2026-docs claims match this repo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Run cross-repo fact check
+        env:
+          TECHJAM_CROSS_REPO_TOKEN: ${{ secrets.TECHJAM_CROSS_REPO_TOKEN }}
+        run: python scripts/check_docs_sync.py
