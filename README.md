@@ -30,7 +30,11 @@ class Agent:
 ```
 
 A session ends the moment the target appears in `recommendations`, or after
-turn 10. Full schema: `docs/agent_api_contract.json` in the competition repo.
+turn 10. The evaluator—not the agent—controls this stop, and the agent cannot
+see which recommendation is the hidden target. Withholding the current top 10
+to chase a higher rank on a later turn would therefore sacrifice an immediate
+hit and worsen MTTC, with no guarantee of improving MRR. Full schema:
+`docs/agent_api_contract.json` in the competition repo.
 
 That `Agent` — pure local Python, zero network calls, never throws — is the
 entire submission. Everything else in this repo (the two chat CLIs, tests,
