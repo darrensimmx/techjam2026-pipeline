@@ -122,7 +122,7 @@ and `starter` / `evaluator` / `cli` are imported as top-level packages.
 python -m unittest tests.test_agent_contract tests.test_cli_integration tests.test_evaluator_smoke tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety -v
 ```
 
-Expected: `Ran 21 tests` … `OK`.
+Expected: `Ran 22 tests` … `OK`.
 
 ### Or just use discovery
 
@@ -130,11 +130,12 @@ Expected: `Ran 21 tests` … `OK`.
 python -m unittest discover
 ```
 
-Also `Ran 22 tests` … `OK`. This works because `tests/__init__.py` exists — do
-not delete it. Without it `tests/` is not an importable package, discovery
-walks straight past it, and the run reports `Ran 0 tests in 0.000s` followed by
-**`OK`**: green output meaning "found nothing", not "everything passed". If you
-ever see a suspiciously fast `OK`, check the test count before believing it.
+Also `Ran 22 tests` … `OK` — the same 22, since the explicit list above names
+every test module. This works because `tests/__init__.py` exists — do not delete
+it. Without it `tests/` is not an importable package, discovery walks straight
+past it, and the run reports `Ran 0 tests in 0.000s` followed by **`OK`**: green
+output meaning "found nothing", not "everything passed". If you ever see a
+suspiciously fast `OK`, check the test count before believing it.
 
 ### Mirroring the two CI jobs
 
