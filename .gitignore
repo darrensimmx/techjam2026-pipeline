@@ -9,3 +9,7 @@ results_leak_controlled.json
 
 # Claude Code: share settings.json, keep personal overrides local
 .claude/settings.local.json
+
+# Bake-off harness: regenerable artifacts (bakeoff/README.md documents how)
+bakeoff/cache/
+bakeoff/trajectories-*.json
