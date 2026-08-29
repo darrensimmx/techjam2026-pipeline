@@ -1,0 +1,402 @@
+{
+  "current": {
+    "ledger": "current",
+    "k0": {
+      "sample_count": 200,
+      "hit_rate_at_10": 0.8,
+      "mrr": 0.525619,
+      "mttc": 4.255,
+      "efficiency": 0.6745,
+      "technical_score": 0.692586
+    },
+    "k1": {
+      "top10": {
+        "score": {
+          "sample_count": 200,
+          "hit_rate_at_10": 0.8,
+          "mrr": 0.621845,
+          "mttc": 4.255,
+          "efficiency": 0.6745,
+          "technical_score": 0.721453
+        },
+        "paired": {
+          "wins": 56,
+          "losses": 29,
+          "ties": 115,
+          "mean_rr_delta": 0.096226,
+          "regressed_fraction": 0.145
+        },
+        "delta_ci": {
+          "mean_delta": 0.029102,
+          "sd": 0.007474,
+          "p2_5": 0.014736,
+          "p97_5": 0.044313,
+          "excludes_zero": true
+        },
+        "by_scenario": {
+          "boundary": {
+            "sample_count": 10,
+            "hit_rate_at_10": 0.6,
+            "mrr": 0.483333,
+            "mttc": 6.2,
+            "efficiency": 0.48,
+            "technical_score": 0.541
+          },
+          "browsing": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.7875,
+            "mrr": 0.612515,
+            "mttc": 4.3625,
+            "efficiency": 0.66375,
+            "technical_score": 0.710255
+          },
+          "buying": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.825,
+            "mrr": 0.610848,
+            "mttc": 3.675,
+            "efficiency": 0.7325,
+            "technical_score": 0.742254
+          },
+          "intent_override": {
+            "sample_count": 30,
+            "hit_rate_at_10": 0.833333,
+            "mrr": 0.722222,
+            "mttc": 4.866667,
+            "efficiency": 0.613333,
+            "technical_score": 0.756
+          }
+        },
+        "pairs_scored": 4550,
+        "seconds_total": 180.5,
+        "seconds_per_reranked_turn": 0.2226,
+        "turns_reranked": 811
+      },
+      "top20": {
+        "score": {
+          "sample_count": 200,
+          "hit_rate_at_10": 0.84,
+          "mrr": 0.568159,
+          "mttc": 3.805,
+          "efficiency": 0.7195,
+          "technical_score": 0.734348
+        },
+        "paired": {
+          "wins": 60,
+          "losses": 47,
+          "ties": 93,
+          "mean_rr_delta": 0.04254,
+          "regressed_fraction": 0.235
+        },
+        "delta_ci": {
+          "mean_delta": 0.041746,
+          "sd": 0.01595,
+          "p2_5": 0.011518,
+          "p97_5": 0.073576,
+          "excludes_zero": true
+        },
+        "by_scenario": {
+          "boundary": {
+            "sample_count": 10,
+            "hit_rate_at_10": 0.6,
+            "mrr": 0.393333,
+            "mttc": 5.8,
+            "efficiency": 0.52,
+            "technical_score": 0.522
+          },
+          "browsing": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.8625,
+            "mrr": 0.543056,
+            "mttc": 3.575,
+            "efficiency": 0.7425,
+            "technical_score": 0.742667
+          },
+          "buying": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.85,
+            "mrr": 0.567237,
+            "mttc": 3.3875,
+            "efficiency": 0.76125,
+            "technical_score": 0.747421
+          },
+          "intent_override": {
+            "sample_count": 30,
+            "hit_rate_at_10": 0.833333,
+            "mrr": 0.695833,
+            "mttc": 4.866667,
+            "efficiency": 0.613333,
+            "technical_score": 0.748083
+          }
+        },
+        "pairs_scored": 8660,
+        "seconds_total": 314.6,
+        "seconds_per_reranked_turn": 0.4315,
+        "turns_reranked": 729
+      },
+      "top50": {
+        "score": {
+          "sample_count": 200,
+          "hit_rate_at_10": 0.82,
+          "mrr": 0.525373,
+          "mttc": 3.935,
+          "efficiency": 0.7065,
+          "technical_score": 0.708912
+        },
+        "paired": {
+          "wins": 60,
+          "losses": 59,
+          "ties": 81,
+          "mean_rr_delta": -0.000246,
+          "regressed_fraction": 0.295
+        },
+        "delta_ci": {
+          "mean_delta": 0.017252,
+          "sd": 0.023272,
+          "p2_5": -0.029934,
+          "p97_5": 0.063121,
+          "excludes_zero": false
+        },
+        "by_scenario": {
+          "boundary": {
+            "sample_count": 10,
+            "hit_rate_at_10": 0.7,
+            "mrr": 0.38373,
+            "mttc": 5.2,
+            "efficiency": 0.58,
+            "technical_score": 0.581119
+          },
+          "browsing": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.8,
+            "mrr": 0.465094,
+            "mttc": 3.975,
+            "efficiency": 0.7025,
+            "technical_score": 0.680028
+          },
+          "buying": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.85,
+            "mrr": 0.545461,
+            "mttc": 3.4,
+            "efficiency": 0.76,
+            "technical_score": 0.740638
+          },
+          "intent_override": {
+            "sample_count": 30,
+            "hit_rate_at_10": 0.833333,
+            "mrr": 0.679762,
+            "mttc": 4.833333,
+            "efficiency": 0.616667,
+            "technical_score": 0.743928
+          }
+        },
+        "pairs_scored": 21350,
+        "seconds_total": 938.85,
+        "seconds_per_reranked_turn": 1.2501,
+        "turns_reranked": 751
+      }
+    },
+    "weights_mb": 91.0
+  },
+  "legacy": {
+    "ledger": "legacy",
+    "k0": {
+      "sample_count": 200,
+      "hit_rate_at_10": 0.85,
+      "mrr": 0.525395,
+      "mttc": 3.99,
+      "efficiency": 0.701,
+      "technical_score": 0.722818
+    },
+    "k1": {
+      "top10": {
+        "score": {
+          "sample_count": 200,
+          "hit_rate_at_10": 0.85,
+          "mrr": 0.604371,
+          "mttc": 3.99,
+          "efficiency": 0.701,
+          "technical_score": 0.746511
+        },
+        "paired": {
+          "wins": 64,
+          "losses": 34,
+          "ties": 102,
+          "mean_rr_delta": 0.078976,
+          "regressed_fraction": 0.17
+        },
+        "delta_ci": {
+          "mean_delta": 0.02395,
+          "sd": 0.007563,
+          "p2_5": 0.009915,
+          "p97_5": 0.038968,
+          "excludes_zero": true
+        },
+        "by_scenario": {
+          "boundary": {
+            "sample_count": 10,
+            "hit_rate_at_10": 0.6,
+            "mrr": 0.483333,
+            "mttc": 6.2,
+            "efficiency": 0.48,
+            "technical_score": 0.541
+          },
+          "browsing": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.8625,
+            "mrr": 0.575481,
+            "mttc": 3.9625,
+            "efficiency": 0.70375,
+            "technical_score": 0.744644
+          },
+          "buying": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.875,
+            "mrr": 0.601071,
+            "mttc": 3.4125,
+            "efficiency": 0.75875,
+            "technical_score": 0.769571
+          },
+          "intent_override": {
+            "sample_count": 30,
+            "hit_rate_at_10": 0.833333,
+            "mrr": 0.730556,
+            "mttc": 4.866667,
+            "efficiency": 0.613333,
+            "technical_score": 0.7585
+          }
+        },
+        "pairs_scored": 7280,
+        "seconds_total": 316.98,
+        "seconds_per_reranked_turn": 0.4127,
+        "turns_reranked": 768
+      },
+      "top20": {
+        "score": {
+          "sample_count": 200,
+          "hit_rate_at_10": 0.875,
+          "mrr": 0.535788,
+          "mttc": 3.675,
+          "efficiency": 0.7325,
+          "technical_score": 0.744736
+        },
+        "paired": {
+          "wins": 59,
+          "losses": 56,
+          "ties": 85,
+          "mean_rr_delta": 0.010393,
+          "regressed_fraction": 0.28
+        },
+        "delta_ci": {
+          "mean_delta": 0.021835,
+          "sd": 0.01331,
+          "p2_5": -0.003799,
+          "p97_5": 0.048445,
+          "excludes_zero": false
+        },
+        "by_scenario": {
+          "boundary": {
+            "sample_count": 10,
+            "hit_rate_at_10": 0.6,
+            "mrr": 0.393333,
+            "mttc": 5.8,
+            "efficiency": 0.52,
+            "technical_score": 0.522
+          },
+          "browsing": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.8875,
+            "mrr": 0.481994,
+            "mttc": 3.625,
+            "efficiency": 0.7375,
+            "technical_score": 0.735848
+          },
+          "buying": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.9125,
+            "mrr": 0.544871,
+            "mttc": 3.0125,
+            "efficiency": 0.79875,
+            "technical_score": 0.779461
+          },
+          "intent_override": {
+            "sample_count": 30,
+            "hit_rate_at_10": 0.833333,
+            "mrr": 0.7025,
+            "mttc": 4.866667,
+            "efficiency": 0.613333,
+            "technical_score": 0.750083
+          }
+        },
+        "pairs_scored": 13420,
+        "seconds_total": 590.46,
+        "seconds_per_reranked_turn": 0.8316,
+        "turns_reranked": 710
+      },
+      "top50": {
+        "score": {
+          "sample_count": 200,
+          "hit_rate_at_10": 0.895,
+          "mrr": 0.46672,
+          "mttc": 3.7,
+          "efficiency": 0.73,
+          "technical_score": 0.733516
+        },
+        "paired": {
+          "wins": 57,
+          "losses": 76,
+          "ties": 67,
+          "mean_rr_delta": -0.058675,
+          "regressed_fraction": 0.38
+        },
+        "delta_ci": {
+          "mean_delta": 0.010744,
+          "sd": 0.017971,
+          "p2_5": -0.025212,
+          "p97_5": 0.045512,
+          "excludes_zero": false
+        },
+        "by_scenario": {
+          "boundary": {
+            "sample_count": 10,
+            "hit_rate_at_10": 0.7,
+            "mrr": 0.38373,
+            "mttc": 5.2,
+            "efficiency": 0.58,
+            "technical_score": 0.581119
+          },
+          "browsing": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.875,
+            "mrr": 0.39999,
+            "mttc": 3.875,
+            "efficiency": 0.7125,
+            "technical_score": 0.699997
+          },
+          "buying": {
+            "sample_count": 80,
+            "hit_rate_at_10": 0.925,
+            "mrr": 0.462232,
+            "mttc": 3.05,
+            "efficiency": 0.795,
+            "technical_score": 0.76017
+          },
+          "intent_override": {
+            "sample_count": 30,
+            "hit_rate_at_10": 0.933333,
+            "mrr": 0.684299,
+            "mttc": 4.466667,
+            "efficiency": 0.653333,
+            "technical_score": 0.802623
+          }
+        },
+        "pairs_scored": 34000,
+        "seconds_total": 1603.22,
+        "seconds_per_reranked_turn": 2.2298,
+        "turns_reranked": 719
+      }
+    },
+    "weights_mb": 91.0
+  }
+}

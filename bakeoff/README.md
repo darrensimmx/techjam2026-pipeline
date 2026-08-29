@@ -99,9 +99,25 @@ Real human shopping queries come from the Shopping Queries Dataset (ESCI):
 > <https://github.com/amazon-science/esci-data> — Apache-2.0.
 
 Used because the public set's customer utterances are built by copying strings
-out of the target product's own listing (`local_evaluator.py:52-71`), so it has
-almost no low-verbatim-overlap stratum to measure dense retrieval on. Inventing
-paraphrases to fill that gap would mean inventing the distribution that decides
-the answer. ESCI supplies human-authored queries against real ASINs instead,
-and where those ASINs fall inside our 50,000-product catalog we get a genuine
-low-overlap retrieval set on the exact index the agent ships.
+out of the target product's own listing (`local_evaluator.py:52-71`), so a BM25
+win on it is consistent both with "BM25 is the right retriever" and with "the
+simulator hands BM25 the answer key", and the public set cannot separate those.
+Inventing paraphrases to fill the gap would mean inventing the distribution that
+decides the answer. ESCI supplies human-authored queries instead.
+
+**Correction, 29 Aug 2026 — the original wording here called ESCI a
+"low-verbatim-overlap retrieval set". Measured, it is not.** On the
+query-token-coverage measure ESCI is *higher* than the public set (mean 0.815 /
+median 1.000 vs 0.724 / 0.714), because that measure is confounded by query
+length: a three-token human query has all its tokens somewhere in a long
+listing, while a ten-turn accumulated ledger dilutes. What actually differs is
+*phrase-level* copying — 94.5% of the simulator's constraint strings are
+verbatim substrings of the target listing, and no human query is a copied
+phrase. The claim ESCI supports is the narrower one: queries nobody here
+authored, not generated from the target document. Kept rather than quietly
+reworded, because the metric was added expecting it to support the story and it
+did not.
+
+The plan to run ESCI queries against *our own* index was abandoned: 71 shared
+ASINs of 599,151 × 50,000, and zero after the us+Exact filter. `esci.py` builds
+a standalone 20,000-product corpus in our catalog's schema instead.

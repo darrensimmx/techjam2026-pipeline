@@ -23,6 +23,31 @@ corpus rather than our own.
 This produces no TechnicalScore and is not the competition task. It answers one
 question: does the ordering hold, or invert, when the queries stop being copied
 out of the target?
+
+A correction to this script's own premise, kept because it was wrong
+--------------------------------------------------------------------
+This was built expecting ESCI to be the *low-overlap* condition, and the
+query-token-coverage measure below was added to demonstrate that. **It does not.
+ESCI scores higher, not lower: mean 0.815 / median 1.000, against the public
+set's 0.724 / 0.714.**
+
+That measure is confounded by query length, and the confound runs the wrong way.
+A three-token human query ("$1 stuffed toy") has all of its tokens somewhere in a
+long product listing, so coverage saturates at 1.0. A ten-turn accumulated ledger
+is long, so its coverage is diluted no matter how verbatim its source. Token
+coverage therefore measures brevity here at least as much as copying, and it
+should not be quoted as evidence for either side.
+
+The property that actually differs is *phrase-level* copying, which
+`overlap.py` measures and this cannot: 94.5% of the simulator's disclosed
+constraint strings are verbatim substrings of the target's own listing, because
+the evaluator builds them by copying out of it. Nobody typing "wireless earbuds
+for running" is copying a phrase out of the document they are looking for.
+
+So the claim this script supports is the narrower one, and it is still the claim
+that matters: these are queries nobody on this project authored, and which were
+not generated from the target document. The coverage line is printed anyway,
+against the result it was meant to support, rather than dropped.
 """
 from __future__ import annotations
 
@@ -138,12 +163,14 @@ def main() -> None:
                 dense[queries[start + row]] = list(zip(asin_array[idx].tolist(),
                                                        block[row, idx].tolist()))
 
-        arms: dict[str, list[list[str]]] = {}
-        for name in ("BM25", "dense", "RRF", "w0.3", "w0.5", "union (ceiling)"):
-            arms[name] = []
+        arms: dict[str, list[list[str]]] = {n: [] for n in ("BM25", "dense", "RRF",
+                                                           "w0.3", "w0.5")}
+        blists, dlists = [], []
         for query in queries:
             blist = [a for a, _ in bm25.get(query, [])]
             dlist = [a for a, _ in dense[query]]
+            blists.append(blist)
+            dlists.append(dlist)
             arms["BM25"].append(blist)
             arms["dense"].append(dlist)
             fused: dict[str, float] = {}
@@ -151,7 +178,6 @@ def main() -> None:
                 for position, asin in enumerate(candidates, 1):
                     fused[asin] = fused.get(asin, 0.0) + 1.0 / (RRF_K + position)
             arms["RRF"].append(sorted(fused, key=lambda a: -fused[a]))
-            arms["union (ceiling)"].append(list(dict.fromkeys(blist + dlist)))
             bn, dn = _minmax(bm25.get(query, [])), _minmax(dense[query])
             for weight, key in ((0.3, "w0.3"), (0.5, "w0.5")):
                 combined = {a: weight * dn.get(a, 0.0) + (1 - weight) * bn.get(a, 0.0)
@@ -172,6 +198,20 @@ def main() -> None:
             rows.append(row)
             print(f"{name:<18} {row['recall@10']:>8} {row['recall@50']:>8} "
                   f"{row['recall@100']:>8} {row['mrr@10']:>8}")
+
+        # Union recall -- a set union of the two top-k lists, matching part2_dense.py.
+        # NOT a concatenated list: concatenating puts all 100 BM25 ids first, so
+        # "union@10" would just be BM25@10 and would print below dense's own recall,
+        # which is impossible for a real union. That bug shipped in the first run of
+        # this script and is why the row is recomputed here rather than as an "arm".
+        union_row = {"model": model, "arm": "union (ceiling)"}
+        for depth in (10, 50, 100):
+            found = sum(1 for b, d, t in zip(blists, dlists, targets)
+                        if (set(b[:depth]) | set(d[:depth])) & t)
+            union_row[f"recall@{depth}"] = round(found / len(targets), 4)
+        rows.append(union_row)
+        print(f"{'union (ceiling)':<18} {union_row['recall@10']:>8} "
+              f"{union_row['recall@50']:>8} {union_row['recall@100']:>8} {'--':>8}")
 
     out = ROOT / "bakeoff" / "results-part5.json"
     out.write_text(json.dumps({

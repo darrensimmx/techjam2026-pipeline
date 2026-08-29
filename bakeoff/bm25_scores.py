@@ -33,6 +33,20 @@ WEIGHTS = "0.0, 6.0, 4.0, 2.5, 2.5, 1.5, 1.0"  # starter/retrieval.py:76
 
 
 class ScoringIndex(Bm25Index):
+    def search_expression(self, expression: str, top_k: int) -> list[tuple[str, float]]:
+        """Run a caller-built FTS5 MATCH expression, same weights and ordering.
+
+        Needed by followup_phrase.py, which builds phrase clauses rather than the
+        unigram OR `search_scored` assembles. Kept here so both share one index
+        build and one weight vector.
+        """
+        rows = self._connection.execute(
+            f"SELECT parent_asin, bm25(products, {WEIGHTS}) AS s FROM products "
+            "WHERE products MATCH ? ORDER BY s LIMIT ?",
+            (expression, top_k),
+        ).fetchall()
+        return [(str(asin), -float(raw)) for asin, raw in rows]
+
     def search_scored(self, query_text: str, top_k: int) -> list[tuple[str, float]]:
         unique_terms = list(dict.fromkeys(_terms(query_text)))[:40]
         if not unique_terms:

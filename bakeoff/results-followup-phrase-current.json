@@ -1,0 +1,63 @@
+{
+  "ledger": "current",
+  "baseline": {
+    "sample_count": 200,
+    "hit_rate_at_10": 0.8,
+    "mrr": 0.525619,
+    "mttc": 4.255,
+    "efficiency": 0.6745,
+    "technical_score": 0.692586
+  },
+  "arms": {
+    "phrase_plus": {
+      "score": {
+        "sample_count": 200,
+        "hit_rate_at_10": 0.86,
+        "mrr": 0.584327,
+        "mttc": 3.7,
+        "efficiency": 0.73,
+        "technical_score": 0.751298
+      },
+      "paired": {
+        "wins": 50,
+        "losses": 24,
+        "ties": 126,
+        "mean_rr_delta": 0.058708,
+        "regressed_fraction": 0.12
+      },
+      "delta_ci": {
+        "mean_delta": 0.058836,
+        "sd": 0.014196,
+        "p2_5": 0.031573,
+        "p97_5": 0.087939,
+        "excludes_zero": true
+      },
+      "seconds": 354.1
+    },
+    "phrase_only": {
+      "score": {
+        "sample_count": 200,
+        "hit_rate_at_10": 0.285,
+        "mrr": 0.180504,
+        "mttc": 8.635,
+        "efficiency": 0.2365,
+        "technical_score": 0.243951
+      },
+      "paired": {
+        "wins": 16,
+        "losses": 122,
+        "ties": 62,
+        "mean_rr_delta": -0.345115,
+        "regressed_fraction": 0.61
+      },
+      "delta_ci": {
+        "mean_delta": -0.448619,
+        "sd": 0.032511,
+        "p2_5": -0.511057,
+        "p97_5": -0.384232,
+        "excludes_zero": true
+      },
+      "seconds": 105.1
+    }
+  }
+}

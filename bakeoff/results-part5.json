@@ -1,0 +1,112 @@
+{
+  "source": "Reddy et al. 2022, arXiv:2206.06588; HF tasksource/esci",
+  "filter": "product_locale == 'us'; targets are esci_label == 'Exact'; seed 20260829; corpus 20000 products",
+  "note": "ESCI product_ids and our catalog's parent_asins are near-disjoint (71 shared of 599,151 x 50,000, 0 after the us+Exact filter), so this is a standalone corpus in our catalog's schema, not our catalog.",
+  "queries": 600,
+  "token_coverage": {
+    "mean": 0.8149,
+    "median": 1.0,
+    "p10": 0.4
+  },
+  "public_set_token_coverage": {
+    "mean": 0.724,
+    "median": 0.714,
+    "p10": 0.6
+  },
+  "arms": [
+    {
+      "model": "minilm",
+      "arm": "BM25",
+      "recall@10": 0.8233,
+      "recall@50": 0.9083,
+      "recall@100": 0.9217,
+      "mrr@10": 0.6686
+    },
+    {
+      "model": "minilm",
+      "arm": "dense",
+      "recall@10": 0.8517,
+      "recall@50": 0.92,
+      "recall@100": 0.9417,
+      "mrr@10": 0.6659
+    },
+    {
+      "model": "minilm",
+      "arm": "RRF",
+      "recall@10": 0.8733,
+      "recall@50": 0.9417,
+      "recall@100": 0.955,
+      "mrr@10": 0.7089
+    },
+    {
+      "model": "minilm",
+      "arm": "w0.3",
+      "recall@10": 0.8567,
+      "recall@50": 0.9367,
+      "recall@100": 0.9583,
+      "mrr@10": 0.7232
+    },
+    {
+      "model": "minilm",
+      "arm": "w0.5",
+      "recall@10": 0.8833,
+      "recall@50": 0.9433,
+      "recall@100": 0.955,
+      "mrr@10": 0.7256
+    },
+    {
+      "model": "minilm",
+      "arm": "union (ceiling)",
+      "recall@10": 0.9,
+      "recall@50": 0.955,
+      "recall@100": 0.965
+    },
+    {
+      "model": "bge",
+      "arm": "BM25",
+      "recall@10": 0.8233,
+      "recall@50": 0.9083,
+      "recall@100": 0.9217,
+      "mrr@10": 0.6686
+    },
+    {
+      "model": "bge",
+      "arm": "dense",
+      "recall@10": 0.875,
+      "recall@50": 0.9433,
+      "recall@100": 0.9517,
+      "mrr@10": 0.7014
+    },
+    {
+      "model": "bge",
+      "arm": "RRF",
+      "recall@10": 0.8783,
+      "recall@50": 0.9467,
+      "recall@100": 0.9583,
+      "mrr@10": 0.7087
+    },
+    {
+      "model": "bge",
+      "arm": "w0.3",
+      "recall@10": 0.8617,
+      "recall@50": 0.9433,
+      "recall@100": 0.9583,
+      "mrr@10": 0.7149
+    },
+    {
+      "model": "bge",
+      "arm": "w0.5",
+      "recall@10": 0.8817,
+      "recall@50": 0.9483,
+      "recall@100": 0.955,
+      "mrr@10": 0.7266
+    },
+    {
+      "model": "bge",
+      "arm": "union (ceiling)",
+      "recall@10": 0.9083,
+      "recall@50": 0.9583,
+      "recall@100": 0.965
+    }
+  ]
+}
