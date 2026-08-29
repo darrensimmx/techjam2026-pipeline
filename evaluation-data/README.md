@@ -91,12 +91,62 @@ catalog's exact JSONL schema*, so `starter/retrieval.py`'s `Bm25Index` indexes
 it unmodified — same FTS5 tokenizer, same column weights — and the same encoders
 run over it. 600 human queries, 5,036 judged-Exact targets, seed 20260829.
 
-Generated, not committed: the artifacts are ~28 MB and fully reproducible.
+#### `esci/esci_public_set.jsonl` — committed, drop-in for the organizer's tooling
+
+600 samples in `data/public_set.jsonl`'s schema, so `load_jsonl`,
+`catalog_index` and `evaluate()` all take it unchanged. One deliberate
+departure, and it is load-bearing: each sample also carries `intent_card` and
+`behavior`, which the organizer's public set does **not**.
+
+That is not decoration. `local_evaluator.py:204-206` returns a supplied
+`intent_card` verbatim and otherwise falls through to building the customer's
+hidden preferences out of *the target product's own listing* (`:52-71`). Emit
+ESCI in the public set's literal shape and the evaluator would discard every
+human query and regenerate a copy-pasted one — deleting the entire reason this
+dataset exists. The keys are there to stop that. Round-trip verified: the human
+query reaches the opener in 600/600 samples.
+
+Fields with no ESCI counterpart (`category_bucket`, `difficulty_bucket`,
+`user_profile`) are `"unknown"` / empty rather than invented, and the profile's
+`summary` says so in words so it cannot be quoted as real.
 
 ```sh
-.venv/Scripts/python bakeoff/esci.py           # -> bakeoff/cache/esci_catalog.jsonl
-.venv/Scripts/python bakeoff/part5_realqueries.py
+.venv/Scripts/python bakeoff/esci.py                  # -> bakeoff/cache/esci_catalog.jsonl
+.venv/Scripts/python bakeoff/esci_public_schema.py    # -> esci/esci_public_set.jsonl
+.venv/Scripts/python bakeoff/part5_realqueries.py     # retrieval-only measurement
+
+python -m evaluator.local_evaluator \
+  --catalog bakeoff/cache/esci_catalog.jsonl \
+  --dataset evaluation-data/esci/esci_public_set.jsonl --output results_esci.json
 ```
+
+The corpus itself (~28 MB) is generated, not committed, and fully reproducible
+from the seed.
+
+#### First result, and how to read it
+
+The shipped agent, unchanged, scored through the real evaluator:
+
+| | public set | ESCI real queries |
+|---|---|---|
+| TechnicalScore | 0.692586 | **0.409436** |
+| HitRate@10 | 0.800 | **0.4867** |
+| MRR | 0.5256 | **0.2292** |
+
+**These two columns are not comparable as scores, and quoting the gap as
+"−0.28" would be wrong.** Four differences, all of which cut the same way:
+the corpus is 20,000 documents rather than 50,000; each ESCI session is a single
+human query with no multi-turn accumulation, so the ledger — this project's
+largest measured lever — never fills; ESCI queries average 8 judged-Exact
+products but only one is recorded as `ground_truth`, so retrieving a *different*
+correct product scores as a miss; and the opener frame adds a constant
+`"clothing item"` category string ESCI has no value for.
+
+So **0.409436 is a lower bound**, not a like-for-like score. What it is good for
+is the direction: the public set's 0.80 hit rate is measured on queries that are
+94.5% verbatim copies of the target listing, and on human language against the
+same retrieval code the number is far lower. That is the bracket the leak
+argument has always needed and never had.
 
 Corpus size differs from our real 50,000-product catalog (CPU budget: every
 document is encoded twice). Recall@k depends on corpus size, so **these numbers

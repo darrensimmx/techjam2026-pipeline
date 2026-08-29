@@ -120,6 +120,36 @@ as a release asset) — see `docs/windows-dev-setup.md` §1. Confirm with:
 python -c "from starter.retrieval import Bm25Index; print(Bm25Index('data/catalog.jsonl').search('waterproof leather boots', 5))"
 ```
 
+## `evaluation-data/` is test-only — do not read it while building
+
+**Rule: during design and development, do not open, sample, quote, or tune
+against anything under `evaluation-data/`. Read it only when running an
+evaluation, and only through a scoring script.** This binds you as an assistant
+exactly as it binds a human developer. If the task is to build or change the
+reply parser, the retrieval config, the ledger, or the scheduler, that data is
+out of scope for the work — say so and proceed without it, rather than opening
+it "just to check".
+
+The rule covers the generated artifacts too, not only the committed ones:
+`evaluation-data/esci/esci_public_set.jsonl` is committed;
+`bakeoff/cache/esci_catalog.jsonl` and any future `evaluation-data/paraphrase/`
+corpus are generated and gitignored, and are equally out of bounds.
+
+Why this is stated rather than enforced: **nothing enforces it.** These are plain
+files in the working tree; no script can check who read what, and a README
+saying "don't look" is a marker of intent, not a control.
+`evaluation-data/README.md` says so outright, and records the guard that does
+hold — *provenance*, not access. ESCI's queries were written by Amazon
+customers, so reading them can cost you a config overfitted to 600 queries but
+cannot make the data circular. A self-authored paraphrase holdout has no such
+protection: reading it **is** the circularity, and it needs a real control
+(kept out of the working tree, or decrypted only at scoring time) chosen before
+it is generated, not after.
+
+Tuning any component until a number on this data improves is the failure mode
+being prevented. If you find yourself iterating against it, stop — that is
+development, not testing, whatever it is labelled.
+
 ## Phase numbering
 
 **This repo's `Phase 0`–`Phase 5` (see README) is the single canonical execution
