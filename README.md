@@ -61,10 +61,19 @@ order the evidence supports — not the order that sounds impressive. Concretely
    *churn in the ranked candidate pool*, so it reads retrieval's output and
    would need re-tuning if the spine changed underneath it. The dependency
    runs one way.
-4. **Add the intent classifier / contradiction detection last** — its ceiling
-   on the metric that's 80% of TechnicalScore is ≤0.0078 by the planning
-   repo's own analysis. It still ships (it's in the rubric, it's the
-   innovation play), it just isn't where early effort goes.
+4. **Add contradiction detection last** — its ceiling on the metric that's 80%
+   of TechnicalScore is ≤0.0078 by the planning repo's own analysis. It still
+   ships (it's in the rubric, it's the innovation play), it just isn't where
+   early effort goes. **Scope narrowed 29 Aug 2026:** what ships here is the
+   *slot-value* contradiction check — exact string comparison, hard trigger,
+   zero model. The per-turn intent labeller and its drift check are 🔴 demoted
+   (`techjam2026-docs/features/intent-trajectory/`): the reply-frame decode
+   already supplies the per-turn signal for free, and `customer_reply` is a
+   deterministic function of session state, so the drift cannot occur.
+   **"Intent classifier" now names something else in the docs repo** — the
+   shipping regex frame decode plus its semantic fallback,
+   `techjam2026-docs/features/intent-classifier/`. See that repo's
+   `project/glossary.md` before using either term.
 5. **Harden for submission** — prove the offline fallback actually works
    with networking *disabled*, not mocked, and package per the organizer's
    reproducibility rules.
