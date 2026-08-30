@@ -12,6 +12,20 @@ All rules were established 28 Aug 2026 against
 
 ## The rules
 
+**Rule 0 — TechnicalScore is not the objective. Never rank a change by score delta
+alone.** Added 30 Aug 2026. `TechnicalScore` is one objective *input* to the Technical
+Execution row, not the row and not the rubric — the specification says so under the
+scoring formula, and judges separately assess *"code quality, architecture, reliability,
+and the effective use of models or APIs."* So a change measuring ~0 or negative can still
+be correct, and one measuring positive can still be wrong. Precedents on the record:
+`"other"` declined at **+0.004**, clock-gated withholding declined at **+0.018602**, and
+the ledger content-free filter **kept at −0.030232** because the score it gave up was
+bought with noise tokens that will not transfer to a private set.
+*Binds:* every change to `starter/`. State the architectural and feasibility read
+alongside any number. "It measures ~0" does not justify dropping robustness work —
+thread safety, degraded-mode signals and offline verification are Feasibility evidence,
+scored, just not by the formula. Evidence: docs repo `project/hard-rules.md` → A0.
+
 1. **Always send a real `ask_attribute`. Never `null`.** A null ask returns the
    "Those options are not quite right yet" template, which the ledger drops — the query
    is unchanged and the turn teaches nothing. Asking costs nothing in the scoring, so a
@@ -20,10 +34,14 @@ All rules were established 28 Aug 2026 against
    *Binds:* `starter/scheduler.py` must not return `None` while any askable attribute
    remains.
 
-2. **Always return the full top-10, every turn.** Sending fewer is *legal* (the contract
-   has `maxItems: 100` and no `minItems`), and a top-1-then-top-10 policy measures
-   **+0.018602** — but it is **declined** as harness-gaming, on the same standard that
-   rejected the `"other"` short-circuit at +0.042. Do not implement it.
+2. **Ship the full top-10 every turn — as policy, not because the harness requires it.**
+   Sending fewer is *legal* (the contract has `maxItems: 100` and no `minItems`), so the
+   permission is structural and the count is our choice. A top-1-then-top-10 policy
+   measures **+0.018602** and is **declined** as harness-gaming — whether or not it is
+   disclosed — on the same standard that rejected the `"other"` short-circuit at
+   **+0.004**. Do not implement a gate on the turn clock. A K chosen from a *measured
+   confidence signal* is a different object: **open, not forbidden**, and parked until
+   the architecture lands (docs repo `open-questions.md` item 11).
    *Binds:* `starter/agent.py` recommendation slice.
 
 3. **Parse customer replies with regex. Never a model.** Every customer utterance is one
