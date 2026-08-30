@@ -1,0 +1,21 @@
+{
+  "source": "Reddy et al. 2022, arXiv:2206.06588; HF tasksource/esci",
+  "queries": 600,
+  "arms": {
+    "unigram OR (shipped)": {
+      "recall@10": 0.8233,
+      "recall@50": 0.9083,
+      "mrr@10": 0.6686
+    },
+    "phrases + unigrams": {
+      "recall@10": 0.825,
+      "recall@50": 0.91,
+      "mrr@10": 0.6758
+    },
+    "phrases only": {
+      "recall@10": 0.24,
+      "recall@50": 0.2417,
+      "mrr@10": 0.2159
+    }
+  }
+}
