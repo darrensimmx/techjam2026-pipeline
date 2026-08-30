@@ -147,6 +147,101 @@ Do not run either against `evaluation-data/` — that set is test-only.
 
 ---
 
+## What is the right granularity for attribute weighting?
+
+**Opened:** 30 Aug 2026 · **Owner:** raphael · **Blocks:** any weighting work,
+including the sweep that `docs/findings.md` defers
+
+**The claim.** The FTS5 column weights are the wrong unit. A real shopper cares
+about some attributes more than others, and which ones shifts mid-conversation —
+so the agent needs per-attribute weighting that adapts as the customer talks.
+Tuning six column weights against this evaluator optimises for the harness, not
+for a shopper.
+
+### Evidence for — the granularity objection is measured, not theoretical
+
+All six askable attributes collapse into **one** column. Measured across the 200
+public targets, 800 disclosed constraint strings:
+
+| column | constraints found in it | current weight |
+|---|---|---|
+| `features` | **749 (93.6%)** | 2.5 |
+| `title` | 43 (5.4%) | 6.0 |
+| `description` | 28 (3.5%) | 1.0 |
+| `details` | 8 (1.0%) | 2.5 |
+| `categories` | 0 (0.0%) | 4.0 |
+| `store` | 0 (0.0%) | 1.5 |
+
+Reproduce: materialize each sample with `materialize_hidden_fields()`, then test
+each `hard_constraints`/`soft_preferences` string for substring membership in
+each column of the target listing.
+
+Two things follow. First, the inherited weights are close to inverted for this
+workload — the column carrying nearly all the customer's text is ranked below two
+that carry almost none, and `categories` (weight 4.0) never matches anything a
+customer says, because `intent_card()` (`evaluator/local_evaluator.py:52`) builds
+constraints from `features` and `details` only. Second, and more important:
+**material, colour, size, style, use_case and feature all land in the same
+column**, so no column weight vector can express "this customer cares about
+colour more than size." There is one slider for six attributes.
+
+`bm25()` accepts column weights only — FTS5 offers no per-term weighting — so the
+mechanism the claim needs does not exist at that layer at all.
+
+### Evidence against — it cannot be validated here, at all
+
+- The simulator has **no notion of hard vs soft**. `customer_reply()`
+  (`evaluator/local_evaluator.py:174-185`) returns up to two matching constraints
+  with no strength marker, drawn from `hard_constraints + soft_preferences`
+  concatenated. Nothing rewards weighting them differently and nothing punishes
+  weighting them badly.
+- The 93.6% figure **is the leak**. `intent_card()` lifts sentences out of the
+  target's `features` and the customer recites them back — the same mechanism as
+  the 94% substring measurement at `scripts/leak_controlled_benchmark.py:14`. So
+  "up-weight `features`" is mechanically "up-weight the field the answer is being
+  read out of." Under real customer paraphrase that 93.6% collapses.
+- Therefore any local number produced by any weighting scheme — column, attribute,
+  adaptive — is measuring the harness. **This entry cannot be closed by
+  `bench.py eval`.** Saying so is the entry's main job.
+
+### If it is built, build it at the right layer
+
+Not column weights. Two places, both already scaffolded:
+
+- **Score fusion** — one query per attribute group, combined with per-attribute
+  weights. `bakeoff/part3_fusion.py` already implements weighted fusion and
+  `bakeoff/bm25_scores.py:32` exists to get comparable magnitudes; both are
+  currently pointed at BM25-vs-dense instead of attribute-vs-attribute.
+- **Rerank** — retrieve wide, rescore candidates on weighted per-attribute match.
+  Stronger, because it can ask "does this match the size they stated?", which a
+  column weight cannot. It is also where the headroom is: recall@100 is 0.96
+  against recall@10 of 0.80, oracle@100 = +0.2478.
+
+**Where a model would earn its place** — not choosing the numbers, but classifying
+constraint *strength*: "I need a size 11 wide" (hard, weight heavily or filter) vs
+"something casual, I guess" (soft). Bounded, genuinely hard under paraphrase, and
+the same Tier-2 shape the glossary already scopes. First pass needs no model —
+strength is usually lexically marked (`need`, `must`, `only`, a number with a unit
+vs `prefer`, `ideally`). Ship rules behind an interface; swap a classifier in if
+paraphrasing arrives.
+
+### What would settle it
+
+Nothing local, and that is the finding. What can be done:
+
+1. **Bound the ceiling before building.** Run the attribute-fusion arm through
+   `bakeoff/part3_fusion.py`'s paired wins/losses/ties + `delta_ci` machinery in
+   both brackets. If it wins only under the leaky bracket, that is a clean
+   negative and costs an afternoon.
+2. **Decide it as a product question.** 50% of the competition is human-judged.
+   "Column weights cannot distinguish size from colour, so we built per-attribute
+   weighting, and we are telling you it does not move our local number because our
+   local number is measuring a simulator leak" is a defensible submission — and a
+   stronger Innovation & Problem Insight story than a tuned number nobody can
+   justify. Record it as a values call, not a measurement.
+
+---
+
 ## How to add an entry
 
 ```markdown

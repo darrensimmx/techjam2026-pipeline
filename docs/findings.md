@@ -103,6 +103,14 @@ above by oracle@10 = **+0.0825** (`bakeoff/results-part1.json`,
 `current.oracle.10.delta_ci.mean_delta`), so size the effort against that ceiling
 rather than against oracle@100.
 
+**Before running that sweep, read `docs/TBD.md` → "What is the right granularity
+for attribute weighting?"** It measures that 93.6% of disclosed constraints land
+in the single `features` column, which means (a) the inherited weights look
+inverted for this workload, and (b) all six askable attributes share one slider,
+so no column weight vector can tell colour from size. It also shows that the
+93.6% is itself the leak, so the sweep must be run in both brackets or its result
+is uninterpretable. That entry is open; this deprioritization does not pre-empt it.
+
 ---
 
 ## How to add an entry
