@@ -1,0 +1,48 @@
+{
+  "_comment": "Facts that docs/pipeline-drawings.html asserts about this tree. `drawings.py check` compares each against live source; `refresh` rewrites the mechanical ones. Mirrors .claude/skills/run-sol/baselines.json. After republishing, run `refresh` and commit -- skip it and the post-commit hook warns forever.",
+
+  "url": "https://claude.ai/code/artifact/f90b4cf5-668e-4086-852e-144893ffeba6",
+  "title": "Sol Pipeline Drawings",
+  "doc": "docs/pipeline-drawings.html",
+  "commit": "a1aae93",
+  "drawn": "2026-08-29",
+
+  "_watch_comment": "Files whose movement can invalidate a plate. evaluator/ is excluded on purpose -- it is vendored and bench.py test already diffs it against the organizer's copy. hard-rules.md is excluded because rewording cannot be told from a rule change.",
+  "watch": ["starter/", "bakeoff/results-part1.json"],
+
+  "bm25_weights": "0.0, 6.0, 4.0, 2.5, 2.5, 1.5, 1.0",
+  "_bm25_from": "starter/retrieval.py:76 -- Plate 3 renders this as prose, so a sweep breaks the caption too",
+
+  "schedule": ["material", "feature", "color", "style", "size", "use_case"],
+  "_schedule_from": "starter/scheduler.py:15 -- Plate 4's entire premise",
+
+  "term_cap": "40",
+  "_term_cap_from": "starter/retrieval.py:70 -- Plate 3 'stopwords out, ≤40'",
+
+  "max_recommendations": "100",
+  "_max_recommendations_from": "starter/agent.py:38 -- Plate 3 'clamped to [0,100]'",
+
+  "_symbols_comment": "Existence only, never line numbers: pinning a line makes every insertion above it a false positive. The paths are the human breadcrumb.",
+  "symbols": {
+    "starter/ledger.py": ["record_message", "mark_asked", "disclosed_constraints", "asked_attributes"],
+    "starter/retrieval.py": ["_terms", "search"],
+    "starter/scheduler.py": ["next_attribute"],
+    "starter/agent.py": ["_validated", "_limit", "_empty_response"]
+  },
+
+  "_doc_literals_comment": "Catches the opposite rot -- someone hand-edits the HTML and these pins go stale.",
+  "doc_literals": [
+    "clamped to [0,100]",
+    "stopwords out, ≤40",
+    "first of six unasked",
+    "drops empty replies"
+  ],
+
+  "_score_comment": "Plate 5. Checked only by `check --score`, never by the hook: the catalog is gitignored and a missing one scores 0.0 silently, so an automatic check would report a fake regression on every fresh clone.",
+  "score": {
+    "hit_rate_at_10": 0.8,
+    "mrr": 0.525619,
+    "efficiency": 0.6745,
+    "technical_score": 0.692586
+  }
+}
