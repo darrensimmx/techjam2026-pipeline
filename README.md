@@ -200,4 +200,13 @@ techjam2026-pipeline/
 - [`docs/benchmark-tracking-plan.md`](docs/benchmark-tracking-plan.md) — how
   Hit Rate/MRR/MTTC get tracked across phases so each change's effect is
   visible in git history, not just in someone's terminal.
+- [`docs/findings.md`](docs/findings.md) — methods ruled out or deprioritized,
+  each with the evidence that closed it and the condition that would reopen it.
+  Read before proposing an approach; it exists so decisions are not re-argued.
+- [`docs/TBD.md`](docs/TBD.md) — open questions, argued from both sides. An
+  entry leaves it by becoming a hard rule or a finding, never by deletion.
+- [`docs/pipeline-drawings.html`](docs/pipeline-drawings.html) — six plates on
+  what the agent does and where the score comes from; the source for the
+  published artifact. Refresh it with
+  [`.claude/skills/update-drawings/`](.claude/skills/update-drawings/SKILL.md).
 - Competition kit: [`TechJam2026/techjam-conversational-search`](https://github.com/TechJam2026/techjam-conversational-search)
