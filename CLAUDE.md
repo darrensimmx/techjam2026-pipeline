@@ -17,10 +17,12 @@ in `project/standing-findings.md` there, not here.
 
 ## Commands
 
-This is Windows-first development. **The interpreter is `python`, not `python3`** —
-every docstring and README line in this repo uses the POSIX spelling and will fail
-as written. `docs/windows-dev-setup.md` is the authoritative, verified setup guide;
-read it before debugging any environment problem.
+Development happens on both Windows and macOS — neither is the primary platform,
+so keep tooling cross-platform and don't dismiss hygiene that only bites one side.
+**On Windows the interpreter is `python`, not `python3`** — every docstring and
+README line in this repo uses the POSIX spelling and will fail as written there.
+`docs/windows-dev-setup.md` is the authoritative, verified setup guide; read it
+before debugging any environment problem.
 
 Always run from the repo root — `starter`, `evaluator`, and `cli` are imported as
 top-level packages, and tests resolve paths relative to the root.

@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .venv/
+.DS_Store
 results.json
 data/catalog.jsonl
 results_offline.json
