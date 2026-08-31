@@ -28,7 +28,7 @@ that this table described as inert until that day:**
 |---|---|---|---|---|
 | Tier 2 semantic fallback | `src/semantic.py` | `TIER2_ENABLED = True`, rung 3 | `model2vec` **+** weights vendored at `data/models/potion-base-8m/` | `NullSemanticDecoder` (abstains always) |
 | Cross-encoder rerank | `src/rerank.py` | `load_reranker(enabled=True)` | `sentence-transformers`, `torch` **+** weights at `data/models/ms-marco-MiniLM-L-6-v2/` | `NullReranker` (identity) |
-| LLM ranking escalation | `src/llm_rerank.py` | `LLM_RERANK_ENABLED = True`, `gemini-3.5-flash` | `google-genai` **+** `GEMINI_API_KEY` in the environment **+** network | `NullLlmReranker` (identity, `usage() == (0, 0)`) |
+| LLM ranking escalation | `src/llm_rerank.py` | `LLM_RERANK_ENABLED = True`, `gemini-3.7-flash` | `google-genai` **+** `GEMINI_API_KEY` in the environment **+** network | `NullLlmReranker` (identity, `usage() == (0, 0)`) |
 
 **Still INERT — a seam with a null implementation behind it:**
 
@@ -46,7 +46,7 @@ opposite, called out because both were load-bearing claims elsewhere:
   are no longer commented out either — a checkpoint and a model *have* been
   chosen (items 1, 3, 4).
 - **A language model now does run in the shipped system**, where none did
-  before: `gemini-3.5-flash` in `src/llm_rerank.py`. It sits in *ranking*, on a
+  before: `gemini-3.7-flash` in `src/llm_rerank.py`. It sits in *ranking*, on a
   branch that fires only when the overlap gate finds zero literal overlap.
   **Intent is still never model-backed** — Tier 1 is regex and the Tier 2
   fallback behind it is an *encoder*, not a generative model, and item 2 explains

@@ -3,7 +3,7 @@
 LIVE as of 1 Sep 2026 (SMOKE-TESTED ONLY): Gemini 3.5 Flash, minimal reasoning.
 
 DISCLOSURE (submission_rules.md, competition_specification.md "Model and API
-Policy"): model = gemini-3.5-flash, provider = Google, thinking_budget=0
+Policy"): model = gemini-3.7-flash, provider = Google, thinking_budget=0
 (minimum-reasoning mode -- report.md section 5: reasoning mode is
 disqualifying on latency, ~15s TTFT at high effort). Cost ~$0.011/turn at the
 top-50 window per report.md section 4/5 when it fires; it fires only on the
@@ -74,13 +74,13 @@ from src.types import Candidate, Reranker
 LLM_RERANK_ENABLED: bool = True
 
 # Which model fills the slot -- docs/todo.md item 3.
-SELECTED_MODEL: str | None = "gemini-3.5-flash"
+SELECTED_MODEL: str | None = "gemini-3.7-flash"
 
 # Third-party modules each candidate model needs, checked through try_import
 # before anything is constructed. Declared as strings rather than imported at
 # module top so that importing src.llm_rerank never touches a third party.
 MODEL_DEPENDENCIES: dict[str, tuple[str, ...]] = {
-    "gemini-3.5-flash": ("google.genai",),
+    "gemini-3.7-flash": ("google.genai",),
 }
 
 RETURN_K = 10        # what the LLM selects; matches src.types.DEFAULT_TOP_K
@@ -122,7 +122,7 @@ def _check_indices(ranking: object, n: int, k: int = RETURN_K) -> str | None:
     measurement. This is the production path, where `_apply_indices` appends
     whatever was not explicitly ranked in its original order regardless of
     how many the model actually named -- so length is not load-bearing for
-    correctness. Found live: gemini-3.5-flash returned a different count than
+    correctness. Found live: gemini-3.7-flash returned a different count than
     min(k, n) on the very first real call, which an exact-length check turned
     into a rejected (but safely degraded) turn instead of a working rerank.
     Uniqueness and range are still enforced -- THOSE are load-bearing, because
@@ -154,7 +154,7 @@ class _GeminiReranker:
     turn, which `rerank()` never claims on its own: the caller only asks for
     usage after a successful rerank."""
 
-    name = "gemini-3.5-flash"
+    name = "gemini-3.7-flash"
 
     def __init__(self, client: object, types_module: object) -> None:
         self._client = client
@@ -208,7 +208,7 @@ def _build_gemini() -> _GeminiReranker:
 
 # Constructors, registered by whoever wires a model up.
 MODEL_BUILDERS: dict[str, Callable[[], object]] = {
-    "gemini-3.5-flash": _build_gemini,
+    "gemini-3.7-flash": _build_gemini,
 }
 
 

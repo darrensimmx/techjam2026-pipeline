@@ -158,9 +158,9 @@ ARMS = {
         # path we want. Do not "fix" this by adding an effort dial.
         "params": {},
     },
-    "gemini-3.5-flash": {
+    "gemini-3.7-flash": {
         "provider": "google",
-        "model": "gemini-3.5-flash",                 # VERIFY before paid run
+        "model": "gemini-3.7-flash",                 # VERIFY before paid run
         "params": {"thinking_budget": 0},            # VERIFY: non-reasoning mode
     },
     "gpt-5.6-luna": {

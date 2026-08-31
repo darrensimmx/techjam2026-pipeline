@@ -35,7 +35,7 @@
 #      python -c "from src.llm_rerank import load_llm_reranker; print(load_llm_reranker().name)"
 #
 #    Expect cross-encoder/ms-marco-MiniLM-L-6-v2, rung3_centroid, and
-#    gemini-3.5-flash. Any `null*` name means that layer is inert here.
+#    gemini-3.7-flash. Any `null*` name means that layer is inert here.
 #
 # 4. The checkpoints below are chosen, and each was chosen against a measured
 #    field rather than adopted unopposed. Condensed; full tables and their
@@ -102,7 +102,7 @@ torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
 
 
 # -- LLM ranking escalation (src/llm_rerank.py) --------------------------------
-# DECIDED 1 Sep 2026: gemini-3.5-flash, pinned to thinking_budget=0. This is the
+# DECIDED 1 Sep 2026: gemini-3.7-flash, pinned to thinking_budget=0. This is the
 # only language model anywhere in the system, and the only entry in this file
 # for which `pip install -r` alone does NOT make the layer live -- unlike the two
 # local layers above, it additionally needs a live credential AND network:
