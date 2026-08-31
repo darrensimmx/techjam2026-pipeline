@@ -104,7 +104,7 @@ python -c "from src.llm_rerank import load_llm_reranker; print(load_llm_reranker
 ```
 
 Expect `cross-encoder/ms-marco-MiniLM-L-6-v2`, `rung3_centroid`, and
-`gemini-3.5-flash`. Any `null*` name means that layer is inert on this machine.
+`gemini-3.7-flash`. Any `null*` name means that layer is inert on this machine.
 
 ### 5. Environment variables
 
@@ -349,7 +349,7 @@ Requirements") and `competition_specification.md` ("Model and API Policy").
 | Retrieval, ledger, intent Tier 1, slots, overlap gate, ask policy | **none** | in-process | stdlib only | none | **always on** |
 | Cross-encoder rerank | `cross-encoder/ms-marco-MiniLM-L-6-v2` (~22M params) | **local**, vendored at `data/models/` | `sentence-transformers`, `torch` | **none at inference** | on when the checkpoint is present |
 | Intent Tier 2 fallback | `minishlab/potion-base-8M` via `model2vec` (static embeddings, numpy-only) | **local**, vendored at `data/models/` | `model2vec` | **none at inference** | on when the checkpoint is present |
-| LLM ranking escalation | `gemini-3.5-flash`, `thinking_budget=0` | **hosted API (Google)** | `google-genai` + `GEMINI_API_KEY` | **yes, when it fires** | on when the key and package are present |
+| LLM ranking escalation | `gemini-3.7-flash`, `thinking_budget=0` | **hosted API (Google)** | `google-genai` + `GEMINI_API_KEY` | **yes, when it fires** | on when the key and package are present |
 | Ask-yield adaptive ordering | none | in-process | stdlib | none | **off** (`ADAPTIVE_ENABLED = False`) |
 
 **No generative model anywhere in intent classification.** Tier 1 is regex; the
@@ -378,11 +378,11 @@ it has one path with one optional re-ordering step.
 | Disclosure | Value |
 |---|---|
 | **Token usage — core** | `0` prompt, `0` completion, every turn. Truthfully, because no model is called. |
-| **Token usage — LLM layer, when it fires** | **Measured live on a real top-50 window (1 Sep 2026, `public_0002`): 4,238 prompt / 56 completion.** This supersedes the earlier 212/9 smoke figure, which was a 5-candidate *synthetic* query and not representative. The ~4,640 prompt estimate held (4,238 actual); the ~30 completion estimate did not (56 actual, ~2×) — the model returns more than the ten bare integers the contract asks for. Reported honestly through `usage.prompt_tokens` / `usage.completion_tokens`; `(0, 0)` on every turn it does not fire. |
+| **Token usage — LLM layer, when it fires** | **Measured live on `gemini-3.7-flash` over real top-50 windows (1 Sep 2026): 4,238–4,759 prompt / 56–59 completion** (`public_0002`, `public_0004`). This supersedes the earlier 212/9 smoke figure, which was a 5-candidate *synthetic* query and not representative. The ~4,640 prompt estimate held; the ~30 completion estimate did not (~57 actual, ~2×) — the model returns more than the ten bare integers the contract asks for. Reported honestly through `usage.prompt_tokens` / `usage.completion_tokens`; `(0, 0)` on every turn it does not fire. |
 | **Estimated model cost** | **$0.00** for the core and both local checkpoints. The LLM layer is ~**$0.011 per turn it fires on**. Measured firing rate against this simulator (1 Sep 2026, 200 sessions): **0% of turns leaky (0/571)**, **1.98% scrubbed (24/1214)** — so ~**$0.00 per leaky session** and ~**$0.0013 per scrubbed session**. A superseded ≈5.5% estimate is corrected under "Limitations"; it was a per-string figure, and the gate needs *zero* overlap across all disclosed segments. |
 | **Latency — core** | Index build ~1.16 s once at construction; ~**19 ms per turn** end to end. 200 sessions / 571 turns in 9.7 s. |
 | **Latency — with the cross-encoder** | ~**1.2 s per turn** (single rig, top-50 window). This is a timeout/disqualification risk against a per-turn budget the organizers have never published — it is **not** a score cost, since Efficiency is turn-based and wall-clock never enters `TechnicalScore`. |
-| **Latency — LLM layer** | **Measured live: 1.87 s** added on the one turn it fired (`public_0002`, 50-candidate window, `thinking_budget=0`). This is **4–13× the ~0.14–0.42 s previously disclosed**, which was extrapolated from a 5-candidate synthetic call and did not survive contact with a real top-50 window. n=1 — treat as an order-of-magnitude correction, not a distribution. Still pinned to `thinking_budget=0`: reasoning mode is far worse (Gemini 3.5 Flash at `high` effort is 15.28 s to first token). **Read this next to the cross-encoder row: a turn where both fire is ~3 s, and the organizers have never published a per-turn budget.** It remains a timeout/disqualification risk, not a score cost — Efficiency is turn-based and wall-clock never enters `TechnicalScore`. |
+| **Latency — LLM layer** | ⚠️ **The single largest operational risk in the system, and far worse than previously disclosed.** Measured live on `gemini-3.7-flash` in the production config (`thinking_budget=0`, response schema, 50-candidate window), 8 calls on 1 Sep 2026: **min 7.9 s, median ~11 s, max 25.1 s**, against the **~0.14–0.42 s** this table used to claim. **One call in 8 returned HTTP 503 `UNAVAILABLE` ("this model is currently experiencing high demand") after burning 45.7 s** before it errored. For contrast, `gemini-3.5-flash` measured 1.87 s on the same window — the move to 3.7 costs roughly **6× the latency**. **No timeout is enforced anywhere on this path** (nor on the cross-encoder — see `src/rerank.py::_load_checkpoint`), so a turn where both fire is **9–26 s, and a 503 can make it ~47 s**. It is still not a *score* cost — every failure mode here is caught by `safe_rerank`, BM25's order stands, and we measured the 200-session score as bit-identical with the layer failing — but against a per-turn budget the organizers have never published, this is a live timeout/disqualification risk. **Unset `GEMINI_API_KEY` to remove it entirely.** |
 | **Memory** | One in-memory SQLite FTS5 index over the 50,000-product catalog. No vector store, no external index — the spec's "must run entirely in-memory" constraint is satisfied by construction. The two local checkpoints add their own footprint when loaded (~22M and ~8M parameters respectively). |
 | **API credentials** | One optional environment variable, `GEMINI_API_KEY`. Never committed, never logged, never read by any file in this repo — `google.genai.Client()` reads it from the environment directly. |
 
@@ -470,13 +470,15 @@ their own evidence:
   structural rather than an omission. Every customer utterance here is one of
   eight f-strings and Tier 1 decodes all eight, so Tier 2 never fires. It exists
   for the private set, where the organizers reserved the right to paraphrase.
-- **LLM escalation:** the live path *inside* a real session is now proven. A live
-  `gemini-3.5-flash` call fired inside `public_0002` (intent_override, scrubbed)
-  on 1 Sep 2026: 4,238 prompt / 56 completion tokens reported through
-  `usage` on the wire, 1.87 s, and the top-50 window genuinely reordered. An
-  earlier 10-session leaky smoke run reported **0 tokens** and was *not* evidence
-  of the layer working — the escalation simply never fired, because it requires
-  *zero* literal overlap and the leaky bracket has 94.5% verbatim overlap by
+- **LLM escalation:** the live path *inside* a real session is now proven. Live
+  `gemini-3.7-flash` calls fired inside `public_0002` and `public_0004`
+  (intent_override, scrubbed) on 1 Sep 2026: 4,238–4,759 prompt / 56–59
+  completion tokens reported through `usage` on the wire, and the top-50 window
+  genuinely reordered. They also took **7.3 s and 13.6 s** — see the latency row
+  above, which is the finding that matters more than the tokens. An earlier
+  10-session leaky smoke run reported **0 tokens** and was *not* evidence of the
+  layer working — the escalation simply never fired, because it requires *zero*
+  literal overlap and the leaky bracket has 94.5% verbatim overlap by
   construction. Forcing it does need a scrubbed run, which is why the leaky
   column shows the smaller layer separation.
 - **LLM escalation, its ceiling:** measured, and it is low. Across 200 scrubbed
@@ -509,7 +511,7 @@ against this simulator it almost never fires, so its expected `TechnicalScore`
 delta is ≈0. We disclose that up front rather than let a reader infer a gain.
 
 **Measured firing rate, 1 Sep 2026**: **0 of 571 turns leaky (0%)** and **24 of
-1214 turns scrubbed (1.98%)**. Conditions: 200 public sessions, `gemini-3.5-flash`
+1214 turns scrubbed (1.98%)**. Conditions: 200 public sessions, `gemini-3.7-flash`
 made live against a stubbed client so every call site is counted, cross-encoder
 and Tier 2 inert (deps absent). The cross-encoder's absence does **not** bias
 this: steps 14 and 15 are order-only and `_same_multiset_or_original` enforces

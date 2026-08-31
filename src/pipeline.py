@@ -99,7 +99,7 @@ def run_turn(session: Session, user_message: object, turn: object,
      16  LLMRR: escalate to the LLM reranker ONLY when overlap.gate found
          zero literal overlap ("vague") -- report.md's design of record.
          Skipped whenever deps.llm_reranker is None -- no longer "every turn
-         until a model is chosen": gemini-3.5-flash is chosen and live, so
+         until a model is chosen": gemini-3.7-flash is chosen and live, so
          this is now the turns where the package or the API key is absent.
          Order-only, safe_rerank-guarded like 14.
      17  picks = (window + rest of fresh + seen)[:top_k]   <- never short
@@ -488,7 +488,7 @@ def _llm_escalate(deps: Deps, query: str, session: Session, decode: Decode,
     record, section 7.
 
     Skipped whenever deps.llm_reranker is None. That used to be EVERY turn,
-    "until a model is chosen and enabled"; since 1 Sep 2026 gemini-3.5-flash is
+    "until a model is chosen and enabled"; since 1 Sep 2026 gemini-3.7-flash is
     chosen and LLM_RERANK_ENABLED is True (docs/todo.md item 3), so it is now
     only the machines where `google-genai` or GEMINI_API_KEY is missing -- which
     includes any rig scoring with the network off, by design.

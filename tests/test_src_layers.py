@@ -107,11 +107,11 @@ class TestSeamsAreLiveAndSelected(unittest.TestCase):
     def test_a_rung_and_a_model_are_selected(self):
         """Rung 3 (docs/todo.md item 1) and Gemini (item 3) are both settled."""
         self.assertEqual(semantic.SELECTED_RUNG, "rung3_centroid")
-        self.assertEqual(llm_rerank.SELECTED_MODEL, "gemini-3.5-flash")
+        self.assertEqual(llm_rerank.SELECTED_MODEL, "gemini-3.7-flash")
 
     def test_builders_are_registered(self):
         self.assertEqual(set(semantic.RUNG_BUILDERS), {"rung3_centroid"})
-        self.assertEqual(set(llm_rerank.MODEL_BUILDERS), {"gemini-3.5-flash"})
+        self.assertEqual(set(llm_rerank.MODEL_BUILDERS), {"gemini-3.7-flash"})
 
     def test_load_semantic_decoder_defaults_to_null_when_disabled(self):
         self.assertIsInstance(load_semantic_decoder(enabled=False), NullSemanticDecoder)
@@ -196,7 +196,7 @@ class TestEnabledWithoutDependencies(unittest.TestCase):
             self.assertIsInstance(load_llm_reranker(enabled=True), NullLlmReranker)
         finally:
             llm_rerank.SELECTED_MODEL = original
-        self.assertEqual(llm_rerank.SELECTED_MODEL, "gemini-3.5-flash")
+        self.assertEqual(llm_rerank.SELECTED_MODEL, "gemini-3.7-flash")
 
     def test_semantic_survives_a_builder_that_raises(self):
         """A rung whose constructor throws -- a missing checkpoint, a CUDA probe,
