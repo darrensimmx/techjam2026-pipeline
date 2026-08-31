@@ -37,6 +37,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 from src.contract import clamp_top_k, empty_response, response_from_plan
+from src.llm_rerank import load_llm_reranker
 from src.pipeline import Deps, run_turn
 from src.rerank import load_reranker
 from src.retrieval import Bm25Index
@@ -63,8 +64,10 @@ class Agent:
         index = _guard(lambda: Bm25Index(catalog_path))
         reranker = _guard(load_reranker)
         semantic = _guard(load_semantic_decoder)
+        llm_reranker = _guard(load_llm_reranker)
 
-        deps = _guard(lambda: Deps(index=index, reranker=reranker, semantic=semantic))
+        deps = _guard(lambda: Deps(
+            index=index, reranker=reranker, semantic=semantic, llm_reranker=llm_reranker))
         if deps is None:
             # Deps itself refused the parts. Fall back to an all-null Deps so the
             # pipeline still runs (ask-only); if even that fails, leave None and

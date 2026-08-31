@@ -1,0 +1,182 @@
+{
+  "sample_ids": [
+    "public_0001",
+    "public_0002",
+    "public_0004",
+    "public_0024",
+    "public_0028",
+    "public_0035",
+    "public_0037",
+    "public_0057",
+    "public_0066",
+    "public_0081",
+    "public_0086",
+    "public_0091",
+    "public_0092",
+    "public_0094",
+    "public_0099",
+    "public_0100",
+    "public_0113",
+    "public_0121",
+    "public_0123",
+    "public_0124",
+    "public_0132",
+    "public_0146",
+    "public_0148",
+    "public_0153",
+    "public_0156",
+    "public_0167",
+    "public_0177",
+    "public_0180",
+    "public_0189",
+    "public_0190"
+  ],
+  "seed": 20260901,
+  "quota": {
+    "buying": 12,
+    "browsing": 12,
+    "intent_override": 4,
+    "boundary": 2
+  },
+  "scenario_counts": {
+    "buying": 12,
+    "intent_override": 4,
+    "boundary": 2,
+    "browsing": 12
+  },
+  "model": "claude-haiku-4-5",
+  "call_deadline_s": 6.0,
+  "session_budget_s": 20.0,
+  "runs": {
+    "none@leaky": {
+      "technical_score": 0.893694,
+      "hit_rate_at_10": 1.0,
+      "mrr": 0.792315,
+      "mttc": 3.2,
+      "efficiency": 0.78,
+      "scenario_metrics": {
+        "boundary": {
+          "sample_count": 2,
+          "hit_rate_at_10": 1.0,
+          "mrr": 0.75,
+          "mttc": 7.0
+        },
+        "browsing": {
+          "sample_count": 12,
+          "hit_rate_at_10": 1.0,
+          "mrr": 0.59537,
+          "mttc": 2.583333
+        },
+        "buying": {
+          "sample_count": 12,
+          "hit_rate_at_10": 1.0,
+          "mrr": 0.927083,
+          "mttc": 2.833333
+        },
+        "intent_override": {
+          "sample_count": 4,
+          "hit_rate_at_10": 1.0,
+          "mrr": 1.0,
+          "mttc": 4.25
+        }
+      },
+      "reported_token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "turns_reranked": 96,
+      "escalations": 0,
+      "reranker_moved_top": 0,
+      "gate_overrode_reranker": 38,
+      "turns_with_shipped_list": 96,
+      "overlap_p50": 0.1,
+      "llm_latency_s": {
+        "p50": null,
+        "p95": null,
+        "max": null,
+        "n": 0
+      },
+      "ce_latency_s": {
+        "p50": null,
+        "p95": null,
+        "max": null,
+        "n": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "llm_usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "budget_exhausted_sessions": 0,
+      "wall_clock_s": 11.0
+    },
+    "none@scrubbed": {
+      "technical_score": 0.376647,
+      "hit_rate_at_10": 0.5,
+      "mrr": 0.195489,
+      "mttc": 7.6,
+      "efficiency": 0.34,
+      "scenario_metrics": {
+        "boundary": {
+          "sample_count": 2,
+          "hit_rate_at_10": 0.0,
+          "mrr": 0.0,
+          "mttc": 11.0
+        },
+        "browsing": {
+          "sample_count": 12,
+          "hit_rate_at_10": 0.583333,
+          "mrr": 0.121164,
+          "mttc": 7.5
+        },
+        "buying": {
+          "sample_count": 12,
+          "hit_rate_at_10": 0.583333,
+          "mrr": 0.355655,
+          "mttc": 6.666667
+        },
+        "intent_override": {
+          "sample_count": 4,
+          "hit_rate_at_10": 0.25,
+          "mrr": 0.035714,
+          "mttc": 9.0
+        }
+      },
+      "reported_token_usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "turns_reranked": 213,
+      "escalations": 0,
+      "reranker_moved_top": 0,
+      "gate_overrode_reranker": 112,
+      "turns_with_shipped_list": 213,
+      "overlap_p50": 0.08,
+      "llm_latency_s": {
+        "p50": null,
+        "p95": null,
+        "max": null,
+        "n": 0
+      },
+      "ce_latency_s": {
+        "p50": null,
+        "p95": null,
+        "max": null,
+        "n": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "llm_usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "budget_exhausted_sessions": 0,
+      "wall_clock_s": 23.1
+    }
+  }
+}

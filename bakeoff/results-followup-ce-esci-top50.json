@@ -1,0 +1,23 @@
+{
+  "source": "Reddy et al. 2022, arXiv:2206.06588; HF tasksource/esci",
+  "queries": 600,
+  "depth": 50,
+  "arms": {
+    "BM25 (no rerank)": {
+      "recall@10": 0.8233,
+      "mrr@10": 0.6686
+    },
+    "+ CE pure (a=0.0)": {
+      "recall@10": 0.8783,
+      "mrr@10": 0.7313
+    },
+    "+ CE blended a=0.25": {
+      "recall@10": 0.8717,
+      "mrr@10": 0.728
+    },
+    "+ CE blended a=0.5": {
+      "recall@10": 0.86,
+      "mrr@10": 0.7116
+    }
+  }
+}

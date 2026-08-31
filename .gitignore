@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .venv/
+.env
 .DS_Store
 results.json
 # evaluate_src.py's per-session dump. results_src.md (the run log) IS tracked --
@@ -20,7 +21,14 @@ results_leak_controlled.json
 # matches only .json: results.md and results_src.md are the durable run logs and
 # MUST stay tracked -- there is no committed baseline artifact, so an unrecorded
 # number is a lost number.
+#
+# CAREFUL: this pattern has no slash, so git matches it at ANY depth -- it was
+# swallowing every bakeoff/results-*.json artifact, including the LLMRR baseline.
+# The older bakeoff/results-part*.json are tracked only because they predate this
+# line. The negation below is what keeps the bake-off's artifacts recordable; the
+# comment above is otherwise self-defeating.
 results*.json
+!bakeoff/results-*.json
 
 # Claude Code: share settings.json, keep personal overrides local
 .claude/settings.local.json
@@ -28,6 +36,10 @@ results*.json
 # Bake-off harness: regenerable artifacts (bakeoff/README.md documents how)
 bakeoff/cache/
 bakeoff/trajectories-*.json
+
+# Vendored model weights -- distributed as release assets / fetched locally,
+# same convention as data/catalog.jsonl. See docs/windows-dev-setup.md.
+data/models/
 
 # demo/ trace streams: one JSONL per run, regenerable by re-running the demo.
 # Same reasoning as results*.json -- a per-session dump, not a durable record.

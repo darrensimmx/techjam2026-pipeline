@@ -20,6 +20,14 @@ jobs:
       # not run until it is listed here. Every tests.test_src_* module below was
       # added with the src/ rebuild; the four starter/ modules that lead the list
       # are unchanged and stay green.
+      #
+      # tests.test_bakeoff_llmrr is the one entry that does NOT test the shipped
+      # agent -- it guards the LLM-rerank measurement harness in bakeoff/. It is
+      # listed here because that harness decides whether a paid run's numbers
+      # mean anything. It may only import bakeoff.llmrr_contract, which is
+      # standard-library only: this step installs the comments-only
+      # requirements.txt, so importing the probe itself (which reaches
+      # bakeoff.dense -> numpy) would break the build.
       - name: Contract + ledger/scheduler + offline + P1 safety tests, and the src/ unit + static checks
         run: >-
           python -m unittest
@@ -27,7 +35,8 @@ jobs:
           tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames
           tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network
           tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval
-          tests.test_src_shown tests.test_src_slots
+          tests.test_src_semantic_rung3 tests.test_src_shown tests.test_src_slots
+          tests.test_bakeoff_llmrr
           tests.test_demo_tracer_targets
           -v
 

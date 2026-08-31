@@ -31,14 +31,23 @@ class _Stub:
 
 class TestLoadReranker(unittest.TestCase):
     def test_disabled_returns_the_null_pass_through(self) -> None:
-        reranker = load_reranker()
+        reranker = load_reranker(enabled=False)
         self.assertIsInstance(reranker, NullReranker)
         self.assertEqual(reranker.name, "null")
 
-    def test_enabled_still_returns_null_because_no_checkpoint_is_chosen(self) -> None:
-        """The seam is built; the model is not. Enabling it must degrade, not fail."""
-        self.assertIsInstance(load_reranker(enabled=True), NullReranker)
-        self.assertIsInstance(load_reranker(enabled=True, timeout_s=0.001), NullReranker)
+    def test_enabled_without_a_vendored_checkpoint_degrades_to_null(self) -> None:
+        """Checkpoint chosen (ms-marco-MiniLM-L-6-v2), but if it is not vendored
+        on this machine -- or sentence_transformers is not installed -- loading
+        must degrade, never raise. Points CE_MODEL_PATH at a path that cannot
+        exist so this is true regardless of what is actually vendored locally."""
+        import src.rerank as rerank_module
+        original_path = rerank_module.CE_MODEL_PATH
+        try:
+            rerank_module.CE_MODEL_PATH = original_path / "definitely-not-here"
+            self.assertIsInstance(load_reranker(enabled=True), NullReranker)
+            self.assertIsInstance(load_reranker(enabled=True, timeout_s=0.001), NullReranker)
+        finally:
+            rerank_module.CE_MODEL_PATH = original_path
 
     def test_never_raises_on_junk_arguments(self) -> None:
         for args in ((None, None), ("yes", "soon"), (object(), object())):

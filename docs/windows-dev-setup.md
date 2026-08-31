@@ -100,7 +100,27 @@ responses — it just returns zero recommendations on every turn and scores
 0.0.** `Agent.__init__` swallows the load failure by design and nothing prints
 a warning. See §6.
 
-Sanity check that it actually loaded:
+### Vendored model weights (Tier 2 centroid, cross-encoder rerank)
+
+Same convention as the catalog above: gitignored (`data/models/`), not on
+`main`, fetched once locally. Without either, the corresponding layer degrades
+silently to its null implementation — `NullSemanticDecoder` /
+`NullReranker` — exactly as if the layer were still disabled.
+
+```powershell
+pip install model2vec sentence-transformers torch --index-url https://download.pytorch.org/whl/cpu
+python -c "from model2vec import StaticModel; StaticModel.from_pretrained('minishlab/potion-base-8M').save_pretrained('data/models/potion-base-8m')"
+python -c "from sentence_transformers import CrossEncoder; CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2').save('data/models/ms-marco-MiniLM-L-6-v2')"
+```
+
+Sanity check both loaded (not the null fallback):
+
+```powershell
+python -c "from src.semantic import load_semantic_decoder; print(load_semantic_decoder(enabled=True).name)"   # rung3_centroid
+python -c "from src.rerank import load_reranker; print(load_reranker().name)"                                  # cross-encoder/ms-marco-MiniLM-L-6-v2
+```
+
+Sanity check that the catalog actually loaded:
 
 ```powershell
 python -c "from starter.retrieval import Bm25Index; print(Bm25Index('data/catalog.jsonl').search('waterproof leather boots', 5))"

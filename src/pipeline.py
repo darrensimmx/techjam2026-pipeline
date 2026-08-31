@@ -73,6 +73,7 @@ class Deps:
     index: Bm25Index | None = None
     reranker: Reranker | None = None
     semantic: SemanticDecoder | None = None
+    llm_reranker: Reranker | None = None
 
 
 def run_turn(session: Session, user_message: object, turn: object,
@@ -95,10 +96,14 @@ def run_turn(session: Session, user_message: object, turn: object,
      13  hydrate the rerank window
      14  safe_rerank  (order-only, permutation-checked)
      15  overlap.gate (order-only, stable -- composes with 14)
-     16  picks = (window + rest of fresh + seen)[:top_k]   <- never short
-     17  shown.record(picks)
-     18  attribute = askyield.next_attribute(...)  <- never None, never "other"
-     19  return the TurnPlan
+     16  LLMRR: escalate to the LLM reranker ONLY when overlap.gate found
+         zero literal overlap ("vague") -- report.md's design of record.
+         Skipped whenever deps.llm_reranker is None, which is every turn
+         until a model is chosen. Order-only, safe_rerank-guarded like 14.
+     17  picks = (window + rest of fresh + seen)[:top_k]   <- never short
+     18  shown.record(picks)
+     19  attribute = askyield.next_attribute(...)  <- never None, never "other"
+     20  return the TurnPlan
     """
     try:
         return _run_turn(session, user_message, turn, top_k, deps)
@@ -138,14 +143,18 @@ def _run_turn(session: Session, user_message: object, turn: object,
     window = _hydrate(deps, window)                              # 13
     window = _rerank(deps, query, window)                        # 14
     window = _gate(session, decode, window)                      # 15
-    picks = _assemble(window, rest, seen, limit)                 # 16
-    _record(session, picks)                                      # 17
+    window, prompt_tokens, completion_tokens = \
+        _llm_escalate(deps, query, session, decode, window)      # 16
+    picks = _assemble(window, rest, seen, limit)                 # 17
+    _record(session, picks)                                      # 18
 
-    attribute = _choose_attribute(session, turn_number)          # 18
-    return TurnPlan(                                             # 19
+    attribute = _choose_attribute(session, turn_number)          # 19
+    return TurnPlan(                                             # 20
         message=_message_for(attribute),
         ask_attribute=attribute,
         parent_asins=tuple(picks),
+        prompt_tokens=prompt_tokens,
+        completion_tokens=completion_tokens,
     )
 
 
@@ -441,9 +450,10 @@ def _rerank(deps: Deps, query: str, window: list[Candidate]) -> list[Candidate]:
     return _same_multiset_or_original(window, reranked)
 
 
-def _gate(session: Session, decode: Decode, window: list[Candidate]) -> list[Candidate]:
-    if not window:
-        return window
+def _segments_for_turn(session: Session, decode: Decode) -> tuple[str, ...]:
+    """The disclosed-segment list overlap.gate() and _llm_escalate() both key
+    on -- factored out so the two stay in lockstep by construction rather than
+    by two copies of the same fallback order agreeing."""
     segments: tuple[str, ...] = ()
     try:
         recorded = session.ledger.segments
@@ -453,11 +463,60 @@ def _gate(session: Session, decode: Decode, window: list[Candidate]) -> list[Can
         segments = ()
     if not segments:
         segments = _segments_of(decode)
+    return segments
+
+
+def _gate(session: Session, decode: Decode, window: list[Candidate]) -> list[Candidate]:
+    if not window:
+        return window
+    segments = _segments_for_turn(session, decode)
     try:
         gated = overlap.gate(window, segments)
     except Exception:
         return window
     return _same_multiset_or_original(window, gated)
+
+
+def _llm_escalate(deps: Deps, query: str, session: Session, decode: Decode,
+                   window: list[Candidate]) -> tuple[list[Candidate], int, int]:
+    """LLMRR: hand the shortlist to a language model ONLY when overlap.gate
+    found zero literal overlap ("vague" -- keyword matching has gone blind).
+    Any literal overlap at all means BM25 + the cross-encoder are already
+    doing the right thing, so the LLM is skipped -- report.md's design of
+    record, section 7. INERT (skipped) whenever deps.llm_reranker is None,
+    which is every turn until a model is chosen and enabled (docs/todo.md
+    item 3). Order-only and safe_rerank-guarded, identically to the
+    cross-encoder at step 14 -- a broken or hallucinating model costs BM25's
+    order and nothing else.
+    """
+    if not window:
+        return window, 0, 0
+    llm = getattr(deps, "llm_reranker", None)
+    if llm is None:
+        return window, 0, 0
+    segments = _segments_for_turn(session, decode)
+    if not segments:
+        return window, 0, 0
+    try:
+        report = overlap.measure(window, segments)
+    except Exception:
+        return window, 0, 0
+    if report.segments == 0 or report.rate > 0.0:
+        return window, 0, 0
+    try:
+        reranked = rerank.safe_rerank(llm, query, window)
+    except Exception:
+        return window, 0, 0
+    usage_fn = getattr(llm, "usage", None)
+    prompt_tokens, completion_tokens = 0, 0
+    if callable(usage_fn):
+        try:
+            counted = usage_fn()
+            prompt_tokens = int(counted[0])
+            completion_tokens = int(counted[1])
+        except Exception:
+            prompt_tokens, completion_tokens = 0, 0
+    return _same_multiset_or_original(window, reranked), prompt_tokens, completion_tokens
 
 
 def _same_multiset_or_original(original: list[Candidate], produced: object) -> list[Candidate]:

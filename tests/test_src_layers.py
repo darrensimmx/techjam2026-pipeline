@@ -71,21 +71,27 @@ class _NotADecoder:
 
 
 class TestSeamsDefaultInert(unittest.TestCase):
-    def test_module_flags_are_off(self):
-        self.assertFalse(semantic.TIER2_ENABLED)
-        self.assertFalse(llm_rerank.LLM_RERANK_ENABLED)
+    """Semantic (Tier 2, rung 3) and LLM ranking escalation (Gemini) are both
+    now LIVE -- docs/todo.md items 1 and 3. Both still degrade to their null
+    implementation whenever their real dependency isn't reachable -- see
+    TestEnabledWithoutDependencies below, which is the test that actually
+    matters for the graded path."""
 
-    def test_nothing_is_selected(self):
-        """No rung and no model has been chosen -- docs/todo.md items 1 and 3."""
-        self.assertIsNone(semantic.SELECTED_RUNG)
-        self.assertIsNone(llm_rerank.SELECTED_MODEL)
+    def test_module_flags_are_on(self):
+        self.assertTrue(semantic.TIER2_ENABLED)
+        self.assertTrue(llm_rerank.LLM_RERANK_ENABLED)
 
-    def test_no_builders_are_registered(self):
-        self.assertEqual(semantic.RUNG_BUILDERS, {})
-        self.assertEqual(llm_rerank.MODEL_BUILDERS, {})
+    def test_a_rung_and_a_model_are_selected(self):
+        """Rung 3 (docs/todo.md item 1) and Gemini (item 3) are both settled."""
+        self.assertEqual(semantic.SELECTED_RUNG, "rung3_centroid")
+        self.assertEqual(llm_rerank.SELECTED_MODEL, "gemini-3.5-flash")
 
-    def test_load_semantic_decoder_defaults_to_null(self):
-        self.assertIsInstance(load_semantic_decoder(), NullSemanticDecoder)
+    def test_builders_are_registered(self):
+        self.assertEqual(set(semantic.RUNG_BUILDERS), {"rung3_centroid"})
+        self.assertEqual(set(llm_rerank.MODEL_BUILDERS), {"gemini-3.5-flash"})
+
+    def test_load_semantic_decoder_defaults_to_null_when_disabled(self):
+        self.assertIsInstance(load_semantic_decoder(enabled=False), NullSemanticDecoder)
 
     def test_load_llm_reranker_defaults_to_null(self):
         self.assertIsInstance(load_llm_reranker(), NullLlmReranker)
@@ -100,23 +106,48 @@ class TestEnabledWithoutDependencies(unittest.TestCase):
     """enabled=True with nothing installed and nothing chosen must degrade, not
     raise. Called from an unwrapped __init__, a raise here costs the whole run."""
 
-    def test_semantic_enabled_returns_null(self):
-        self.assertIsInstance(load_semantic_decoder(enabled=True), NullSemanticDecoder)
+    def test_semantic_enabled_with_no_rung_selected_returns_null(self):
+        """Flag on, but the rung choice cleared -- must still degrade safely."""
+        original = semantic.SELECTED_RUNG
+        try:
+            semantic.SELECTED_RUNG = None
+            self.assertIsInstance(load_semantic_decoder(enabled=True), NullSemanticDecoder)
+        finally:
+            semantic.SELECTED_RUNG = original
 
-    def test_llm_enabled_returns_null(self):
-        self.assertIsInstance(load_llm_reranker(enabled=True), NullLlmReranker)
+    def test_llm_enabled_with_no_model_selected_returns_null(self):
+        """Flag on, but the model choice cleared -- must still degrade safely."""
+        original = llm_rerank.SELECTED_MODEL
+        try:
+            llm_rerank.SELECTED_MODEL = None
+            self.assertIsInstance(load_llm_reranker(enabled=True), NullLlmReranker)
+        finally:
+            llm_rerank.SELECTED_MODEL = original
+
+    def test_llm_enabled_without_credentials_returns_null(self):
+        """No GEMINI_API_KEY set (or an invalid one) -- must still degrade,
+        never raise. This is the actual graded-path condition: the key lives
+        in an environment variable that a given machine may simply not have."""
+        import os
+        original = os.environ.pop("GEMINI_API_KEY", None)
+        original_google = os.environ.pop("GOOGLE_API_KEY", None)
+        try:
+            self.assertIsInstance(load_llm_reranker(enabled=True), NullLlmReranker)
+        finally:
+            if original is not None:
+                os.environ["GEMINI_API_KEY"] = original
+            if original_google is not None:
+                os.environ["GOOGLE_API_KEY"] = original_google
 
     def test_semantic_enabled_with_unregistered_rung_returns_null(self):
         """Flag on AND a rung named, but no builder registered for it."""
         original = semantic.SELECTED_RUNG
         try:
-            semantic.SELECTED_RUNG = "rung3_centroid"
-            self.assertIsInstance(load_semantic_decoder(enabled=True), NullSemanticDecoder)
             semantic.SELECTED_RUNG = "a_rung_nobody_declared"
             self.assertIsInstance(load_semantic_decoder(enabled=True), NullSemanticDecoder)
         finally:
             semantic.SELECTED_RUNG = original
-        self.assertIsNone(semantic.SELECTED_RUNG)
+        self.assertEqual(semantic.SELECTED_RUNG, "rung3_centroid")
 
     def test_llm_enabled_with_unregistered_model_returns_null(self):
         original = llm_rerank.SELECTED_MODEL
@@ -125,7 +156,7 @@ class TestEnabledWithoutDependencies(unittest.TestCase):
             self.assertIsInstance(load_llm_reranker(enabled=True), NullLlmReranker)
         finally:
             llm_rerank.SELECTED_MODEL = original
-        self.assertIsNone(llm_rerank.SELECTED_MODEL)
+        self.assertEqual(llm_rerank.SELECTED_MODEL, "gemini-3.5-flash")
 
     def test_semantic_survives_a_builder_that_raises(self):
         """A rung whose constructor throws -- a missing checkpoint, a CUDA probe,
@@ -133,29 +164,27 @@ class TestEnabledWithoutDependencies(unittest.TestCase):
         def _explode():
             raise RuntimeError("no weights on this box")
 
-        original_rung = semantic.SELECTED_RUNG
+        original_deps = semantic.RUNG_DEPENDENCIES["rung3_centroid"]
+        original_builder = semantic.RUNG_BUILDERS["rung3_centroid"]
         try:
-            semantic.SELECTED_RUNG = "rung3_centroid"
             semantic.RUNG_DEPENDENCIES["rung3_centroid"] = ()  # skip the dep gate
             semantic.RUNG_BUILDERS["rung3_centroid"] = _explode
             self.assertIsInstance(load_semantic_decoder(enabled=True), NullSemanticDecoder)
         finally:
-            semantic.SELECTED_RUNG = original_rung
-            semantic.RUNG_BUILDERS.pop("rung3_centroid", None)
-            semantic.RUNG_DEPENDENCIES["rung3_centroid"] = ("sentence_transformers",)
-        self.assertEqual(semantic.RUNG_BUILDERS, {})
+            semantic.RUNG_BUILDERS["rung3_centroid"] = original_builder
+            semantic.RUNG_DEPENDENCIES["rung3_centroid"] = original_deps
+        self.assertEqual(set(semantic.RUNG_BUILDERS), {"rung3_centroid"})
 
     def test_semantic_rejects_a_builder_returning_a_non_decoder(self):
-        original_rung = semantic.SELECTED_RUNG
+        original_deps = semantic.RUNG_DEPENDENCIES["rung3_centroid"]
+        original_builder = semantic.RUNG_BUILDERS["rung3_centroid"]
         try:
-            semantic.SELECTED_RUNG = "rung3_centroid"
             semantic.RUNG_DEPENDENCIES["rung3_centroid"] = ()
             semantic.RUNG_BUILDERS["rung3_centroid"] = _NotADecoder
             self.assertIsInstance(load_semantic_decoder(enabled=True), NullSemanticDecoder)
         finally:
-            semantic.SELECTED_RUNG = original_rung
-            semantic.RUNG_BUILDERS.pop("rung3_centroid", None)
-            semantic.RUNG_DEPENDENCIES["rung3_centroid"] = ("sentence_transformers",)
+            semantic.RUNG_BUILDERS["rung3_centroid"] = original_builder
+            semantic.RUNG_DEPENDENCIES["rung3_centroid"] = original_deps
 
 
 class TestSafeDecode(unittest.TestCase):

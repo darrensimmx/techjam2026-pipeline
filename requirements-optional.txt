@@ -34,24 +34,31 @@
 
 
 # -- Tier 2 semantic fallback (src/semantic.py) --------------------------------
-# Rung 3 (embedding nearest-centroid) and rung 4 (a small trained head on the
-# same frozen encoder) both run exactly one encoder pass and need the same
-# runtime. Rung 4 additionally needs a training run, which this project's
-# sandbox cannot do -- no network to fetch weights. See docs/todo.md item 1.
-# Encoder only. No SLM, no LLM: a generative model has no calibrated score to
-# threshold and therefore cannot abstain.
+# DECIDED 1 Sep 2026: rung 3 (embedding nearest-centroid), potion-8m. See
+# docs/todo.md item 1 for the held-out numbers (potion-8m/stripped @ 0.52:
+# 0 wrong vs. mpnet/multi @ 0.31: 29 wrong -- zero-wrong wins under this
+# project's asymmetric-cost rule even at a lower combined-recovery number).
 #
-# sentence-transformers
-# torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
-# numpy
+# model2vec is numpy-only inference for a static embedding model -- no torch,
+# no CUDA probe at import time. This is a lighter runtime than every other
+# seam in this file, not a coincidence: it is why rung 3 needs "no training,
+# no labelled data" (docs/todo.md) all the way down to the dependency graph.
+# Weights are vendored locally at data/models/potion-base-8m/ (gitignored,
+# fetch step in docs/windows-dev-setup.md) -- no network at inference.
+#
+# Rung 4 (fine-tuned encoder head) is NOT built -- needs a training run this
+# sandbox cannot do (no network to fetch weights), and rung 3 already won.
+#
+# model2vec
 
 
 # -- Cross-encoder rerank (src/rerank.py) --------------------------------------
-# Bundled and offline -- no network at any point. Same runtime as above; a
-# checkpoint has never been chosen, and the three open axes (which checkpoint,
-# the per-turn cost against an unpublished organizer timeout, and the rubric
-# reading) are docs/todo.md item 4. Weights would ship as a local asset, NOT as
-# a download at load time.
+# LIVE 1 Sep 2026: cross-encoder/ms-marco-MiniLM-L-6-v2, the only checkpoint
+# ever measured (+0.047, CI excludes zero). Bundled and offline -- no network
+# once vendored. Weights ship as a local asset at data/models/ms-marco-MiniLM-L-6-v2/
+# (gitignored, fetch step in docs/windows-dev-setup.md), NOT a download at load
+# time. The per-turn cost (~1.2 s) against an unpublished organizer timeout is
+# still an open Feasibility disclosure -- docs/todo.md item 4.
 #
 # sentence-transformers
 # torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
