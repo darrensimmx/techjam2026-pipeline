@@ -3,10 +3,24 @@ __pycache__/
 .venv/
 .DS_Store
 results.json
+# evaluate_src.py's per-session dump. results_src.md (the run log) IS tracked --
+# no committed baseline artifact exists, so an unrecorded number is a lost number.
+results_src.json
+# The catalog is ~60 MB uncompressed and ~19 MB gzipped, distributed as a release
+# asset. The .gz MUST stay ignored too: data/README.md tells you to download that
+# exact filename, and it is also recoverable from origin/benchmark-tracking -- so
+# without this line a `git add -A` after either route stages a 19 MB blob.
 data/catalog.jsonl
+data/catalog.jsonl.gz
 results_offline.json
 results_offline_plain.json
 results_leak_controlled.json
+
+# Any results*.json is a regenerable per-session dump. Note this deliberately
+# matches only .json: results.md and results_src.md are the durable run logs and
+# MUST stay tracked -- there is no committed baseline artifact, so an unrecorded
+# number is a lost number.
+results*.json
 
 # Claude Code: share settings.json, keep personal overrides local
 .claude/settings.local.json

@@ -1,5 +1,157 @@
 # techjam2026-pipeline
 
+**Statement 4 — conversational e-commerce search.** A multi-turn shopping agent
+that asks one useful clarifying question per turn and finds the customer's
+hidden target product within ten turns.
+
+---
+
+# Submission
+
+Everything the organizer needs is in this section. The phase plan that follows
+it is internal team history and is **superseded** — the source of truth for the
+current design is `docs/artifacts`.
+
+## What ships
+
+```text
+agent.py            the submission entry point -- exports `Agent`
+src/                the system (18 files, standard library only)
+requirements.txt    intentionally empty
+docs/todo.md        decisions deliberately left open, with their evidence
+```
+
+`starter/` is the superseded first-generation system. It is retained unmodified
+as the historical record and as the baseline the rebuild is measured against.
+**It is not part of the submission.** `evaluator/` is the organizer's kit,
+vendored byte-identical and never edited.
+
+## Setup and reproduction
+
+```bash
+# Python 3.10 or later. Verified on 3.14.2 / SQLite 3.50.4 (FTS5 required).
+pip install -r requirements.txt        # a no-op: there are no dependencies
+
+# place the organizer's catalog at data/catalog.jsonl, then:
+python3 -m unittest discover -s tests -p 'test_*.py' -t .   # 390 tests
+python3 scripts/evaluate_src.py --bracket both              # score it
+```
+
+One command to run the agent in the official harness:
+
+```python
+from agent import Agent          # Agent(catalog_path="data/catalog.jsonl")
+```
+
+There are **no environment variables** and **no non-obvious setup**. All paths
+resolve relative to the repository root.
+
+## Model choice, cost, tokens, latency, network
+
+| Disclosure | Value |
+|---|---|
+| **Models used** | **None.** No LLM, no SLM, no neural model of any kind runs on the graded path. |
+| **Network access** | **None required, and none attempted.** Enforced by an AST test over every `src/` module (`tests/test_src_no_network.py`). |
+| **API credentials** | None. The system cannot fail for want of a key. |
+| **Offline verified** | Full 200-session run under `sandbox-exec -f scripts/no-network.sb` with networking revoked: **scores identical to the networked run — `0.872057` leaky / `0.497383` scrubbed** (see Results below; never quote one end alone). A control probe in the same sandbox confirms the block is real, not vacuous. |
+| **Reported token usage** | `0` prompt, `0` completion, every turn — truthfully, because no model is called. |
+| **Estimated model cost** | **$0.00.** |
+| **Latency** | Index build **1.16 s** once at construction; **~19 ms per turn** end to end. 200 sessions / 571 turns complete in **9.7 s**. |
+| **Memory** | One in-memory SQLite FTS5 index over the 50,000-product catalog. |
+
+Retrieval is BM25 over SQLite FTS5 — standard library only. Dense/embedding
+fusion was measured twice and **rejected** (−0.206 at top-100, −0.065 at
+top-50): the target is BM25's rank 1 in 87 of 176 hit sessions but sits around
+dense rank 72, so blending dilutes a strong list with a weak one.
+
+Three optional layers exist as **typed seams with inert null implementations** —
+a cross-encoder reranker, a semantic intent fallback, and an LLM re-ranking
+escalation. All three are **disabled**, each behind a flag checked *before* its
+dependency, so installing `requirements-optional.txt` changes nothing. Which
+implementation fills each seam is an open decision, recorded with its evidence
+in `docs/todo.md`. **If any is ever enabled, this table must be updated** — the
+LLM seam is the only place a language model is even proposed, and it sits in
+*ranking*, never in intent parsing.
+
+## Method
+
+`respond()` is a never-raise wrapper around one pass:
+
+**decode → contradiction check → ledger append → query → BM25 → rerank seam →
+overlap gate → never-repeat selection → ask policy → schema coercion**
+
+- **Intent (Tier 1).** The simulator emits a closed set of sentence shapes, so
+  intent is an anchored-regex *frame decode*, not an estimate. It splits the two
+  declines on the single token `additional`: "I don't have **a** preference"
+  means the bucket was never opened (re-ask later), while "I don't have an
+  **additional** preference" proves it empty (retire permanently).
+- **The ledger is the query.** Every disclosed reply is appended verbatim, and
+  the concatenation of those raw strings *is* what gets searched. Append-only,
+  enforced by the absence of any deletion method.
+- **Slots are scheduling-only.** The typed slot view never touches retrieval, so
+  a parsing bug can corrupt *which question we ask* but can never corrupt
+  *what we search*. Asserted structurally in `tests/test_src_layering.py`.
+- **Ask policy.** A seven-attribute fixed schedule for turns 1–7, then a
+  fallthrough ladder re-evaluated independently on each free turn. Never `null`,
+  never `other`.
+- **Never repeat a shown product.** The session ends the instant our list
+  contains the target, so anything still on screen in a running session is
+  confirmed wrong. Excluding it cannot lose the target. It is an *ordering*
+  preference, not a filter — the top-10 is always full.
+
+## Results
+
+Scored with the organizer's own unmodified `evaluate()` over the 200 public
+sessions.
+
+| bracket | hit@10 | MRR | MTTC | TechnicalScore |
+|---|---|---|---|---|
+| leaky (upper bound) | 0.9950 | 0.7059 | 2.860 | **0.872057** |
+| scrubbed (lower bound) | 0.6600 | 0.2519 | 6.410 | **0.497383** |
+
+**Read both, never one.** `public_set.jsonl` carries no real intent card, so the
+evaluator falls back to building the "hidden" customer preferences out of the
+*target product's own listing* — 94.5% of disclosed constraint strings are
+verbatim substrings of the target's indexed text. Leaky is as-shipped; scrubbed
+patches that leak. The organizer's held-out set should land between them.
+
+Against the superseded `starter/` system, measured under the same conditions on
+the same day:
+
+| bracket | `starter/` | `src/` | delta |
+|---|---|---|---|
+| leaky | 0.692586 | 0.872057 | **+0.179471** |
+| scrubbed | 0.198439 | 0.497383 | **+0.298944** |
+
+The gain is *larger* with the leak removed, which is the opposite of a
+measurement artifact. Both `starter/` rows are reproducible:
+`.claude/skills/run-sol/bench.py eval` gives the leaky one, and the scrubbed one
+comes from running `scripts/evaluate_src.py`'s `bracket()` contextmanager against
+`starter.agent.Agent` — no committed tool does that, so the row is recorded here
+rather than in a run log.
+
+## Limitations
+
+- Both numbers above are this simulator. The bracket *direction* is the signal.
+- The never-repeat rule shipped ahead of a rank-distribution readout the design
+  asked for first (`docs/todo.md` item 7). It cannot cost anything — that much
+  is structural — but it is not yet proven to be what earns the gain.
+- Tier 1's frame decode is exact against the current simulator. The organizers
+  reserve the right to add paraphrasing; the semantic fallback for that case is
+  designed and seamed but **not built**, so paraphrased input degrades to a
+  content-bearing unknown rather than being understood.
+- One reply shape decodes conservatively: a message combining real content with
+  a decline phrase is treated as a decline, losing its content. Deliberate — on
+  a paraphrased set a missed decline is the costlier error.
+
+---
+
+# Internal phase plan (superseded)
+
+Everything below predates the `src/` rebuild and is kept for team history. The
+current design lives in `docs/artifacts`; open decisions live in `docs/todo.md`.
+
+
 Code for TikTok TechJam 2026, Statement 4: a conversational shopping agent that
 asks useful follow-up questions and finds the customer's hidden target product
 within 10 turns.

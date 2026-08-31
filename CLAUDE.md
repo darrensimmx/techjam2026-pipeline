@@ -4,16 +4,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What ships
 
-The entire submission is one class: `starter/agent.py::Agent`. The organizer's
-evaluator imports it and calls `reset()` / `respond()` **in-process** — no network,
-no CLI on the graded path. Everything else here (`cli/`, `tests/`, `scripts/`) is dev
+The submission is `agent.py` at the repo root, which exports `Agent` from `src/`.
+The organizer's evaluator imports it and calls `reset()` / `respond()`
+**in-process** — no network, no CLI on the graded path. The layout is the one
+`docs/submission_rules.md` in the organizer's kit prescribes (`agent.py`,
+`requirements.txt`, `README.md`, `src/`); that file is **not** vendored here, so
+citations to it point at `../techjam-conversational-search/docs/`.
+
+```text
+agent.py    entry point — a sys.path self-heal, then `from src.agent import Agent`
+src/        the system: 18 modules, standard library only
+```
+
+**`starter/` is the superseded first-generation system and is NOT part of the
+submission.** It is retained unmodified as the historical record and as the
+baseline the rebuild is measured against — do not edit it, and do not add
+features to it. Everything else (`cli/`, `tests/`, `scripts/`, `bakeoff/`) is dev
 tooling that never reaches the organizer.
+
+The trap this creates: `evaluator/local_evaluator.py:12` hardcodes
+`from starter.agent import Agent`, so running the vendored evaluator directly
+scores the **superseded** system and reports a plausible number for the wrong
+agent. Score `src/` only through `scripts/evaluate_src.py`.
 
 Planning and reasoning live in a **separate repo**,
 [`darrensimmx/techjam2026-docs`](https://github.com/darrensimmx/techjam2026-docs).
 That repo is the *why*; this one is the *how*. When a change needs a rationale — why
-BM25 and not dense, why the "clean six" attributes and not `other` — the answer is
-in `project/standing-findings.md` there, not here.
+BM25 and not dense, why the seven-slot schedule and never `other` — the answer is
+in `project/standing-findings.md` there, or in `docs/artifacts`, not here.
 
 ## Commands
 
@@ -24,28 +42,34 @@ README line in this repo uses the POSIX spelling and will fail as written there.
 `docs/windows-dev-setup.md` is the authoritative, verified setup guide; read it
 before debugging any environment problem.
 
-Always run from the repo root — `starter`, `evaluator`, and `cli` are imported as
-top-level packages, and tests resolve paths relative to the root.
+Always run from the repo root — `src`, `starter`, `evaluator`, and `cli` are
+imported as top-level packages, and tests resolve paths relative to the root.
 
 ```powershell
-# Full suite (22 tests)
-python -m unittest tests.test_agent_contract tests.test_cli_integration tests.test_evaluator_smoke tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety -v
+# Full suite (390 tests). Check the count before believing green.
+python -m unittest discover -s tests -p "test_*.py" -t .
 
 # One class / one test
-python -m unittest tests.test_p1_offline_safety.TestRespondSafety -v
+python -m unittest tests.test_src_askpolicy -v
 python -m unittest tests.test_agent_contract.TestAgentContract.test_never_raises_on_malformed_input -v
 
-# Mirror the two CI jobs exactly
-python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety -v
-python -m unittest tests.test_cli_integration tests.test_evaluator_smoke -v
+# Mirror the two CI jobs exactly. Modules are named EXPLICITLY in ci.yml, not
+# discovered, so a NEW TEST FILE DOES NOT RUN UNTIL IT IS ADDED THERE.
+python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval tests.test_src_shown tests.test_src_slots -v
+python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end -v
 
-# Real scoring run (needs data/catalog.jsonl)
+# Real scoring run — THE SUBMISSION (needs data/catalog.jsonl).
+# --bracket both reports the leaky/scrubbed spread; quote both, never one.
+python scripts\evaluate_src.py --catalog data\catalog.jsonl --dataset data\public_set.jsonl --bracket both
+
+# Scores the SUPERSEDED starter/ agent, not the submission — see "What ships".
+# Useful only as the historical control.
 python -m evaluator.local_evaluator --catalog data\catalog.jsonl --dataset data\public_set.jsonl --output results.json
 
-# Instrumented run: the five P1 acceptance criteria, per call
+# Instrumented run: the five P1 acceptance criteria, per call (starter/ only)
 python scripts\verify_offline_safety.py
 
-# Manual turn-by-turn chat (client spawns its own server subprocess)
+# Manual turn-by-turn chat (client spawns its own server subprocess; starter/)
 python -m cli.client --catalog data\catalog.jsonl
 python -m cli.client --catalog tests\fixtures\catalog.jsonl   # no catalog needed
 ```
@@ -56,36 +80,69 @@ organizer's offline final-scoring conditions.
 
 ## Architecture
 
-`respond()` is a thin, paranoid wrapper around three collaborators:
+The design of record is `docs/artifacts` — "Statement 4 Architecture v5" and
+"The Seven-Slot Ask Policy". Where this file and those disagree, they win.
 
-- **`starter/ledger.py` — `SessionState`.** Accumulates every customer reply
-  verbatim into one `disclosed_constraints` string. This is *the* lever the planning
-  repo identified (0.16 → 0.75); no structured slot parsing. The single documented
-  exception is a content-free reply (`_CONTENT_FREE_PATTERNS`), anchored at `^`
-  because a message that merely *contains* a decline phrase after real content must
-  still be appended.
-- **`starter/retrieval.py` — `Bm25Index`.** SQLite FTS5 over an in-memory index,
-  built once at construction. Queries are OR-joined over ≤40 unique stopword-filtered
-  terms, ranked with a weighted `bm25()`.
-- **`starter/scheduler.py` — `next_attribute(state)`.** Fixed six-attribute order.
-  Takes the whole `state`, not just the asked list, so Phase 3 (ask-yield) can swap
-  its body in behind this exact signature — it will need `state.retired` and
-  `state.yield_seen` added to `SessionState`. **Do not widen this signature again.**
+`src/agent.py::Agent.respond()` is a never-raise wrapper around one pass in
+`src/pipeline.py::run_turn`:
+
+> decode → contradiction check → ledger append → query → BM25 → rerank seam →
+> overlap gate → never-repeat selection → ask policy → schema coercion
+
+- **`src/frames.py` — Tier 1 intent decode.** Anchored regex against the eight
+  f-string templates the simulator emits, so it is a *decode*, not an estimate.
+  It splits the two declines on the single token `additional`: "I don't have **a**
+  preference" leaves the bucket live (re-ask later); "I don't have an
+  **additional** preference" proves it empty (retire permanently). `TIER_15_HEDGE`
+  is the one unanchored pattern and the one tuning knob.
+- **`src/ledger.py` — `ConstraintLedger`.** Every disclosed reply appended
+  verbatim; the concatenation of those raw strings **is** the query. Append-only,
+  enforced by the absence of any deletion method — do not add one. Never erased,
+  not even on intent override (`docs/hard-rules.md` rule 6).
+- **`src/retrieval.py` — `Bm25Index`.** SQLite FTS5 over an in-memory index,
+  built once at construction. The sole retrieval route: dense fusion was measured
+  twice and rejected (−0.206, −0.065). Terms are quoted as phrases and OR-joined
+  over ≤40 unique stopword-filtered terms so a stray FTS5 operator in a customer
+  reply cannot break the query.
+- **`src/askpolicy.py` — `next_attribute(state)`.** Seven-slot fixed order for
+  turns 1–7, then a fallthrough ladder re-evaluated on each free turn. Never
+  `null`, never `other`. Takes the whole `state`, so `src/askyield.py` can swap in
+  behind this exact signature. **Do not widen this signature.**
+- **`src/shown.py` — never-repeat.** `partition()`, never `filter()` — the top-10
+  is always full. Carries the override guard: in `intent_override` sessions the
+  evaluator's hit check is off early, so everything shown before the override goes
+  back in play.
+- **`src/slots.py` — scheduling only.** The typed slot view never touches
+  retrieval, so a parsing bug can corrupt *which question we ask* but never *what
+  we search*. Asserted structurally in `tests/test_src_layering.py`.
 
 ### The rule that governs every change here
 
 The evaluator swallows exceptions into a silent zero. A schema-invalid dict is zeroed
 just as silently. So:
 
-- `respond()` must never raise — it returns `_empty_response()` on any exception.
+- `respond()` must never raise — it returns `src/contract.py::empty_response()`
+  on any exception.
 - `__init__` and `reset()` are **not** wrapped by the evaluator
   (`local_evaluator.py:306` and `:228`). A raise in either kills the *entire run*,
   not one session. Both are guarded here; keep them guarded.
-- Every outgoing payload passes through `_validated()`, which coerces each field to
-  its schema-valid empty form rather than letting an invalid value through.
+- Every outgoing payload passes through `src/contract.py::validated()`, which
+  coerces each field to its schema-valid empty form rather than letting an invalid
+  value through.
+- The guards catch `Exception`, so they do not cover a raise at **import** time.
+  `src/agent.py` imports its siblings at module scope unguarded, and `agent.py`
+  catches only `ImportError` — a module-level `re.compile` that throws would kill
+  the run before `Agent` exists. Keep module scope free of anything that can fail.
 
-Adding any optional layer (rerank, LLM, classifier) means: its own try/except, a
-local fallback, and never on the critical path.
+Three optional layers already exist as typed seams with inert null
+implementations: `src/rerank.py` (cross-encoder), `src/semantic.py` (Tier 2
+intent fallback), `src/llm_rerank.py` (LLM ranking escalation), plus
+`src/askyield.py` (adaptive ask ordering). **Every flag is `False` and each loader
+checks its flag BEFORE it checks for a dependency**, so installing
+`requirements-optional.txt` changes nothing. Enabling any of them is a
+submission-level decision with a disclosure attached, not a line edit — and the
+same contract applies: its own try/except, a local fallback, never on the
+critical path. `src/` is standard library only; keep it that way.
 
 `evaluator/` is **vendored from the competition kit and never edited.**
 `scripts/leak_controlled_benchmark.py` needs to change `intent_card()` and honors
@@ -97,30 +154,50 @@ exit. Do the same if you ever need to vary evaluator behavior.
 **Local scores are inflated by a leak in the vendored simulator.** `public_set.jsonl`
 carries no real `intent_card`, so the evaluator falls back to building the simulated
 customer's "hidden" preferences out of the *target product's own listing* and reciting
-them back turn by turn — 94% of disclosed constraint strings are exact substrings of
-the target's indexed text. Phase 1's local hit@10 of 0.80 is an upper bound, not a
-score. `scripts/leak_controlled_benchmark.py` brackets it. Never quote a local number
-without saying which bracket it came from.
+them back turn by turn — 94.5% of disclosed constraint strings are exact substrings
+of the target's indexed text. **Never quote a local number without saying which
+bracket it came from.** `scripts/evaluate_src.py --bracket both` reports the spread;
+`scripts/leak_controlled_benchmark.py` is the older single-arm tool.
+
+Measured 31 Aug 2026 over the 200 public sessions, both arms, for reference:
+
+| system | leaky (upper) | scrubbed (lower) |
+|---|---|---|
+| `src/` (the submission) | 0.872057 | 0.497383 |
+| `starter/` (superseded) | 0.692586 | 0.198439 |
+
+The rebuild's gain is *larger* with the leak removed (+0.299 scrubbed vs +0.179
+leaky), which is the opposite of a measurement artifact. A leaky hit@10 of 0.995 is
+still an upper bound, not a score.
 
 **A green test run proves less than it looks like.** `tests/fixtures/catalog.jsonl`
 has 6 products against `top_k=10`, so any query matching one term returns the whole
 fixture — `test_evaluator_smoke` passes even with a query-blind ranker.
 `test_offline` is an AST check for banned import *names* in `starter/*.py` only; it
-executes nothing and covers neither `evaluator/` nor `cli/`. And `python -m unittest
+executes nothing and covers neither `evaluator/` nor `cli/`. `tests/test_src_no_network.py`
+is the equivalent for `src/` and is the one that matters now. CI names its test
+modules explicitly rather than discovering them, so **a new test file is silently
+not run until it is added to `.github/workflows/ci.yml`.** And `python -m unittest
 discover` reports `Ran 0 tests ... OK` if `tests/__init__.py` is ever deleted —
-check the count before believing green. `docs/windows-dev-setup.md` §7 has the full
-list.
+check the count before believing green (it is 390). `docs/windows-dev-setup.md` §7
+has the full list.
 
 ## Silent failure to check first
 
 If the agent returns `recommendations: []` on every turn with no error,
 `data/catalog.jsonl` is missing. `Agent.__init__` swallows the load failure by design
-and sets a null index; nothing warns. The file is gitignored (~50k rows, distributed
-as a release asset) — see `docs/windows-dev-setup.md` §1. Confirm with:
+and sets a null index; **there is no logging anywhere in `src/`**, so nothing warns.
+The file is gitignored (~50k rows, distributed as a release asset) — see
+`docs/windows-dev-setup.md` §1. Confirm with:
 
 ```powershell
-python -c "from starter.retrieval import Bm25Index; print(Bm25Index('data/catalog.jsonl').search('waterproof leather boots', 5))"
+python -c "from src.retrieval import Bm25Index; print(Bm25Index('data/catalog.jsonl').search('waterproof leather boots', 5))"
+python -c "from agent import Agent; print('degraded:', Agent('data/catalog.jsonl').degraded)"
 ```
+
+`Agent.degraded` is the programmatic form of the same check, and
+`scripts/evaluate_src.py` prints it on every run. A `TechnicalScore` of exactly
+`0.00000` is almost always this, not a solution regression.
 
 ## `evaluation-data/` is test-only — do not read it while building
 
@@ -177,6 +254,9 @@ only 40/200 public sessions reach turn 7 at all. Do not start it before that rep
   equivalent is `docker run --rm --network none ...`; say explicitly that you supplied
   the block yourself when reporting such a result. Running
   `scripts/verify_offline_safety.py` unsandboxed covers criteria 1–3 only, never 4–5.
-- `results*.json` are all gitignored and there is no committed baseline artifact, so
-  record any number you measure somewhere durable — see
+- `results*.json` are all gitignored — they are regenerable per-session dumps. The
+  durable record is the two **tracked** run logs: `results_src.md` (the submission,
+  appended by `scripts/evaluate_src.py`) and `results.md` (the `starter/` control,
+  appended by `.claude/skills/run-sol/bench.py`). An unrecorded number is a lost
+  number — commit the row alongside whatever change produced it. See
   `docs/benchmark-tracking-plan.md`.

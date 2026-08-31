@@ -16,8 +16,19 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: Contract + ledger/scheduler + offline + P1 safety tests
-        run: python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety -v
+      # Modules are named EXPLICITLY, not discovered, so a new test file does
+      # not run until it is listed here. Every tests.test_src_* module below was
+      # added with the src/ rebuild; the four starter/ modules that lead the list
+      # are unchanged and stay green.
+      - name: Contract + ledger/scheduler + offline + P1 safety tests, and the src/ unit + static checks
+        run: >-
+          python -m unittest
+          tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety
+          tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames
+          tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network
+          tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval
+          tests.test_src_shown tests.test_src_slots
+          -v
 
   barebone-app-smoke:
     name: Barebone app smoke test (CLI endpoint connects, session ends by turn 10)
@@ -29,5 +40,5 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install -r requirements.txt
-      - name: CLI integration + real-evaluator smoke tests
-        run: python -m unittest tests.test_cli_integration tests.test_evaluator_smoke -v
+      - name: CLI integration + real-evaluator smoke tests, and the src/ end-to-end assembly proof
+        run: python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end -v
