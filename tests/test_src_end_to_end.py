@@ -32,7 +32,11 @@ all cost points quietly without ever failing a run.
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
 import tempfile
+import textwrap
 import unittest
 from collections import OrderedDict
 from pathlib import Path
@@ -553,6 +557,72 @@ class SrcDrainedPoolInvariants(unittest.TestCase):
                     for record in self.records
                     for error in schema_errors(record["response"], TURN_RESPONSE)]
         self.assertEqual([], failures)
+
+
+class SubmissionEntryPointImport(unittest.TestCase):
+    """`agent.py`'s sys.path self-heal, exercised in the situation it names.
+
+    Its docstring says the fallback exists because "`src` is a common package
+    name, and the harness may run us from a directory where another `src`
+    shadows ours". That cannot be tested in-process: the import has to happen
+    in an interpreter whose sys.path and sys.modules we control from empty, so
+    each case runs in a subprocess.
+
+    A raise here is the worst failure mode in the system -- it happens before
+    `Agent` exists, so it is not one zeroed turn but no run at all, and
+    `agent.py` catches only ImportError.
+    """
+
+    REPO = Path(__file__).resolve().parent.parent
+
+    def _import_agent(self, shadow: str | None) -> subprocess.CompletedProcess:
+        """Import the submission entry point with `shadow` (if given) ahead of
+        the repo on sys.path, from a cwd that is neither."""
+        program = textwrap.dedent(
+            """
+            import sys
+            shadow = sys.argv[1] or None
+            if shadow:
+                sys.path.insert(0, shadow)
+            sys.path.insert(1 if shadow else 0, sys.argv[2])
+            from agent import Agent
+            a = Agent(sys.argv[3])
+            r = a.respond("s", "waterproof leather boots", 1, 10)
+            print("OK", len(r["recommendations"]))
+            """
+        )
+        with tempfile.TemporaryDirectory() as elsewhere:
+            catalog = Path(elsewhere) / "catalog.jsonl"
+            synthetic.build_catalog(catalog, n=60)
+            environment = dict(os.environ)
+            environment.pop("PYTHONPATH", None)
+            return subprocess.run(
+                [sys.executable, "-c", program, shadow or "",
+                 str(self.REPO), str(catalog)],
+                cwd=elsewhere, capture_output=True, text=True,
+                env=environment, timeout=300)
+
+    def test_imports_when_nothing_shadows_src(self) -> None:
+        result = self._import_agent(shadow=None)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.assertIn("OK", result.stdout)
+
+    def test_imports_when_a_foreign_src_package_shadows_ours(self) -> None:
+        """The regression. A competing `src` earlier on sys.path used to defeat
+        the self-heal: the failed `from src.agent import Agent` leaves the
+        FOREIGN `src` cached in sys.modules, so the retry after the sys.path
+        insert was served from that cache and raised the identical
+        ModuleNotFoundError. Fixed by purging `src`/`src.*` before retrying.
+        """
+        with tempfile.TemporaryDirectory() as shadow_root:
+            foreign = Path(shadow_root) / "src"
+            foreign.mkdir()
+            (foreign / "__init__.py").write_text("", encoding="utf-8")
+            result = self._import_agent(shadow=shadow_root)
+        self.assertEqual(0, result.returncode,
+                         "a foreign `src` on sys.path broke the entry point:\n"
+                         + result.stderr)
+        self.assertIn("OK", result.stdout)
 
 
 if __name__ == "__main__":

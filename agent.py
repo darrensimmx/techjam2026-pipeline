@@ -19,6 +19,14 @@ from pathlib import Path
 try:
     from src.agent import Agent
 except ImportError:  # pragma: no cover - environment-dependent
+    # Purge any `src` already bound in sys.modules BEFORE retrying. When another
+    # `src` shadows ours -- the exact case this fallback exists for -- the failed
+    # import has already cached that foreign package (and possibly submodules)
+    # under these names. Without the purge the retry is served from that cache
+    # and fails identically, so the self-heal silently does nothing.
+    for _name in [n for n in sys.modules
+                  if n == "src" or n.startswith("src.")]:
+        del sys.modules[_name]
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     from src.agent import Agent
 
