@@ -19,10 +19,14 @@ every number came from.
    `CLAUDE.md`'s and it is not negotiable, including in speaker notes.
 3. **`+0.047` must not appear on any slide** except inside Appendix A4's
    do-not-quote note. `docs/todo.md` item 4 records it as unreconciled.
-4. Slides 1–14 are the deck. A1–A9 are appendix / Q&A ammunition — render them,
+4. Slides 1–13 are the deck. A1–A9 are appendix / Q&A ammunition — render them,
    but they sit after the close.
 5. Keep the visual language consistent: one accent colour for *shipped*, one for
    *measured and rejected*, one for *held open*. Three states, used everywhere.
+6. **There is deliberately no problem slide.** The judges wrote the problem
+   statement. The task shape is spoken over Slide 1 and never rendered; the
+   scoring formula appears once, as a legend on the results slide. Do not add a
+   problem or agenda slide back.
 
 ---
 
@@ -45,38 +49,56 @@ ten turns without a language model.
 
 **Notes:** "Our agent talks to a shopper for up to ten turns, asks one useful
 question each turn, and has to have the exact product they had in mind inside
-its top ten. We do that with no LLM, no embeddings, and no network — and I'll
-show you the numbers and then show you why we made that choice on purpose."
+its top ten. We do that with no LLM, no embeddings, and no network. Let me
+start with the one idea the whole system rests on, and then show you the
+numbers it earns."
 
 **Source:** `README.md` §What ships; catalog size from `docs/windows-dev-setup.md` §1.
 
 ---
 
-## Slide 2 — The problem
+## Slide 2 — The core idea
 
-**Says:** The task, and the exact formula we are scored on.
+**Says:** The concatenation of everything the customer literally said *is* the
+search query. Not an input to building one — the thing itself.
 
 **On the slide:**
-- A simulated customer has one specific product in mind and never names it.
-- Each turn: we return up to 10 products **and** ask one clarifying question.
-- The session ends the moment our list contains their target. Hard stop at 10
-  turns — exceed it and the session scores zero.
-- `TechnicalScore = 0.50·HitRate@10 + 0.30·MRR + 0.20·Efficiency`
-- `Efficiency = clip((11 − MTTC) / 10, 0, 1)` — turn-based. **Wall-clock never
-  enters the score.**
-- 50,000-product frozen Amazon catalog; 200 public sessions; 800 held out.
 
-**Visual:** A ten-cell turn strip, cells 1–10, with a "hit" marker landing at
-turn 3. Underneath, the score formula with each of the three terms tinted.
+The customer has one specific product in mind and never names it. Each turn they
+disclose one more constraint — and we simply keep every one, verbatim:
 
-**Notes:** "Three things to hold onto. One: we're graded on whether the right
-product is in the top ten, how high it ranks, and how few turns it took. Two:
-efficiency is measured in *turns*, not seconds — latency is a timeout risk, not
-a score cost. Three: eight hundred of the thousand sessions are held out, so
-anything that only works on the public set is worth nothing."
+| | After turn 1 | After turn 2 |
+|---|---|---|
+| Customer said | "A key requirement is: black leather." | "…what matters is: formal." |
+| Slot state | `{material: leather, color: black}` | `{…, style: formal}` |
+| **Ledger** | `["A key requirement is: black leather."]` | `[…, "For that, what matters is: formal."]` |
+| **Query** | `"black leather"` | `"black leather formal"` |
 
-**Source:** `docs/todo.md` framing point 2; `docs/agent_api_contract.json`
-(`turn` max 10, `top_k` const 10); Lark §4.3 Limits; Lark §4.4 Competition Data.
+- Append-only. **No deletion method exists** — enforced by an AST test that
+  scans the module for any function named like `clear`/`remove`/`pop`/`reset`.
+- The typed slot view exists to catch contradictions and drive the override —
+  and is **architecturally barred from touching retrieval**, asserted by test.
+
+**Visual:** The table above, with a second panel: a red "parser bug" injected
+into the slot row, and the Query row visibly unchanged.
+
+**Notes:** "Here's the safety property. Suppose our parser mis-tags 'black
+leather' as colour-only. The slot state is now wrong — but the query is
+unaffected, because the word 'leather' is sitting in the raw string whether or
+not the parser ever tagged it. A parsing bug can corrupt *which question we
+ask*. It cannot corrupt *what we search*. That's the concrete reason structured
+slot parsing bought us nothing measurable when we tried it as a retrieval input:
+it was never wired into search in the first place."
+
+**Source:** `src/ledger.py:35-95`; `src/slots.py:3-12`;
+`tests/test_src_layering.py::test_ledger_defines_no_erasing_api`; the worked
+example is from the design of record ("Statement 4 Architecture v5").
+
+**Presenter note, do not put on the slide:** today `SlotState` is consumed only
+by the override path (`slots.apply_override:148-153` reads it to detect the
+contradiction). Ask selection reads the ask registers, not the slots. So say
+"slots catch contradictions", not "slots decide what we ask" — the second is the
+design intent, not the current wiring.
 
 ---
 
@@ -96,6 +118,13 @@ uncertainty rather than the flattering one.
 Leaky detail: hit@10 **0.9950**, MRR **0.705855**, MTTC **2.86**
 Scrubbed detail: hit@10 **0.6600**, MRR **0.251944**, MTTC **6.41**
 
+*Scoring legend — render as a footer, small:*
+
+> `TechnicalScore = 0.50·HitRate@10 + 0.30·MRR + 0.20·Efficiency`
+> `Efficiency = clip((11 − MTTC) / 10, 0, 1)` — **turn-based. Wall-clock never
+> enters the score.**
+> 200 public sessions; 800 held out.
+
 **Visual:** A horizontal range bar per system — the bar spans scrubbed→leaky, so
 the *width* is the uncertainty. The organizer baseline is a single tick far to
 the left. This one picture makes slide 4 almost unnecessary.
@@ -107,6 +136,8 @@ depending on which end you read. Against our own first attempt we gained
 
 **Source:** `results_src.md` rows 2026-08-31 02:21 and 02:11 (`6e4c32b`);
 `README.md` §Results; baseline `0.106710` from `scripts/evaluate_src.py:92`.
+Scoring legend: `docs/agent_api_contract.json` (`turn` max 10, `top_k` const 10);
+Lark §4.3 Limits; Lark §4.4 Competition Data; `docs/todo.md` framing point 2.
 
 ---
 
@@ -167,7 +198,9 @@ pipeline, with our bar essentially at the axis. Keep the comparison honest and
 label it as illustrative.
 
 **Notes:** "This is the Feasibility slide. There is nothing to provision, nothing
-to pay for, no key to rotate, and no rate limit to hit. We verified the offline
+to pay for, no key to rotate, and no rate limit to hit. And none of this scores
+— efficiency is measured in turns, not seconds — so speed here is a timeout
+risk we've removed, not a number we're buying. We verified the offline
 claim by running the whole thing inside a sandbox with networking revoked and
 confirming the scores were byte-identical — and we ran a control probe in the
 same sandbox to prove the block was real and not vacuous."
@@ -240,49 +273,7 @@ actually make this slow."
 
 ---
 
-## Slide 8 — The idea that carries the score
-
-**Says:** The concatenation of everything the customer literally said *is* the
-search query. Not an input to building one — the thing itself.
-
-**On the slide:**
-
-| | After turn 1 | After turn 2 |
-|---|---|---|
-| Customer said | "A key requirement is: black leather." | "…what matters is: formal." |
-| Slot state | `{material: leather, color: black}` | `{…, style: formal}` |
-| **Ledger** | `["A key requirement is: black leather."]` | `[…, "For that, what matters is: formal."]` |
-| **Query** | `"black leather"` | `"black leather formal"` |
-
-- Append-only. **No deletion method exists** — enforced by an AST test that
-  scans the module for any function named like `clear`/`remove`/`pop`/`reset`.
-- The typed slot view exists to catch contradictions and drive the override —
-  and is **architecturally barred from touching retrieval**, asserted by test.
-
-**Visual:** The table above, with a second panel: a red "parser bug" injected
-into the slot row, and the Query row visibly unchanged.
-
-**Notes:** "Here's the safety property. Suppose our parser mis-tags 'black
-leather' as colour-only. The slot state is now wrong — but the query is
-unaffected, because the word 'leather' is sitting in the raw string whether or
-not the parser ever tagged it. A parsing bug can corrupt *which question we
-ask*. It cannot corrupt *what we search*. That's the concrete reason structured
-slot parsing measured plus zero point zero zero zero for us: it was never wired
-into search in the first place."
-
-**Source:** `src/ledger.py:35-95`; `src/slots.py:3-12`;
-`tests/test_src_layering.py::test_ledger_defines_no_erasing_api`; the worked
-example is from the design of record ("Statement 4 Architecture v5").
-
-**Presenter note, do not put on the slide:** today `SlotState` is consumed only
-by the override path (`slots.apply_override:148-153` reads it to detect the
-contradiction). Ask selection reads the ask registers, not the slots. So say
-"slots catch contradictions", not "slots decide what we ask" — the second is the
-design intent, not the current wiring.
-
----
-
-## Slide 9 — Understanding the customer
+## Slide 8 — Understanding the customer
 
 **Says:** The customer speaks in a closed set of sentence shapes, so we *decode*
 intent exactly rather than estimating it.
@@ -318,12 +309,14 @@ attributes the customer would happily have answered later."
 
 ---
 
-## Slide 10 — Deciding what to ask
+## Slide 9 — Deciding what to ask
 
 **Says:** Seven fixed questions, then an adaptive ladder — and never a null
 question, ever.
 
 **On the slide:**
+- Ten turns, hard stop — exceed it and the session scores zero. So the schedule
+  is the whole budget, not a preference.
 - Turns 1–7, fixed order: `material → feature → color → style → size →
   use_case → budget`. Seven because those are the only labels the evaluator's
   own classifier can return.
@@ -352,7 +345,7 @@ exactly zero, because we were going to spend that turn anyway."
 
 ---
 
-## Slide 11 — Never show the same product twice
+## Slide 10 — Never show the same product twice
 
 **Says:** In a running session, everything still on screen is confirmed wrong —
 so we push it down. But we never remove it.
@@ -384,7 +377,7 @@ shape and simply switch recording off until the override lands."
 
 ---
 
-## Slide 12 — Engineering for the silent zero
+## Slide 11 — Engineering for the silent zero
 
 **Says:** The evaluator turns a crash and a malformed response into the same
 silent zero. That single fact shaped the whole codebase.
@@ -417,7 +410,7 @@ behaviour."
 
 ---
 
-## Slide 13 — Method: the score is not the objective
+## Slide 12 — Method: the score is not the objective
 
 **Says:** We declined three changes that would have raised our score, and kept
 one that lowered it.
@@ -452,7 +445,7 @@ point 2; Lark §4.6 (the five weights).
 
 ---
 
-## Slide 14 — Limitations, and what's next
+## Slide 13 — Limitations, and what's next
 
 **Says:** Here is what we know is weak, stated before anyone asks.
 
@@ -509,7 +502,7 @@ things we chose not to build.
 | II | Guide convergence | **Built** — stops mining once the card is provably full |
 | II | Over-generality pool cutoff | **Not built** — our truncation is unconditional |
 | III | Short-term session state from history | **Built** — ledger, slots, two ask registers, shown set |
-| III | Long-term user profile | **Not read** — see slide 14 |
+| III | Long-term user profile | **Not read** — see slide 13 |
 | III | Adaptive orchestration | **Built, deterministic** — turns 8–10 re-plan against live state |
 | IV | Hit@K / MRR / MTTC | **Built and exceeded** — plus the leak bracket you didn't ask for |
 
@@ -797,6 +790,7 @@ Numbers you will be asked for, in the form you should say them:
 | "What's your score?" | "0.872057 leaky, 0.497383 scrubbed — and I'll explain why there are two." |
 | "How does that compare?" | "The organizer's baseline is 0.106710. Our own first-generation system was 0.692586 leaky." |
 | "What model?" | "None. Zero tokens, zero dollars, no network." |
+| "How is it scored?" | "Half hit-rate at ten, three-tenths MRR, two-tenths efficiency — and efficiency is *turns*, not seconds." |
 | "How fast?" | "1.16 seconds to build the index once, about 19 milliseconds a turn." |
 | "How big is the code?" | "18 modules, 3,056 lines, standard library only. 390 tests." |
 | "Why no LLM?" | "In ranking it can't abstain. In intent parsing a regex is already exact." |
