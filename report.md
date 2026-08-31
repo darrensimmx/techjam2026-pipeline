@@ -202,6 +202,21 @@ banking them; the whole argument rests on the ASIN-vs-integer ratio.*
 
 ## 5. Model selection
 
+> **SUPERSEDED on the choice, not on the reasoning (1 Sep 2026).** The shipped
+> model is now **`gemini-3.7-flash`**, not the `gemini-3.5-flash` this section
+> selects. The tables below are left exactly as measured — they are a record of
+> the comparison that was actually run, and rewriting their rows to a model that
+> was never in them would be a fabrication.
+>
+> **The one row that did not survive is the latency column.** This section quotes
+> `0.14 s` for generation at a 50-candidate window, sourced from published
+> leaderboard figures. Measured live in the production config on 1 Sep 2026,
+> `gemini-3.7-flash` runs **7.9–25.1 s (median ~11 s)** on that exact window,
+> with **1 call in 8 returning HTTP 503** after 45.7 s. `gemini-3.5-flash`
+> measured 1.87 s on the same window. Published per-token generation latency
+> proved to be the wrong instrument for a 4.7k-token structured-output call —
+> off by roughly two orders of magnitude. See README.md's disclosure table.
+
 **Reasoning mode is disqualifying.** Published leaderboard latency is quoted at
 high effort: Gemini 3.5 Flash at `high` is 15.28 s to first token, GPT-5.6 Luna
 at `xhigh` is 60.67 s. Every arm must be pinned to minimum-reasoning mode. This

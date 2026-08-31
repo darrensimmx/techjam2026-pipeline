@@ -158,7 +158,7 @@ is a parameter default with no named constant at all.
 |---|---|---|---|---|
 | `src/rerank.py` | `load_reranker(enabled=True)` — **param default, no constant** | on | `ms-marco-MiniLM-L-6-v2` | `sentence-transformers` + `data/models/` checkpoint |
 | `src/semantic.py` | `TIER2_ENABLED` | `True` | `rung3_centroid` | `model2vec` + `data/models/potion-base-8m` |
-| `src/llm_rerank.py` | `LLM_RERANK_ENABLED` | `True` | `gemini-3.5-flash` | `google-genai` + `GEMINI_API_KEY` |
+| `src/llm_rerank.py` | `LLM_RERANK_ENABLED` | `True` | `gemini-3.7-flash` | `google-genai` + `GEMINI_API_KEY` |
 | `src/askyield.py` | `ADAPTIVE_ENABLED` | `False` | off | — |
 
 **A flipped flag is necessary but not sufficient**: each loader checks its flag,
