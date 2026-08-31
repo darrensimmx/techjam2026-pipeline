@@ -29,6 +29,7 @@ a scrubbed row, because both reference constants were measured under the leak.
 
 | when (UTC) | commit | branch | score | vs starter | vs baseline | hit@10 | mrr | mttc | note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-31 22:35 | `cfd6841*` | `fix-entrypoint-robustness` | **0.872057** | +0.179471 | +0.765347 | 0.9950 | 0.705855 | 2.86 | [both -> leaky] verify entrypoint fix does not move the score [dataset: public_set.jsonl] |
 | 2026-08-31 21:02 | `cb5817e*` | `enable-layer3-live` | **0.913500** | -- | -- | 1.0000 | 0.925000 | 4.2 | [leaky] live gemini smoke test, 10 sessions (4 intent_override/3 boundary/2 browsing/1 buying) [dataset: llm_smoke_set.jsonl] [10 sessions -- NOT the 200-session set] |
 | 2026-08-31 02:21 | `6e4c32b*` | `src-rebuild` | **0.872057** | +0.179471 | +0.765347 | 0.9950 | 0.705855 | 2.86 | [both -> leaky] verify bracket-mixing fix [dataset: public_set.jsonl] |
 | 2026-08-31 02:11 | `6e4c32b*` | `src-rebuild` | **0.872057** | +0.179471 | +0.765347 | 0.9950 | 0.705855 | 2.86 | [leaky] PR verification: leaky arm alone, consistent row [dataset: public_set.jsonl] |
