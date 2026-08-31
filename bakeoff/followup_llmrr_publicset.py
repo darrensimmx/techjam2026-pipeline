@@ -88,11 +88,13 @@ QUOTA = {"buying": 12, "browsing": 12, "intent_override": 4, "boundary": 2}
 SEED = 20260901
 
 # The per-call deadline and the per-session budget. Neither exists in `src/`:
-# `safe_rerank` and `_rerank` have NO time budget, and `load_reranker`'s
-# `timeout_s` reaches only the inert `_load_checkpoint`. A sync SDK call cannot
-# be interrupted from the calling thread, so the client timeout IS the
-# mechanism -- and `max_retries=0` is the load-bearing half, because the SDK
-# default of 2 means a worst case of 3x the deadline on a single turn.
+# `safe_rerank` and `_rerank` have NO time budget, and `load_reranker` has none
+# either -- it used to take a `timeout_s` that `_load_checkpoint` accepted and
+# ignored, and that parameter was deleted on 1 Sep 2026 rather than left to
+# imply a budget it never applied. A sync SDK call cannot be interrupted from
+# the calling thread, so the client timeout IS the mechanism -- and
+# `max_retries=0` is the load-bearing half, because the SDK default of 2 means
+# a worst case of 3x the deadline on a single turn.
 CALL_DEADLINE_S = 6.0
 SESSION_BUDGET_S = 20.0
 

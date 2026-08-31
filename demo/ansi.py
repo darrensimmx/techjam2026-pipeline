@@ -75,7 +75,15 @@ def configure(no_color: bool = False, stream: object = None) -> bool:
     target = stream if stream is not None else sys.stdout
 
     try:
-        target.reconfigure(line_buffering=True)  # type: ignore[attr-defined]
+        # encoding: box() draws its frame with non-ASCII characters, and Python
+        # picks the LOCALE encoding for a redirected stdout -- so `python -m
+        # demo.backend > out.txt` (or a pipe, or a pager) died with
+        # UnicodeEncodeError on a cp1252 Windows box. An interactive console is
+        # fine because Python uses the console API there, which is why this
+        # only ever showed up under capture. errors="replace" so an exotic
+        # locale degrades to "?" rather than killing the render.
+        target.reconfigure(  # type: ignore[attr-defined]
+            line_buffering=True, encoding="utf-8", errors="replace")
     except Exception:
         pass
 

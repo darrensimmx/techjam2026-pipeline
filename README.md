@@ -231,6 +231,64 @@ looks like a clean run.** That single fact governs every design decision here:
   seven-attribute fixed schedule for turns 1–7, then a fallthrough ladder
   re-evaluated independently on each free turn.
 
+### Two local models, deliberately judged by two different rules
+
+The system carries two small local models. They are easy to mistake for
+competitors — both are optional Layer 3, both were picked from a measured field,
+both fall back to a null implementation. They are not competitors. They sit at
+**opposite ends of the same pass**, and the reason they matter here is that
+choosing either one by the other's metric picks the wrong winner.
+
+```text
+customer reply ──▶ [centroid: what did they SAY?] ──▶ ledger ──▶ query
+                                                                  │
+                                                                  ▼
+     top-10 ◀── [cross-encoder: which products MATCH?] ◀── BM25 retrieval
+```
+
+| | Tier 2 centroid | Cross-encoder rerank |
+|---|---|---|
+| Task | classify customer intent | rank products by relevance |
+| Input | one customer reply | (query, product) pairs |
+| Output | one of eight intent frames | a relevance score |
+| **If it is wrong** | a constraint bucket is retired **permanently** | the list is ordered slightly worse |
+| **What it falls back to** | Tier 1's miss handling | BM25's own order — always available, always safe |
+| Can it abstain? | **yes** — returns `None` | no — it always scores |
+
+That difference in *failure cost* is what sets the selection rule:
+
+- **The centroid optimises for zero-wrong.** `potion-base-8M` recovers only 39
+  of 168 held-out paraphrases and abstains on 109 — but it is wrong **0 times**.
+  The alternative, an mpnet-based decoder, more than doubles recovery (105) and
+  is wrong **29 times**. On combined recovery mpnet wins outright, 0.7262 to
+  0.3333, and we shipped the loser on purpose. A wrong decode here silently
+  retires a live constraint bucket for the rest of the session and no later turn
+  can undo it; an abstention costs nothing at all, because Tier 1's existing miss
+  handling simply runs. Buying 66 extra recoveries at the price of 29 permanent
+  losses is a bad trade at any exchange rate.
+- **The cross-encoder optimises for accuracy.** `ms-marco-MiniLM-L-6-v2` wins its
+  four-arm comparison at 84.38% hit rate and is also the second-cheapest arm; the
+  two slowest arms are the two worst, so there is no latency being bought here.
+  It is allowed to chase accuracy precisely *because* it cannot lose anything:
+  `safe_rerank` discards any result that is not a permutation of its input, so
+  the worst case is BM25's ordering — the exact behaviour of the system without
+  it.
+
+This asymmetry is not a post-hoc rationalisation of two independent model picks.
+It is why `src/semantic.py::REFUSAL_BIAS_MARGIN` exists at all: when the centroid
+would answer "exhaustion" (bucket empty, retire it) but `refusal` (bucket still
+live, ask again later) is within 0.15 cosine, it is **forced** to the reversible
+answer. The margin is an unvalidated designed default carried live and disclosed
+as one — see Limitations.
+
+**Provenance, since these two tables do not have equal standing.** The
+cross-encoder comparison has a harness (`bakeoff/part4_checkpoint_comparison.py`,
+32 sessions, six arms of which four are quoted) but its run was never archived to
+a results file, and it has no confidence interval. The centroid comparison has
+**no harness in this repo at all** — the table is the run's only trace. Both are
+recorded as debts in `docs/todo.md` rather than presented as settled
+measurements.
+
 ### The routed LLM escalation
 
 The one place a language model touches the system, and it sits in **ranking**,
@@ -346,23 +404,45 @@ The gain is *larger* with the leak removed, which is the opposite of a
 measurement artifact. The organizer's published BM25 baseline is HitRate@10
 `0.125`.
 
-### With the cross-encoder enabled
+### With the three Layer 3 seams enabled
 
-⏳ **Measurement in progress.** The rows above are the offline core with all
-three Layer 3 seams inert — the configuration that was current when they were
-recorded (31 Aug 2026). The cross-encoder was enabled on 1 Sep 2026 and **there
-is no committed full-public-set score for the enabled configuration yet**; the
-run is slow because the checkpoint scores 50 pairs per turn on CPU.
+⏳ **Measurement outstanding — and the rows above are not it.** Those were
+recorded on 31 Aug 2026, when all three Layer 3 seams were inert; that was the
+shipped configuration then and it is not the shipped configuration now. The
+seams went live on 1 Sep 2026 and **no full-public-set score has been committed
+for the enabled configuration.** The run is slow because the cross-encoder
+scores 50 pairs per turn on CPU.
 
-What is measured about the cross-encoder is component-level, not end-to-end:
-**+0.047 `TechnicalScore`** with the CI excluding zero, at the top-10 and top-20
-windows (`bakeoff/results-part4.json`); at top-50 the delta is +0.017 and its CI
-*includes* zero. On the ESCI rig — 600 real Amazon-customer queries with human
-relevance labels — the same checkpoint moves MRR@10 from 0.6686 to 0.7173.
+**Do not quote the rows above as the score of the shipped configuration.** They
+are the correct, current numbers for the stdlib-only core — which is a real
+configuration the agent still supports and still degrades to — and they are the
+wrong numbers for what ships. Keeping that distinction visible is exactly what
+this repo's run log exists for.
 
-**Do not quote the rows above as the score of the shipped configuration** until
-this row is filled in. That is exactly the kind of drift this repo's run log
-exists to prevent.
+What *is* measured is component-level, not end-to-end:
+
+- **Cross-encoder, the effect:** **+0.047 `TechnicalScore`** with the CI
+  excluding zero at the top-10 and top-20 windows (`bakeoff/results-part4.json`).
+  At top-50 — the window actually shipping — the delta is **+0.017 and its CI
+  includes zero**, so the headline pairs the best arm's delta with the slowest
+  arm's cost and is owed a reconciliation (`docs/todo.md` item 4). On the ESCI
+  rig, 600 real Amazon-customer queries with human relevance labels, the same
+  checkpoint moves MRR@10 from 0.6686 to 0.7173 — independent corroboration of
+  the *direction* only.
+- **Cross-encoder, the checkpoint:** chosen over three alternatives at 84.38%
+  hit rate — see "Two local models" above.
+- **Tier 2 centroid:** cannot be measured on this simulator *at all*, and that is
+  structural rather than an omission. Every customer utterance here is one of
+  eight f-strings and Tier 1 decodes all eight, so Tier 2 never fires. It exists
+  for the private set, where the organizers reserved the right to paraphrase.
+- **LLM escalation:** a 10-session live smoke run scored 0.9135 leaky with
+  hit@10 1.0000 (logged in `results_src.md`, labelled "NOT the 200-session set").
+  It reported **0 prompt and 0 completion tokens** — the escalation never fired,
+  because it requires *zero* literal overlap between the disclosed constraints
+  and the window, and the leaky bracket has 94.5% verbatim overlap by
+  construction. The isolated call is proven and the pipeline runs clean; the live
+  path *inside* a real session is not yet proven, and forcing it needs a scrubbed
+  run.
 
 ## Limitations, and what we would improve with more time
 

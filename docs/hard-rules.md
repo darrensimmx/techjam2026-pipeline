@@ -131,8 +131,14 @@ Added 29 Aug 2026. Authoritative source: `techjam2026-docs/project/glossary.md`.
 
 - **intent classifier** — the shipping component: a regex **frame decode** (which reply
   branch emitted this string) plus a semantic fallback for the paraphrase case. In this
-  repo the Tier 1 half is `src/frames.py`. Tier 2 (`src/semantic.py`) is seamed but
-  **not approved to build**, and is inert.
+  repo the Tier 1 half is `src/frames.py`. Tier 2 (`src/semantic.py`) was **approved,
+  built and turned live on 1 Sep 2026** — rung 3, embedding nearest-centroid over
+  `potion-base-8m` (`docs/todo.md` item 1). This entry previously read "seamed but **not
+  approved to build**, and is inert"; that is no longer true. It still degrades to
+  `NullSemanticDecoder` — abstain always, i.e. exactly the old inert behaviour — when
+  `model2vec` or the vendored weights are missing, and it fires only on a Tier 1
+  `unknown`, so **it never overrides Tier 1** and rule 4 below still governs the decline
+  split.
 - **decline split** — refusal vs. exhaustion on the token `additional`. **An output of
   the frame decode, not a component.** Do not give it its own module or diagram box.
   Rule 4 above is the rule; `src/frames.py` implements it as `_F6_EXHAUSTION` tried

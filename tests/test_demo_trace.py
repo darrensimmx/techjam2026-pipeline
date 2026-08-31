@@ -600,9 +600,13 @@ class BackendIndependence(DemoFixture):
             "raise SystemExit(backend.main(['--replay', sys.argv[1], '--no-color',\n"
             "                               '--width', '100', '--speed', '1000']))\n"
         )
+        # encoding: without it the PARENT decodes with the locale encoding too,
+        # so the box-drawing frame the child now emits as UTF-8 would come back
+        # as mojibake. The ASCII assertions below would still pass, which is
+        # the wrong reason to be green.
         result = subprocess.run(
             [sys.executable, "-c", script, str(path)],
-            capture_output=True, text=True, cwd=str(ROOT))
+            capture_output=True, text=True, encoding="utf-8", cwd=str(ROOT))
         self.assertEqual(0, result.returncode, result.stderr[-2000:])
         for block in ("INPUT & DECODE", "QUERY & POOL", "PICKS", "GROUND TRUTH"):
             self.assertIn(block, result.stdout)

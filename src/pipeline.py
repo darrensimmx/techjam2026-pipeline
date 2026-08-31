@@ -98,8 +98,10 @@ def run_turn(session: Session, user_message: object, turn: object,
      15  overlap.gate (order-only, stable -- composes with 14)
      16  LLMRR: escalate to the LLM reranker ONLY when overlap.gate found
          zero literal overlap ("vague") -- report.md's design of record.
-         Skipped whenever deps.llm_reranker is None, which is every turn
-         until a model is chosen. Order-only, safe_rerank-guarded like 14.
+         Skipped whenever deps.llm_reranker is None -- no longer "every turn
+         until a model is chosen": gemini-3.5-flash is chosen and live, so
+         this is now the turns where the package or the API key is absent.
+         Order-only, safe_rerank-guarded like 14.
      17  picks = (window + rest of fresh + seen)[:top_k]   <- never short
      18  shown.record(picks)
      19  attribute = askyield.next_attribute(...)  <- never None, never "other"
@@ -483,11 +485,25 @@ def _llm_escalate(deps: Deps, query: str, session: Session, decode: Decode,
     found zero literal overlap ("vague" -- keyword matching has gone blind).
     Any literal overlap at all means BM25 + the cross-encoder are already
     doing the right thing, so the LLM is skipped -- report.md's design of
-    record, section 7. INERT (skipped) whenever deps.llm_reranker is None,
-    which is every turn until a model is chosen and enabled (docs/todo.md
-    item 3). Order-only and safe_rerank-guarded, identically to the
-    cross-encoder at step 14 -- a broken or hallucinating model costs BM25's
-    order and nothing else.
+    record, section 7.
+
+    Skipped whenever deps.llm_reranker is None. That used to be EVERY turn,
+    "until a model is chosen and enabled"; since 1 Sep 2026 gemini-3.5-flash is
+    chosen and LLM_RERANK_ENABLED is True (docs/todo.md item 3), so it is now
+    only the machines where `google-genai` or GEMINI_API_KEY is missing -- which
+    includes any rig scoring with the network off, by design.
+
+    Order-only and safe_rerank-guarded, identically to the cross-encoder at step
+    14 -- a broken or hallucinating model costs BM25's order and nothing else.
+
+    Note how narrow the live branch is: it needs `report.segments > 0` AND
+    `report.rate == 0.0`, i.e. the customer has disclosed something and NONE of
+    it appears literally in the window. Against the leaky bracket, where 94.5% of
+    disclosed constraint strings are verbatim substrings of the target listing,
+    that condition is close to unreachable and this function will report (0, 0)
+    tokens for a whole run. That is a property of the simulator, not evidence the
+    layer is inert -- confirm with load_llm_reranker().name, never with a token
+    count.
     """
     if not window:
         return window, 0, 0
