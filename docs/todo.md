@@ -219,10 +219,15 @@ Observed on the first live exercise of the decoder (1 Sep 2026): a light
 exhaustion paraphrase scored `exhaustion` 0.649 / `refusal` 0.590 — a +0.059
 delta, inside the margin — and resolved to `refusal`. Intended behaviour, and a
 real trade: the frame read was wrong, and the price was one idle-turn re-ask
-rather than a bucket retired forever. Also noted at the guard: `refusal`'s score
-defaults to `0.0` when the refusal anchor is missing from the scored set, which
-makes the guard a **no-op exactly when the refusal signal is what has gone
-missing** — it fails open, not safe.
+rather than a bucket retired forever.
+
+*A bug found at that guard while writing this, and fixed rather than recorded.*
+`refusal`'s score defaulted to `0.0` when the refusal anchor was missing from the
+scored set, which made the guard a **no-op exactly when the refusal signal was
+what had gone missing** — it failed open. It now uses a `None` sentinel and takes
+the same branch as a near-tie. **This does not validate `0.15`**; debt 2 stands
+exactly as written above. Fixing the guard only means the margin is applied when
+it should be, not that it is the right margin.
 
 **Seam.** `src/semantic.py`. A rung registers itself in `RUNG_BUILDERS` and
 declares its imports in `RUNG_DEPENDENCIES`; `load_semantic_decoder()` gates on

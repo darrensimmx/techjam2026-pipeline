@@ -162,15 +162,16 @@ CENTROID_THRESHOLD: float = 0.52
 # frame read was wrong, and the price paid for it was one idle-turn re-ask
 # instead of a bucket retired forever.
 #
-# ONE LIVE EDGE CASE, in the guard below rather than in this constant:
-# `scores_by_frame.get("refusal", 0.0)` defaults refusal's score to 0.0 when
-# refusal is absent from `scored`, which happens only if _cosine returns None
-# for the refusal anchor specifically (a shape mismatch on that one vector). In
-# that branch `best_score - 0.0` clears any sane margin, so the guard silently
-# becomes a no-op exactly when the refusal signal is the thing that has gone
-# missing. Left as-is because it is unreachable with real anchors from a single
-# embedder -- but it fails OPEN, not safe, and that is the wrong direction for
-# this particular check.
+# ONE EDGE CASE, FIXED -- it lives in the guard below rather than in this
+# constant. `scores_by_frame.get("refusal", 0.0)` used to default refusal's
+# score to 0.0 when refusal was absent from `scored`, which happens if _cosine
+# returns None for the refusal anchor specifically (a shape mismatch on that one
+# vector). `best_score - 0.0` then cleared any sane margin, so the guard
+# silently became a no-op exactly when the refusal signal was the thing that had
+# gone missing: it failed OPEN, which is the wrong direction for this particular
+# check. The default is now a `None` sentinel and that case takes the same
+# branch as a near-tie -- resolve to refusal. Pinned by
+# tests/test_src_semantic_rung3.py::test_missing_refusal_score_resolves_to_refusal_not_exhaustion.
 REFUSAL_BIAS_MARGIN: float = 0.15
 
 
@@ -230,10 +231,19 @@ class CentroidSemanticDecoder:
         # idle-turn re-ask. An early version of this check only compared
         # against second place, which missed exactly this case (a light
         # refusal paraphrase whose runner-up was "override", not "refusal").
+        #
+        # `refusal_score is None` -- refusal absent from `scored` because
+        # _cosine could not score its anchor -- takes the SAME branch as "too
+        # close to call". That is deliberate and it is a fix: the default used
+        # to be 0.0, which made `best_score - 0.0` clear any sane margin, so the
+        # guard silently no-opped and committed to exhaustion at exactly the
+        # moment the refusal signal was the thing that had gone missing. It
+        # failed open; the one check whose whole job is to prefer the reversible
+        # answer must fail safe.
         if best_frame == "exhaustion":
             scores_by_frame = dict((frame, score) for score, frame in scored)
-            refusal_score = scores_by_frame.get("refusal", 0.0)
-            if (best_score - refusal_score) < self._refusal_margin:
+            refusal_score = scores_by_frame.get("refusal")
+            if refusal_score is None or (best_score - refusal_score) < self._refusal_margin:
                 best_frame = "refusal"
 
         original = message if isinstance(message, str) else text

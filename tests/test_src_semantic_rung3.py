@@ -103,6 +103,30 @@ class TestRefusalBias(unittest.TestCase):
         result = decoder.decode("light paraphrase")
         self.assertEqual(result.frame, "refusal")
 
+    def test_missing_refusal_score_resolves_to_refusal_not_exhaustion(self):
+        """The guard must fail SAFE when refusal cannot be scored at all.
+
+        `scored` only carries frames whose `_cosine` returned a number, so a
+        malformed refusal anchor drops refusal out of it entirely. That score
+        used to default to 0.0, which cleared any sane margin and committed to
+        exhaustion -- retiring a constraint bucket forever at precisely the
+        moment the refusal signal had gone missing. Note the probe vector is
+        the same one `test_confident_exhaustion_still_wins_when_margin_is_wide`
+        uses: with a VALID refusal anchor it must still report exhaustion, so
+        the pair is what proves only the missing-anchor case changed.
+        """
+        anchors = {
+            "refusal": (1.0, 0.0),             # wrong length -> _cosine -> None
+            "exhaustion": (0.0, 1.0, 0.0),
+        }
+        embed = _embed_factory({"clearly exhausted": (0.0, 1.0, 0.0)})
+        decoder = CentroidSemanticDecoder(
+            embed=embed, anchors=anchors, threshold=0.52, refusal_margin=0.15)
+        result = decoder.decode("clearly exhausted")
+        self.assertIsNotNone(result)
+        self.assertEqual(result.frame, "refusal")
+        self.assertEqual(result.decline, "refusal")
+
 
 class TestContentFreeVsContentBearing(unittest.TestCase):
     def test_refusal_carries_no_payload(self):
