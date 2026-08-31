@@ -1,0 +1,80 @@
+# requirements-optional.txt -- the Layer 3 seams ONLY.
+#
+# READ THIS BEFORE INSTALLING ANYTHING HERE.
+#
+# 1. The graded path never needs any of it. `src/` is standard library only by
+#    design -- json, re, sqlite3, dataclasses, typing. That is a deliberate
+#    submission decision, not an accident of the build: `submission_rules.md`
+#    reserves the organizer's right to run the submission under CPU, memory,
+#    timeout and network restrictions, so fewer dependencies is less that can
+#    fail when it counts. The agent must score with NOTHING from this file
+#    installed, and that is the configuration we ship.
+#
+# 2. `requirements.txt` stays empty (comments only) DELIBERATELY. Do not move
+#    anything from here into it. If a layer below is ever approved and turned
+#    on, that is a submission-level decision with a disclosure attached -- not
+#    a line edit.
+#
+# 3. Installing any of these changes NOTHING on its own. Every optional layer
+#    is gated by a flag that is False in the source, and each loader checks the
+#    flag BEFORE it checks for the dependency. A pip install with the flag
+#    still False leaves the null implementation in place, byte for byte.
+#
+#      src/semantic.py    TIER2_ENABLED       = False   Tier 2 semantic fallback
+#      src/llm_rerank.py  LLM_RERANK_ENABLED  = False   LLM ranking escalation
+#      src/rerank.py      load_reranker(enabled=False)  cross-encoder rerank
+#
+#    Every entry is commented out because no checkpoint and no model has been
+#    chosen -- see docs/todo.md items 1, 3 and 4. Pinning a version here would
+#    imply a decision nobody has made.
+#
+# 4. Nothing here is importable except through `src/optional_deps.try_import`,
+#    which returns None on ANY failure -- including a package that raises at
+#    import time, which a narrow `except ImportError` would miss.
+
+
+# -- Tier 2 semantic fallback (src/semantic.py) --------------------------------
+# Rung 3 (embedding nearest-centroid) and rung 4 (a small trained head on the
+# same frozen encoder) both run exactly one encoder pass and need the same
+# runtime. Rung 4 additionally needs a training run, which this project's
+# sandbox cannot do -- no network to fetch weights. See docs/todo.md item 1.
+# Encoder only. No SLM, no LLM: a generative model has no calibrated score to
+# threshold and therefore cannot abstain.
+#
+# sentence-transformers
+# torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
+# numpy
+
+
+# -- Cross-encoder rerank (src/rerank.py) --------------------------------------
+# Bundled and offline -- no network at any point. Same runtime as above; a
+# checkpoint has never been chosen, and the three open axes (which checkpoint,
+# the per-turn cost against an unpublished organizer timeout, and the rubric
+# reading) are docs/todo.md item 4. Weights would ship as a local asset, NOT as
+# a download at load time.
+#
+# sentence-transformers
+# torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
+
+
+# -- LLM ranking escalation (src/llm_rerank.py) --------------------------------
+# UNDECIDED, and the only language model anywhere in the system. Whatever lands
+# here must be disclosed per `submission_rules.md`: model choice, approximate
+# cost, token usage, latency and fallback behaviour. API keys go in environment
+# variables and are never committed. Because official scoring may run with the
+# network disabled, an API-backed client must declare that it needs live
+# credentials AND keep the offline fallback -- which is NullLlmReranker.
+# See docs/todo.md item 3.
+#
+# (no client library listed -- no provider has been chosen)
+
+
+# -- Bake-off / measurement tooling -- NOT part of the submission ---------------
+# `bakeoff/` is dev tooling and never reaches the organizer. Its dependencies
+# are listed for reproducibility only; installing them has no effect on the
+# agent. See bakeoff/README.md.
+#
+# sentence-transformers
+# torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
+# pandas
+# pyarrow

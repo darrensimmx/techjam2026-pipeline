@@ -3,6 +3,9 @@ __pycache__/
 .venv/
 .DS_Store
 results.json
+# evaluate_src.py's per-session dump. results_src.md (the run log) IS tracked --
+# no committed baseline artifact exists, so an unrecorded number is a lost number.
+results_src.json
 data/catalog.jsonl
 results_offline.json
 results_offline_plain.json
