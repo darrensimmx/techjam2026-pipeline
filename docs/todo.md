@@ -98,10 +98,27 @@ so latency is a *timeout risk* and a Feasibility disclosure, never a score cost.
 
 ## 1. Tier 2 implementation — which "rung" fills the one slot
 
-**The decision.** Tier 2 is the semantic fallback that fires only on a Tier 1
-`unknown` frame. It exists for the **private set**, where the organizers have
-reserved the right to add natural-language paraphrasing. There is exactly one
-slot, and exactly one rung ships in it.
+**DECIDED 1 Sep 2026 — rung 3, potion-8m.** Held-out numbers, 168-item
+paraphrase set:
+
+| setup | recovered | wrong | abstained | combined |
+|---|---|---|---|---|
+| potion-8m / stripped @ 0.52 | 39 | **0** | 109 | 0.3333 |
+| mpnet / multi @ 0.31 | 105 | 29 | 14 | 0.7262 |
+
+mpnet recovers more but is wrong 29 times; potion-8m is wrong zero times. Per
+this file's own asymmetry rule below, a wrong refusal/exhaustion read
+permanently loses a constraint bucket while an abstention costs nothing — so
+zero-wrong is the property worth buying even at much lower combined recovery.
+`TIER2_ENABLED = True`, `SELECTED_RUNG = "rung3_centroid"`, `src/semantic.py`.
+Rung 4 is not built — it needed a training run this sandbox cannot do, and
+rung 3 already won on the numbers before that mattered.
+
+**The decision (superseded framing below, kept for context).** Tier 2 is the
+semantic fallback that fires only on a Tier 1 `unknown` frame. It exists for
+the **private set**, where the organizers have reserved the right to add
+natural-language paraphrasing. There is exactly one slot, and exactly one rung
+ships in it.
 
 **The options.**
 
@@ -245,9 +262,18 @@ exactly what hangs on a network-disabled rig.
 
 ## 4. Cross-encoder checkpoint
 
-**The decision.** Whether to ship a local cross-encoder rerank, and which
-checkpoint. It is bundled and offline — no network at any point — so this is not
-a network-policy question.
+**LIVE 1 Sep 2026 — `cross-encoder/ms-marco-MiniLM-L-6-v2`.** `load_reranker`
+now defaults `enabled=True`; `src/rerank.py::_load_checkpoint` loads the
+vendored checkpoint at `data/models/ms-marco-MiniLM-L-6-v2/`. It is the only
+checkpoint this project ever measured (below), so shipping it is not a blind
+choice — the "never compared" axis (below) is still genuinely open, just not
+a reason to withhold a validated default. Degrades to `NullReranker` if the
+checkpoint isn't vendored on a given machine or `sentence_transformers` isn't
+installed, exactly as before.
+
+**The decision (superseded framing below, kept for context).** Whether to ship
+a local cross-encoder rerank, and which checkpoint. It is bundled and offline
+— no network at any point — so this is not a network-policy question.
 
 **The headline evidence.** Recorded in the architecture document and `README.md`
 as **+0.047 TechnicalScore with the confidence interval excluding zero** at
@@ -454,6 +480,65 @@ assume. Absent that, the default is: **do not ship it**, and do not cite the
 **Seam.** `src/retrieval.py`, query construction (`MAX_QUERY_TERMS` unique
 stopword-filtered terms, OR-joined). `bakeoff/followup_phrase.py` and
 `bakeoff/followup_phrase_esci.py` hold the two measurements above.
+
+## 9. Dense fusion — deferred for architecture, not refuted by evidence
+
+**The decision.** Whether BM25 stays the sole retrieval route. **Deferred, and
+the reason is the dependency budget, not the measurement.** `docs/architecture-status.md`
+item 6 currently reads "rejected, not gated"; that wording is stronger than the
+evidence below supports and should be revised to match this section.
+
+**The evidence, both halves.**
+
+| measurement | arm | result |
+|---|---|---|
+| local public set (leaky), top-50 | dense alone (R2) | hit@10 **0.330** vs BM25 0.800 |
+| local public set (leaky), top-50 | RRF (R3) | hit@10 **0.720**, ΔTS −0.1110 |
+| local public set (leaky), top-100 | RRF (R3) | hit@10 **0.660**, ΔTS −0.1554 |
+| local public set (leaky), top-50 | weighted, w=0.2 (R4) | **+0.0228** ΔTechnicalScore (0.6926 → 0.7154), **no CI computed** |
+| ESCI, 600 human queries | BM25 (shipped) | recall@10 **0.8233**, mrr@10 0.6686 |
+| ESCI, 600 human queries | RRF | recall@10 **0.8733**, mrr@10 0.7089 |
+| ESCI, 600 human queries | weighted w=0.5 | recall@10 **0.8833**, mrr@10 0.7256 |
+
+**The asymmetry, stated plainly — and it points the opposite way from §8.** A
+**large loss** on the leaky local set and a **clear gain** (+0.060 recall@10)
+on real human queries is the signature of a **rig artifact suppressing a real
+improvement**, which is the mirror image of the `phrase_plus` case. Same
+mechanism, opposite sign: 94.5% of the simulator's constraint strings are
+verbatim substrings of the target listing, so the local rig hands lexical
+retrieval the answer key and gives semantic matching nothing left to recover.
+The target sits at BM25 rank 1 in 87 of 176 hit sessions but around dense rank
+72 — true on *this* rig, and the reason blending dilutes here.
+
+**Two caveats on the local numbers, both load-bearing.** R2 and R3 are the arms
+that lose; **R4, the weighted sweep, does not.** Its optimum is at w=0.1–0.2 on
+every configuration measured (minilm and bge, top-50 and top-100, both ledgers),
+not at w=0 as `bakeoff/part3_fusion.py`'s own docstring anticipated. It is also
+the one arm for which **no bootstrap CI was ever computed**, so +0.0228 is an
+unqualified point estimate and must not be quoted as a result. The blanket claim
+that "fusion loses on every arm" is true of R2 and R3 only.
+
+**Why it is not shipped now — the architectural reasons, which are the real ones.**
+
+1. **`src/` is standard library only and `requirements.txt` is comments-only by
+   design.** Dense retrieval means numpy, a sentence-transformer runtime, and a
+   bundled checkpoint — the first third-party dependency on the graded path.
+2. **Final scoring runs offline.** Each added dependency is another thing that
+   can fail to import or fail to locate its weights, and the evaluator converts
+   any such failure into a silent zero rather than an error.
+3. **There is no live encoder path.** Every number above is replayed from
+   precomputed `.npy` caches in `bakeoff/cache/`. A shippable implementation is
+   new work, not a port of existing code.
+
+**What would settle it.** Two cheap steps, in order, neither needing a model:
+bootstrap a CI on the existing R4 sweep so its sign is known rather than
+assumed; then decide the dependency question on its own terms, because that is
+what is actually blocking — not the score.
+
+**Seam.** `src/retrieval.py` is the route it would occupy. `bakeoff/dense.py`
+(encoders), `bakeoff/part2_dense.py::dense_topk`, and
+`bakeoff/part3_fusion.py::dense_ranker` / `rrf_ranker` / `weighted_ranker` hold
+the three fusion implementations measured above.
 
 ---
 

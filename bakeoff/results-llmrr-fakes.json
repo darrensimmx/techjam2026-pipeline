@@ -1,0 +1,1144 @@
+{
+  "source": "Reddy et al. 2022, arXiv:2206.06588; HF tasksource/esci",
+  "queries": 600,
+  "depths": [
+    10,
+    20,
+    50
+  ],
+  "encodings": [
+    "permutation",
+    "indices"
+  ],
+  "ce_cache": "ce-esci-top20.json",
+  "ce_depth": 20,
+  "overlap_cuts": [
+    0.5,
+    0.75
+  ],
+  "band_sizes": {
+    "vague": 274,
+    "mid": 151,
+    "literal": 175
+  },
+  "reachable_ceiling": {
+    "10": {
+      "all": 0.8233,
+      "vague": 0.7153,
+      "mid": 0.8609,
+      "literal": 0.96
+    },
+    "20": {
+      "all": 0.8567,
+      "vague": 0.7701,
+      "mid": 0.8808,
+      "literal": 0.9714
+    },
+    "50": {
+      "all": 0.9083,
+      "vague": 0.8431,
+      "mid": 0.9404,
+      "literal": 0.9829
+    }
+  },
+  "arms": {
+    "CE only (baseline)@10": {
+      "all": {
+        "recall@10": 0.8233,
+        "mrr@10": 0.7061,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7153,
+        "mrr@10": 0.6037,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8609,
+        "mrr@10": 0.7301,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.96,
+        "mrr@10": 0.8456,
+        "n": 175
+      }
+    },
+    "CE only (baseline)@20": {
+      "all": {
+        "recall@10": 0.845,
+        "mrr@10": 0.7173,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7518,
+        "mrr@10": 0.6209,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8742,
+        "mrr@10": 0.7424,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.9657,
+        "mrr@10": 0.8466,
+        "n": 175
+      }
+    },
+    "CE only (baseline)@50": {
+      "all": {
+        "recall@10": 0.845,
+        "mrr@10": 0.7173,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7518,
+        "mrr@10": 0.6209,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8742,
+        "mrr@10": 0.7424,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.9657,
+        "mrr@10": 0.8466,
+        "n": 175
+      }
+    },
+    "echo/permutation@10": {
+      "all": {
+        "recall@10": 0.8233,
+        "mrr@10": 0.7061,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7153,
+        "mrr@10": 0.6037,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8609,
+        "mrr@10": 0.7301,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.96,
+        "mrr@10": 0.8456,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "offline fake",
+          "slice": "mid",
+          "moved_top": false
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "offline fake",
+          "slice": "literal",
+          "moved_top": false
+        }
+      ]
+    },
+    "echo/permutation@20": {
+      "all": {
+        "recall@10": 0.845,
+        "mrr@10": 0.7173,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7518,
+        "mrr@10": 0.6209,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8742,
+        "mrr@10": 0.7424,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.9657,
+        "mrr@10": 0.8466,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "offline fake",
+          "slice": "mid",
+          "moved_top": false
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "offline fake",
+          "slice": "literal",
+          "moved_top": false
+        }
+      ]
+    },
+    "echo/permutation@50": {
+      "all": {
+        "recall@10": 0.845,
+        "mrr@10": 0.7173,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7518,
+        "mrr@10": 0.6209,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8742,
+        "mrr@10": 0.7424,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.9657,
+        "mrr@10": 0.8466,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "offline fake",
+          "slice": "mid",
+          "moved_top": false
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "offline fake",
+          "slice": "literal",
+          "moved_top": false
+        }
+      ]
+    },
+    "echo/indices@10": {
+      "all": {
+        "recall@10": 0.8233,
+        "mrr@10": 0.7061,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7153,
+        "mrr@10": 0.6037,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8609,
+        "mrr@10": 0.7301,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.96,
+        "mrr@10": 0.8456,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "",
+          "slice": "mid",
+          "moved_top": false
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "",
+          "slice": "literal",
+          "moved_top": false
+        }
+      ]
+    },
+    "echo/indices@20": {
+      "all": {
+        "recall@10": 0.845,
+        "mrr@10": 0.7173,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7518,
+        "mrr@10": 0.6209,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8742,
+        "mrr@10": 0.7424,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.9657,
+        "mrr@10": 0.8466,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "",
+          "slice": "mid",
+          "moved_top": false
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "",
+          "slice": "literal",
+          "moved_top": false
+        }
+      ]
+    },
+    "echo/indices@50": {
+      "all": {
+        "recall@10": 0.845,
+        "mrr@10": 0.7173,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7518,
+        "mrr@10": 0.6209,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8742,
+        "mrr@10": 0.7424,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.9657,
+        "mrr@10": 0.8466,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "",
+          "slice": "mid",
+          "moved_top": false
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": false
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "",
+          "slice": "literal",
+          "moved_top": false
+        }
+      ]
+    },
+    "reverse/permutation@10": {
+      "all": {
+        "recall@10": 0.8233,
+        "mrr@10": 0.3415,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7153,
+        "mrr@10": 0.2294,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8609,
+        "mrr@10": 0.3362,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.96,
+        "mrr@10": 0.5216,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "offline fake",
+          "slice": "mid",
+          "moved_top": true
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "offline fake",
+          "slice": "literal",
+          "moved_top": true
+        }
+      ]
+    },
+    "reverse/permutation@20": {
+      "all": {
+        "recall@10": 0.3833,
+        "mrr@10": 0.128,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.2664,
+        "mrr@10": 0.0642,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.3642,
+        "mrr@10": 0.1306,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.5829,
+        "mrr@10": 0.2255,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "offline fake",
+          "slice": "mid",
+          "moved_top": true
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "offline fake",
+          "slice": "literal",
+          "moved_top": true
+        }
+      ]
+    },
+    "reverse/permutation@50": {
+      "all": {
+        "recall@10": 0.1567,
+        "mrr@10": 0.0699,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.1423,
+        "mrr@10": 0.0547,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.1457,
+        "mrr@10": 0.0607,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.1886,
+        "mrr@10": 0.1016,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "offline fake",
+          "slice": "mid",
+          "moved_top": true
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "offline fake",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "offline fake",
+          "slice": "literal",
+          "moved_top": true
+        }
+      ]
+    },
+    "reverse/indices@10": {
+      "all": {
+        "recall@10": 0.8233,
+        "mrr@10": 0.3415,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.7153,
+        "mrr@10": 0.2294,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.8609,
+        "mrr@10": 0.3362,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.96,
+        "mrr@10": 0.5216,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "",
+          "slice": "mid",
+          "moved_top": true
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "",
+          "slice": "literal",
+          "moved_top": true
+        }
+      ]
+    },
+    "reverse/indices@20": {
+      "all": {
+        "recall@10": 0.3833,
+        "mrr@10": 0.128,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.2664,
+        "mrr@10": 0.0642,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.3642,
+        "mrr@10": 0.1306,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.5829,
+        "mrr@10": 0.2255,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "",
+          "slice": "mid",
+          "moved_top": true
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "",
+          "slice": "literal",
+          "moved_top": true
+        }
+      ]
+    },
+    "reverse/indices@50": {
+      "all": {
+        "recall@10": 0.1567,
+        "mrr@10": 0.0699,
+        "n": 600
+      },
+      "vague": {
+        "recall@10": 0.1423,
+        "mrr@10": 0.0547,
+        "n": 274
+      },
+      "mid": {
+        "recall@10": 0.1457,
+        "mrr@10": 0.0607,
+        "n": 151
+      },
+      "literal": {
+        "recall@10": 0.1886,
+        "mrr@10": 0.1016,
+        "n": 175
+      },
+      "latency_s": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "max": 0.0,
+        "n_live": 600,
+        "n_cached": 0
+      },
+      "contract_failures": {},
+      "call_failures": {},
+      "usage": {
+        "input": 0,
+        "output": 0,
+        "cache_read": 0
+      },
+      "rationales": [
+        {
+          "query": "$1 stuffed toy",
+          "reason": "",
+          "slice": "mid",
+          "moved_top": true
+        },
+        {
+          "query": "0.2 cu. ft. mini personal fridge in black without freezer",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "04 f150 black beadlight without amber",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "08 silverado headloght bulb",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "09 g6 wheel not cover grey",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 oz amber bottles without lid",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 qt saucepan without lid stainless steel",
+          "reason": "",
+          "slice": "vague",
+          "moved_top": true
+        },
+        {
+          "query": "1 year old girl toys",
+          "reason": "",
+          "slice": "literal",
+          "moved_top": true
+        }
+      ]
+    }
+  }
+}

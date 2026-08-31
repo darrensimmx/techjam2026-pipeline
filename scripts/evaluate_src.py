@@ -97,6 +97,13 @@ BASELINE_TECHNICAL_SCORE = 0.10671
 # local number (see CLAUDE.md) -- an upper bound, not a score.
 STARTER_TECHNICAL_SCORE = 0.692586
 
+# Both constants above were measured over ALL 200 public sessions. `--dataset`
+# accepts any JSONL, so a subset run is easy and legitimate -- scoring a
+# stratified 30-session sample, say -- but the delta columns must go blank when
+# it happens, or the durable log records a comparison across two different
+# population sizes with nothing on the row to show it.
+REFERENCE_SESSIONS = 200
+
 RESULTS_MD = ROOT / "results_src.md"
 RESULTS_MD_HEADER = """# `src/` benchmark results
 
@@ -283,14 +290,22 @@ def append_results_md(*, score: float, result: dict, note: str, degraded: bool,
     if dataset:
         safe_note = f"{safe_note} [dataset: {Path(dataset).name}]"
 
-    # Both reference constants were measured under the leak, so a delta against
-    # them is only meaningful for a leaky score. A scrubbed score gets `--`
-    # rather than a number that silently compares across brackets.
-    if reference_bracket == "leaky":
+    # Both reference constants were measured under the leak AND over all 200
+    # public sessions, so a delta against them needs both to hold. A scrubbed
+    # score gets `--` rather than a number that silently compares across
+    # brackets; a subset run gets `--` for the same reason one size up, because
+    # comparing a 30-session score against a 200-session constant is the same
+    # class of error as comparing across brackets -- and it is easier to make,
+    # since nothing about the row looks wrong.
+    sessions = len(result.get("sessions") or ())
+    comparable = reference_bracket == "leaky" and sessions == REFERENCE_SESSIONS
+    if comparable:
         vs_starter = _delta(score, STARTER_TECHNICAL_SCORE)
         vs_baseline = _delta(score, BASELINE_TECHNICAL_SCORE)
     else:
         vs_starter = vs_baseline = "--"
+    if sessions and sessions != REFERENCE_SESSIONS:
+        safe_note = f"{safe_note} [{sessions} sessions -- NOT the 200-session set]"
 
     row = (
         f"| {when} | `{git_commit()}` | `{git_branch()}` | **{score:.6f}** | "

@@ -55,7 +55,7 @@ python -m unittest tests.test_agent_contract.TestAgentContract.test_never_raises
 
 # Mirror the two CI jobs exactly. Modules are named EXPLICITLY in ci.yml, not
 # discovered, so a NEW TEST FILE DOES NOT RUN UNTIL IT IS ADDED THERE.
-python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval tests.test_src_shown tests.test_src_slots -v
+python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval tests.test_src_semantic_rung3 tests.test_src_shown tests.test_src_slots -v
 python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end -v
 
 # Real scoring run — THE SUBMISSION (needs data/catalog.jsonl).
