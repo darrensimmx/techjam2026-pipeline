@@ -1,0 +1,16 @@
+{
+ "label": "override_late_natural (adversarial: paraphrased override at t6, template override at t8)",
+ "target": "B09YMTWDXJ",
+ "messages": [
+  "I'm looking for Watches Wrist Watches. Stainless Steel Band",
+  "I don't have an additional preference for material.",
+  "For that, what matters is: Water Resistant; 3 Year Battery.",
+  "I don't have an additional preference for color.",
+  "I don't have an additional preference for style.",
+  "Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch.",
+  "I don't have an additional preference for use_case.",
+  "Actually, ignore my earlier preference. What I need is: Water Resistant.",
+  "I don't have an additional preference for budget.",
+  "For that, what matters is: Day / Date Indicator."
+ ]
+}

@@ -1,0 +1,233 @@
+### buying_natural same target B07QMS8TX8 free-form phrasing   degraded=False   target=B07QMS8TX8
+
+--- turn 1 ---
+  user: hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B07QMS8TX8  Medical Cargo Pants for Men Workwear Originals, Zipper Fly Scrubs for Men 4000  [$19.19] <== TARGET
+    2. B015P3O4O4  M&M SCRUBS Women Scrub Set Medical Scrub Top and Pants MYellow
+    3. B0714D1XQC  PY-BIGG Big & Tall Men's Jeans Relaxed Fit Cargo Pants Loose Fashion Rugged Wear Plus Size
+    4. B00V4ZQYWS  KingSize KS Island Men's Big & Tall Full Elastic Waist Gauze Cargo Shorts  [$33.44]
+    5. B002V8WPBG  Workwear Revolution Women Scrubs Top V-Neck WW620
+    6. B002ABJYMC  Jockey 2411 Women's Amazing Comfort Scrub Pant - Comfort Guaranteed
+    7. B09L6NMKDM  Mens Camouflage Military BDU Pants Army Cargo Fatigues Camo Fashion Trousers  [$40.99]
+    8. B0CC6KDZN9  Green Town Women's V-Neck Tuck-In Top/Slim Fit Jogger Yoga Pant Scrub Set Medical Nursing   [$32.99]
+    9. B0B2WPYG12  NIDIE Black Mens Hiking Shorts Stretch Waist Casual Outdoor Stretchy Lightweight Short wit  [$14.99]
+    10. B01MQUDPPO  Iflex Scrubs for Women, Yoga-Inspired Knit Waistband Scrub Pants CK002  [$34.99]
+  scenario='unknown' override_applied=False turn=1
+  ledger(1): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day."]
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day."
+  slots: {}
+  asked=['material'] retired=[] last_ask='material' disclosed=0
+  shown=10 suppressed=False frames={'unknown': 1}
+
+--- turn 2 ---
+  user: like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B083LDYTWJ  Women's Medical Uniform Scrub Sets - 2 Piece V Neck Top and Pants Stretch Lightweight with
+    2. B0B1HLDQ61  URBAN DAIZY Women's Joggers Sweatpants - Elastic Waistband Drawstring Melange Velboa Loung  [$20.95]
+    3. B0BQWQK5GW  YLDUJ AMUM Women's Cinch Bottom Sweatpants  [$19.99]
+    4. B08GSMNYP9  johnnie-O Cross Country PREP-Formance Pant  [$135.0]
+    5. B098P252XH  MELOTOUGH Mens Suspenders 2" Full Elastic Braces X Shape with Strong Clips - Heavy Duty Wo  [$14.8]
+    6. B0939FH2D3  New York Ave Men's Cotton Blend Super Soft Flannel Pajama Lounge Pants
+    7. B08F92KJCW  LIFETIME JEWELRY “Love Heart” 4mm Wheat Chain Bracelet for Women 24k Gold Plated  [$57.95]
+    8. B08GZ692S9  Pdbokew Men's Tactical Pants Lightweight Casual Cargo Pants
+    9. B07R4C48K6  Grey's Anatomy Edge Axis Pant for Women– Wrinkle Recovery Medical Scrub Pant
+    10. B07BPKWV78  Propper Men's Standard Class B Cargo Pant, LAPD Navy, 34W x 36L
+  scenario='unknown' override_applied=False turn=2
+  ledger(2): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature'] retired=[] last_ask='feature' disclosed=0
+  shown=20 suppressed=False frames={'unknown': 2}
+
+--- turn 3 ---
+  user: pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08X65FTS5  Fankle Women Cute Scrub_Top Working Uniform Short Sleeve V-Neck Tops Workwear T-Shirt St. 
+    2. B08BYWN9Y6  ALLNTRENDS Men's T Shirt This is The Way Graphic Tshirt
+    3. B089K2CNS6  Mens Elastic Waist Drawstring Casual Gym Joggers Short Pants Lounge Pajamas Summer Sweat S  [$9.99]
+    4. B00IRDL00G  Cherokee Workwear Men's 4000 Drawstring Cargo Scrub Pant- Royal- Large Tall  [$54.36]
+    5. B01MYUM67T  Med Couture Women's in-Seam Zip Front Solid Warm Up Scrub Jacket
+    6. B01JB6B6A6  Unisex Classic Collection Scrub Pant
+    7. B07H9JXYGT  Bob Ross Painters Gonna Paint T-Shirt
+    8. B0195EC53G  Squats? I Thought They Said Shots! Women's Burnout Racerback Gym Tank Top- 5 Colors
+    9. B01FON9H5G  M&M SCRUBS Women's Super Soft Medical Scrub Pants for Women - Drawstring Yoga Pant Inspire  [$17.95]
+    10. B07BK6Z4ZY  ALLNTRENDS Men's T Shirt I'm Mary Poppins Y'all Trending Tees Cool Popular Top  [$19.44]
+  scenario='unknown' override_applied=False turn=3
+  ledger(3): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color'] retired=[] last_ask='color' disclosed=0
+  shown=30 suppressed=False frames={'unknown': 3}
+
+--- turn 4 ---
+  user: eh, no strong preference on color really. whatever's standard for a hospital.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01N79J85Y  Tough Cookie Clothing Tank Top – Women’s Sleeveless Flowy Triblend Racerback Casual Yoga W
+    2. B07DD98Q7R  KEYBUR Relaxed Fit Outdoor Comouflage Camo Cargo Shorts for Men  [$25.99]
+    3. B07FZBPQVB  Renegader Sportswear Men's Multiple Pocket Water Resistant Poplin Shell Polar Fleece Lined  [$29.99]
+    4. B09P8BWX7P  BONTIME Women Cinch Bottom Sweatpants - High Waisted Athletic Joggers, Baggy Workout Loung
+    5. B083BR74MW  CRZ YOGA Women's Travel Cargo Scrub Joggers with Pockets Quick Dry High Waisted Hiking Wor
+    6. B06XV1865Z  Uncommon Threads mens Unisex Restaurant Utility Shirt With Snap Closure  [$15.95]
+    7. B00IUAGCEK  Dockers Men's Crossover Cargo D3 Classic-Fit Pant
+    8. B07G45SGST  LOCALMODE Men's Casual Dress Shirt Button Down Shirts Fashion Denim Shirt
+    9. B0056X6THE  Port Authority Women's Long Sleeve Value Poplin Shirt S White
+    10. B08T7JWRH1  Eoselio Loungewear - Baggy Sweatpants for Women - Comfy Jogger Track Pants for Ladies
+  scenario='unknown' override_applied=False turn=4
+  ledger(4): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital."]
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style'] retired=[] last_ask='style' disclosed=0
+  shown=40 suppressed=False frames={'unknown': 4}
+
+--- turn 5 ---
+  user: traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08GR3VKSN  Medline Men's Straight  [$13.88]
+    2. B0083IB2SK  Med Couture Drawstring Signature Scrub Pants for Women, Navy, X-Large Tall
+    3. B09L8PRQZ9  Guys Lacrosse Sticks Sweatpants | Guys Lacrosse Apparel by ChalkTalk Sports | Multiple Col  [$34.99]
+    4. B07WQW8HY6  DCRT High Waisted Tummy Control Leggings - Super Compression Leggings Pants with Inner Poc
+    5. B08M9H2463  CQR Men's Tactical Pants, Water Resistant Ripstop Cargo Pants, Lightweight EDC Hiking Work  [$29.97]
+    6. B08463SSHG  New York Baseball 27 Titles Skyline T-Shirt, Hand-Drawn, Screen Printed in USA  [$24.99]
+    7. B07MQ2SQR1  S.H. Churchill & Co. Men's Tuxedo and Bow Tie - Includes Tux Jacket, Formal Pants & Bow Ti
+    8. B074KJ49F2  Leggings Depot Premium Quality Women's Cotton Blend Stretch Pull-on Jeggings with Pockets  [$17.99]
+    9. B00MXDIVNK  City Threads Boys Fleece Cargo Pants Perfect for School and Outdoor Play Made in USA
+    10. B0B93G68W3  Men's Novelty Color Block Pullover Shirt Fall Winter Hooded Sweatshirt Long Sleeve Casual   [$16.99]
+  scenario='unknown' override_applied=False turn=5
+  ledger(5): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital.", 'traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=[] last_ask='size' disclosed=0
+  shown=50 suppressed=False frames={'unknown': 5}
+
+--- turn 6 ---
+  user: i'm a large, sometimes an XL depending on the brand. regular inseam, i'm about 5'10".
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07NKHCH5C  Milumia Women Cargo Work Pants Tapered Mid Waist Office Trousers Pockets
+    2. B074FFHR52  jijamas Incredibly Soft Women's Pajamas Set - The Peaceful Mind
+    3. B09SHQLF98  WEUIE Long Sleeve Henley Shirts for Men Casual V Neck Button Up Tee Shirt Collarless T-Shi  [$11.99]
+    4. B0BB7F1PX3  Fall Jackets for Women Fashion Petite to Plus Size Full Zip Down Puffer Jacket Long Length  [$44.79]
+    5. B08SLBH852  Flovex Women's Motivational Tiger Graphic T-Shirts Vintage Casual Big Cat Short Sleeve Top
+    6. B08Q3B6DK8  Women Short Sleeve V-Neck Tops Workwear T-Shirt Christmas Thanksgiving Print Cute Scrub_To
+    7. B09BKBJ5DC  Tough Cookie Clothing Tank Top – Women’s #Beast Print Burnout Racerback Sleeveless Active 
+    8. B01NH331KT  Tough Cookie Clothing Tank Top – Women’s Burnout Workout Active Yoga Racerback Sleeveless 
+    9. B01KGKK7JC  Savane Men's Big and Tall Big & Tall Flat Front Micro Melange Dress Pant
+    10. B07NJMP7P2  Tough Cookie Clothing Tank Top – Women’s Muscle Girl Print Workout Yoga Racerback Sleevele
+  scenario='unknown' override_applied=False turn=6
+  ledger(6): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital.", 'traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.', 'i\'m a large, sometimes an XL depending on the brand. regular inseam, i\'m about 5\'10".']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=[] last_ask='use_case' disclosed=0
+  shown=60 suppressed=False frames={'unknown': 6}
+
+--- turn 7 ---
+  user: hospital floor shifts, twelve hours on my feet. i also wear them for prep work in the kitchen at home, so they need to take a beating and wash out.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09WR6D62H  Mens Big and Tall Tee Shirts, Summer Casual Retro Distressed Map Printed T-Shirt Vintage C  [$5.51]
+    2. B075Y445MD  Tough Cookie Clothing Tank Top – Women’s #Beast Print Burnout Racerback Sleeveless Active 
+    3. B01A8ZNKIU  Mens Worlds Okayest Nurse Tshirt Funny Sarcastic Doctor Tee for Guys  [$16.99]
+    4. B06W5Y4C25  Tough Cookie Clothing Tank Top – Women’s Sore Today Strong Tomorrow Print Burnout Workout 
+    5. B0BG9RPKPP  RAISEVERN Men Women Hoodie 3D Printed Cool Fleece Long Sleeve Pullover Hooded Sweatshirt  [$17.99]
+    6. B09NDLV42V  Rela Bota Men's Casual Cargo Pants with Multi Pockets Athletic Lightweight Jogging Track S
+    7. B07QRZPG8R  Goodthreads Women's Lightweight Poplin Long-Sleeve Oversized Boyfriend Shirt
+    8. B08SY5HCB6  ANYWALK Men's Belts Big and Tall Size 36" - 112"  [$45.99]
+    9. B084P6KDV8  URBAN DAIZY Women's Tank Top – Sleeveless Casual Loose Fit Scoop Neck Round Hem Solid Summ
+    10. B07PFY1Z34  Evelots Glasses Fashion Display Box-Black Vegan Leather Outer, Clear Acrylic Lid, Soft No   [$24.99]
+  scenario='unknown' override_applied=False turn=7
+  ledger(7): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital.", 'traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.', 'i\'m a large, sometimes an XL depending on the brand. regular inseam, i\'m about 5\'10".', 'hospital floor shifts, twelve hours on my feet. i also wear them for prep work in the kitchen at home, so they need to take a beating and wash out.']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=[] last_ask='budget' disclosed=0
+  shown=70 suppressed=False frames={'unknown': 7}
+
+--- turn 8 ---
+  user: cheap-ish, under $25 a pair. around twenty bucks would be perfect since i need three of them.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0BWRSD1W3  Men's Short Sleeve T-Shirt and Shorts Set 2 Piece Summer Outfits Fashion Stripe Color Bloc  [$20.99]
+    2. B08BJMT9M7  Longwu Women's Casual V-Neck Sleeveless/Short Sleeve Side Split Drawstring Waist Midi Leng
+    3. B08C24BVHH  Longwu Women's Casual V-Neck Sleeveless Side Split Drawstring Waist Midi Length Vest Dress
+    4. B08STDCQRN  Big Boys' Pajama Bottoms Pants - Flannel Cotton Lounge Sleepwear with Pockets.  [$14.88]
+    5. B09D7FXX73  Cheermore Womens Platform High Top Sneakers Lace Up Canvas Shoes Fashion Comfortable Casua
+    6. B07XRDRHRL  Curve & Nerve Women's Plus Size Summer Short Sleeve Plain Casual Light Weight Maxi Dress
+    7. B073SJM9XL  Official Winchester Vintage Banner Art Men's Graphic Short Sleeve T-shirt
+    8. B08NG32GRD  #Marisa #Tomei #in #My #Cousin Vinny T Shirt Gift Tee for Men Women
+    9. B000TJG29U  Key Apparel Men's Relaxed Fit Double Front Denim Logger Dungaree
+    10. B07CV39V3F  Siberian Husky Socks - Fun Unisex Socks - Crazy Pet Lover - Novelty Socks Funny Gifts for   [$10.43]
+  scenario='unknown' override_applied=False turn=8
+  ledger(8): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital.", 'traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.', 'i\'m a large, sometimes an XL depending on the brand. regular inseam, i\'m about 5\'10".', 'hospital floor shifts, twelve hours on my feet. i also wear them for prep work in the kitchen at home, so they need to take a beating and wash out.', 'cheap-ish, under $25 a pair. around twenty bucks would be perfect since i need three of them.']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=[] last_ask='brand' disclosed=0
+  shown=80 suppressed=False frames={'unknown': 8}
+
+--- turn 9 ---
+  user: i don't have a strong preference for brand, honestly. cherokee has been fine but whatever lasts.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B00OU6XQY2  1 World Sarongs Mens Tie Dye Sarong
+    2. B00WAXEEU2  Cherokee Workwear Women's Infinity Crew Neck Scrubs Shirt  [$32.99]
+    3. B07WGY2D12  JeffreyENolan Men T-Shirt Band Shirt Casual Classic Short Sleeve Tops  [$13.97]
+    4. B07Y9CTPC4  LOCALMODE Men's Double Zipper Hooded Jacket Turtleneck Fleece Hoodie Coat
+    5. B06XSD7HG2  Condor Sentinel Tactical Pants - Graphite  [$50.95]
+    6. B07HCGB1NH  Amazon Essentials Men's Big & Tall Loose-fit Wrinkle-Resistant Pleated Chino Pant
+    7. B07MQBVDW3  GIOVANNI UOMO Men's Traditional Fit Solid Color Dress Shirt-More Colors
+    8. B01N6LBTBX  LEE Men’s Regular Fit, Big & Tall, Short Sleeve Button Down Stretch Cotton Shirt
+    9. B07HCG9ZK6  Amazon Essentials Men's Big & Tall Relaxed-Fit Wrinkle-Resistant Pleated Chino Pant
+    10. B07HCG1T4V  Amazon Essentials Men's Big & Tall Athletic-fit Wrinkle-Resistant Flat-Front Chino Pant
+  scenario='unknown' override_applied=False turn=9
+  ledger(8): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital.", 'traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.', 'i\'m a large, sometimes an XL depending on the brand. regular inseam, i\'m about 5\'10".', 'hospital floor shifts, twelve hours on my feet. i also wear them for prep work in the kitchen at home, so they need to take a beating and wash out.', 'cheap-ish, under $25 a pair. around twenty bucks would be perfect since i need three of them.']
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=[] last_ask='brand' disclosed=0
+  shown=90 suppressed=False frames={'unknown': 9}
+
+--- turn 10 ---
+  user: ok fine - cherokee workwear if you've got it, that's what my unit issues. style 4000 i think.
+  ask_attribute: 'category'
+  message: 'Here are the closest matches I found so far. What kind of item are you after, specifically?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07HCDTGXK  Amazon Essentials Men's Big & Tall Loose-fit Wrinkle-Resistant Pleated Chino Pant
+    2. B08SQQ5LF9  Sykooria Womens Sweat Shorts Casual Summer Drawstring Comfy Workout Lounge Shorts Sport At
+    3. B071R7V5MF  PepStep Embroidered Fashion Sneakers for Women Shoes for Women Fashion 2018 Floral Sneaker
+    4. B08JMB2V9K  The American Outdoorsman Mens Long Sleeve Cotton Shirt for Hunters, Collared Button-Up Clo  [$59.99]
+    5. B0951HSD8S  Wrangler Riggs Workwear Men's Lightweight Flannel Work Shirt  [$28.74]
+    6. B0BZ3LQG8C  Feelin Good Tees mens T-shirt  [$17.99]
+    7. B079QPDNL2  Mens Do I Want A Beer T Shirt Funny Graphic Drinking Tee  [$18.99]
+    8. B09YSQQWKM  Plus/Junior Size Colombian Design Butt Lift Levanta Cola Stretch Skinny Jeans  [$43.98]
+    9. B0924Z541X  GLASS TWO Women's Biker Shorts - Basic Stretch 3" Casual Pants Yoga Sports Workout Running
+    10. B07N83DQGP  AKARMY Men's Military Tactical Casual Camouflage Multi-Pocket BDU Cargo Pants Trousers G3W
+  scenario='unknown' override_applied=False turn=10
+  ledger(9): ["hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.", 'like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.', 'pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.', "eh, no strong preference on color really. whatever's standard for a hospital.", 'traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.', 'i\'m a large, sometimes an XL depending on the brand. regular inseam, i\'m about 5\'10".', 'hospital floor shifts, twelve hours on my feet. i also wear them for prep work in the kitchen at home, so they need to take a beating and wash out.', 'cheap-ish, under $25 a pair. around twenty bucks would be perfect since i need three of them.', "ok fine - cherokee workwear if you've got it, that's what my unit issues. style 4000 i think."]
+  query: "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day. like i said, poly-cotton"
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=[] last_ask='category' disclosed=0
+  shown=100 suppressed=False frames={'unknown': 10}
+
+### end buying_natural same target B07QMS8TX8 free-form phrasing: turns=10 first_hit_turn=1

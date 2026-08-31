@@ -1,0 +1,22 @@
+degraded: False
+keys: ['ask_attribute', 'message', 'recommendations', 'usage']
+types: {'message': 'str', 'ask_attribute': 'str', 'recommendations': 'list', 'usage': 'dict'}
+rec[0]: {'parent_asin': 'B0196A59GY'}
+all recs are dicts with parent_asin: True
+usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+
+-- malformed inputs on a live override session --
+None message                 raised=no  n=10 ask='feature' schema_ok=True
+int message                  raised=no  n=10 ask='color'   schema_ok=True
+empty string                 raised=no  n=10 ask='style'   schema_ok=True
+dict message                 raised=no  n=10 ask='size'    schema_ok=True
+override + FTS5 operators    raised=no  n=10 ask='use_case' schema_ok=True
+bad turn type                raised=no  n=10 ask='budget'  schema_ok=True
+negative turn                raised=no  n=10 ask='size'    schema_ok=True
+huge turn                    raised=no  n=10 ask='brand'   schema_ok=True
+
+-- unknown session id (never reset) --
+keys: ['ask_attribute', 'message', 'recommendations', 'usage'] n= 10 ask= material
+
+-- reset wipes the session --
+ledger: [] shown: 0 override_applied: False retired: [] scenario: unknown

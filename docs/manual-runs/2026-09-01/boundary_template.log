@@ -1,0 +1,233 @@
+### boundary_template   degraded=False   target=B0BN6CCHB7
+
+--- turn 1 ---
+  user: I'm looking for Athletic Walking, but I'm still exploring.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08R86WZ11  RIBONGZ Wide Toddler Boys Shoes Slip On Little Girls Sneakers for Athletic Walking Running
+    2. B07PV6BFVZ  aeepd Women Nurse Shoes Walking Slip On Sneakers Mary Jane Velcro Breathable Mesh Platform
+    3. B083Q1ZGHC  Lxso Womens Flat Sandals with Arch Support Braided Strap for Walking/Hiking/Beach/Water Sp
+    4. B01MXVW2VN  LIUID Stan Men's Lightweight Running Shoes - Athletic Knit Mesh Comfortable Walking Shoes 
+    5. B072BD7LYK  ECCO Men's Terra 3s Athletic Sandal
+    6. B0089NAT92  Columbia Women's Sunlight II Sandal
+    7. B094GB3J57  OVRUNS Women's Biker Shorts High Waisted Tummy Control Running Athletic Workout Yoga Casua
+    8. B071J7BXY2  Papa Bear T-Shirt Awesome Camping Father's Gift Tee
+    9. B0827QXZBR  Forcool Copper Military Socks, Men's Women's Cushion Sports Crew Socks,1 Pairs Camouflage 
+    10. B092HTCXDN  dripdrop Kids Rain Boots for Girls Boys, Toddler Animal Printed Waterproof Rubber Boots wi
+  scenario='browsing' override_applied=False turn=1
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material'] retired=[] last_ask='material' disclosed=0
+  shown=10 suppressed=False frames={'browsing_open': 1}
+
+--- turn 2 ---
+  user: I don't have a preference for material; please use your judgment.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0BF6BL7WM  THE NORTH FACE TKA Glacier 1/4 Zip Mens Fleece  [$58.91]
+    2. B0BGGD6Q3Z  waterproof Socks for Men & Women, Breathable Hiking Socks Mid Crew 1 Pair
+    3. B07XVS4BKZ  THE NORTH FACE Aphrodite Motion 4in Womens Shorts  [$29.22]
+    4. B007PG229E  Patagonia Men's Maui Walking Shoe
+    5. B09QHP674V  THE NORTH FACE Men's TNF Bear Pullover Hoodie, Arrowwood Yellow, Large  [$99.0]
+    6. B00HQ5I194  Patagonia Men's Evader Walking Shoe
+    7. B07W68FZK9  HAOJIALI Women's Flats Walking Shoes Mesh Lightweight Breathable Slip-Ons Sneakers
+    8. B0B6DT91Q7  Women's Fashion Sneakers,Women's Slip On Sneakers Loafer Shoes Cow Leopard Pattern Low Top
+    9. B074ZKBYT4  Darn Tough Men's Vertex No Show Tab Ultra-Light Cushion Sock
+    10. B002LVV4WE  The North Face Betasso Sneaker (Little Kid/Big Kid)
+  scenario='boundary' override_applied=False turn=2
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature'] retired=[] last_ask='feature' disclosed=0
+  shown=20 suppressed=False frames={'browsing_open': 1, 'refusal': 1}
+
+--- turn 3 ---
+  user: For that, what matters is: 100% Textile; Imported.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B00HF6K5ZM  Merrell Women's All Out Rave Walking Shoe
+    2. B00ITKSNFM  Skechers Performance Women's Go Walk 2 Extreme Walking Shoe
+    3. B00UZ23FRI  Skechers Performance Women's Go Walk Compose Slip-On Walking Shoe
+    4. B078GTVCS6  Skechers Women's Go Walk Joy-15633 Sneaker
+    5. B09JLJP8VS  Skechers Women's Go Run Mojo-Mania Sneaker
+    6. B078GGN9SM  Skechers Women's Go Walk Lite-15461 Sneaker
+    7. B00MES8EIQ  Skechers Performance Women's Go Walk 3 Fitknit Shoe
+    8. B00ITKT4XM  Skechers Performance Women's Go Walk 2 Extreme Walking Shoe
+    9. B01I42AKS2  Propét Men's TravelFit Strap Walking Shoe
+    10. B072ZDR756  Skechers Unisex-Adult Breathe Easy Calmly Sneaker
+  scenario='boundary' override_applied=False turn=3
+  ledger(2): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported."
+  slots: {'feature': 'Imported'}
+  asked=['material', 'feature', 'color'] retired=[] last_ask='color' disclosed=2
+  shown=30 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 1}
+
+--- turn 4 ---
+  user: I don't have an additional preference for color.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=2
+    1. B00E1ITZIA  Crocs Men's Santa Cruz Loafer | Comfortable Men's Loafers | Slip On Shoes, Navy/Stucco, 10
+    2. B0BN6CCHB7  Skechers Men's Go Max-Athletic Air Mesh Slip on Walking Shoe Sneaker  [$54.97] <== TARGET
+    3. B0C62MF2HV  adidas unisex adult Adilette Clog Slide Sandal, Pink Tint/White/Pink Tint, 12 Women Men US  [$20.68]
+    4. B00KXDDJMK  Saucony Women's Fastwitch Road Racing Shoe
+    5. B00NCPJIVM  Saucony Women's Grid Cohesion 7 Running Shoe
+    6. B0089GNXZG  Columbia Men's Powerdrain II Water Shoe
+    7. B0711R28G8  adidas Unisex-Kid's Racer TR, Collegiate Navy/Collegiate Navy/Grey, 5 Toddler
+    8. B00GJ36ZCY  Skechers Sport Women's Serengeti Fashion Sneaker
+    9. B00PJ849EQ  Saucony Men's Nomad TR Trail Running Shoe
+    10. B010Q60Y58  adidas Performance Men's Court Fury Basketball Shoe
+  scenario='boundary' override_applied=False turn=4
+  ledger(2): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported."
+  slots: {'feature': 'Imported'}
+  asked=['material', 'feature', 'color', 'style'] retired=['color'] last_ask='style' disclosed=2
+  shown=40 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 1, 'exhaustion': 1}
+
+--- turn 5 ---
+  user: I don't have an additional preference for style.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B00LMO1KDE  Jambu Women's Princton Hypergrip Water Ready Water Shoe
+    2. B087CSYVVP  adidas Men's Kaptir Super Running Shoes
+    3. B072MFJNLC  Saucony Men's Stretch & Go Breeze Running Shoe
+    4. B09LMB8W1C  Propét Men's Stability Strider Walking Shoe
+    5. B00LV8CGHU  PUMA Men's Pulse XT Cross-Training Shoe
+    6. B00LV8CGES  PUMA Men's Pulse XT Cross-Training Shoe
+    7. B0747TZ67H  Osiris Men's D3h Skate Shoe
+    8. B07CKCBGQ2  Mickey Mouse Boys Light Up Athletic/Sneakers Toddler/Little Kid
+    9. B00M3J3EKE  Cushe Getaway-U
+    10. B01M31DW64  ECCO Women's Intrinsic TR Runner Fashion Sneaker
+  scenario='boundary' override_applied=False turn=5
+  ledger(2): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported."
+  slots: {'feature': 'Imported'}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=['color', 'style'] last_ask='size' disclosed=2
+  shown=50 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 1, 'exhaustion': 2}
+
+--- turn 6 ---
+  user: I don't have an additional preference for size.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B00R2J35BI  Skechers Sport Men's Skech Air Infinity Sneaker
+    2. B00L8LDAW0  Emerica Men's The Westgate Cruiser LT Skateboard Shoe
+    3. B00LHUEHF6  Hi-Tec Men's V-Lite Rio Quest I Walking Shoe
+    4. B00QXN2L82  DC Men's Trase X DPM Skate Shoe
+    5. B0113VNO7U  adidas Performance Women's Barricade Club Training Shoe
+    6. B09DW6MCGD  Outdoor Research Women's Snowcrew Jacket - Waterproof & Windproof Outdoor Skiing Jacket, B  [$148.03]
+    7. B077ZGRY8P  Reebok Women's Ardara Walking Shoe, Black/ash Grey/White, 8 M US
+    8. B0721KZZHK  Ryka Women's Impulse Walking Shoe, Blue/Pink, 7 M US
+    9. B00RLDX58I  Ahnu Women's Taraval Walking Shoe
+    10. B00RLDXGH8  Ahnu Women's Taraval Walking Shoe
+  scenario='boundary' override_applied=False turn=6
+  ledger(2): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported."
+  slots: {'feature': 'Imported'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=['color', 'size', 'style'] last_ask='use_case' disclosed=2
+  shown=60 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 1, 'exhaustion': 3}
+
+--- turn 7 ---
+  user: I don't have an additional preference for use_case.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01DCLCQB4  DC Men's Heathrow IA Skate Shoe
+    2. B008G3BOSU  RYKA Women's Desire Running Shoe
+    3. B0731ZNG6Z  DC Women's Evan HI TX LE Skate Shoe
+    4. B00KZIWOXI  Merrell Women's Bare Access Trail Trail Running Shoe
+    5. B076HWTRY2  Neil deGrasse Tyson Science Matters T-shirt  [$19.99]
+    6. B09CN61KXW  Charly Women's Resolve Walking Shoe
+    7. B00G0MVF06  Skechers Sport Women's Pure Flex Renegade Walking Shoe
+    8. B00HF5K0XU  Merrell Men_s Moab Rover Hiking Shoes Durable and Comfortable in Sophisticated Leather Upp
+    9. B0BVRKLSVP  Yacht & Smith Mens Wholesale Bulk Cotton Socks, Athletic Sport Socks Shoe Size 10-13  [$22.08]
+    10. B00I9TMYVC  RYKA Women's Dash Stretch Walking Shoe  [$70.0]
+  scenario='boundary' override_applied=False turn=7
+  ledger(2): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported."
+  slots: {'feature': 'Imported'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['color', 'size', 'style', 'use_case'] last_ask='budget' disclosed=2
+  shown=70 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 1, 'exhaustion': 4}
+
+--- turn 8 ---
+  user: I don't have an additional preference for budget.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01H7588IQ  KEEN Women's Whisper Closed Toe Sport Sandals, Malachite/Silver Birch, 5.5
+    2. B0BG6C6T4F  Grasshoppers Women's Windham Stripe Sneaker
+    3. B01NBWCV75  Merrell Men's Bare Access Flex Sneaker
+    4. B00DUK7JQK  DC Men's Hampton Skate Shoe
+    5. B009SDRJYA  adidas Men's Freak X Carbon Mid Football Shoe
+    6. B0B1DQP56F  Shoeict Womens Workout Running Shoes for Casual Lightweight Tennis Sneakers for Women Mesh
+    7. B01MQKGWS7  Under Armour Men's Field Ops GORE-TEX
+    8. B09N72WTDH  USYFAKGH Womens Walking Shoes Sneakers Leisure Breathable Mesh Outdoor Fitness Running Spo  [$25.17]
+    9. B07CGYGPZR  Skechers Women's Relaxed Fit Reggae Fest Tribes Slip-On  [$70.0]
+    10. B097LJ11D7  Outdoor Research Women's Bluebird Beanie Hat – Warm Winter Accessory, Breathable & Moistur  [$16.64]
+  scenario='boundary' override_applied=False turn=8
+  ledger(2): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported."
+  slots: {'feature': 'Imported'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['budget', 'color', 'size', 'style', 'use_case'] last_ask='material' disclosed=2
+  shown=80 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 1, 'exhaustion': 5}
+
+--- turn 9 ---
+  user: For that, what matters is: fabric.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01MU00T0M  adidas Men's Nemeziz Tango 17.3 Turf Soccer Shoe
+    2. B077SN2G2X  Ben Sherman Men's New Prill Slip on Sneaker
+    3. B00R2J2212  Skechers Sport Men's Skech Air Infinity Sneaker
+    4. B01MS4GRDV  Coolway Women's Trecklow Walking Shoe  [$38.05]
+    5. B009JHUTXS  RYKA Women's Ambition Shoe
+    6. B01IIZCU56  Skechers Performance Women's Go Walk 4 - Achiever Walking Shoe,Navy/White,9.5 M US
+    7. B011O8XAN0  Skechers Performance Womens Go Step Pose Walking Shoe
+    8. B00T9BL8AM  Skechers Performance Men's Go Walk 3 Compete Lace-Up Walking Shoe
+    9. B01MS3R93I  OshKosh B'Gosh Unisex-Child Rivet Boy's Athletic Sneaker
+    10. B01AH876SI  Skechers Performance Women's Go Step Untouched Walking Shoe
+  scenario='boundary' override_applied=False turn=9
+  ledger(3): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.', 'For that, what matters is: fabric.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported. For that, what matters is: fabric."
+  slots: {'feature': 'Imported', 'material': 'fabric'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['budget', 'color', 'material', 'size', 'style', 'use_case'] last_ask='feature' disclosed=3
+  shown=90 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 2, 'exhaustion': 5}
+
+--- turn 10 ---
+  user: For that, what matters is: Rubber sole.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B06XDHNJRC  Mens Timberland Euro Sprint Fabric Walking Durable Hiking Ankle Boot
+    2. B01IJCOZOW  Skechers Performance Men's Go Walk 4 Expert Walking Shoe,Khaki,8.5 M US
+    3. B08B3NJJG9  SEEROL Mens Flip Flop Thong Sandals Outdoor Beach Slippers with Comfort Footbed
+    4. B07VQ4QTNL  Skechers Women's Go Walk Steady Sneaker
+    5. B0B8SQ2SVX  HELLHERO Kids Sneakers Boys Girls Walking Running Shoes Athletic Sports  [$24.99]
+    6. B09X4GG71T  Mishansha Women's Walking Shoes Mesh Slip On Sock Sneakers Arch Support Air Cushion Casual  [$29.99]
+    7. B06XCK7855  OshKosh B'Gosh Kids' Zaria Girl's Athletic Sport Sandal
+    8. B09Y994VCL  GyeBea Womens Walking Shoes with Arch Support Comfy Orthotic Tennis Running Sneakers for F
+    9. B0BGM1R72N  Ryka Women's Balance Oxford  [$38.95]
+    10. B074CF8SP3  TFO Men's Breathable Walking Hiking Shoe Outdoor Running Backpacking Athletic Trekking Sne
+  scenario='boundary' override_applied=False turn=10
+  ledger(4): ["I'm looking for Athletic Walking, but I'm still exploring.", 'For that, what matters is: 100% Textile; Imported.', 'For that, what matters is: fabric.', 'For that, what matters is: Rubber sole.']
+  query: "I'm looking for Athletic Walking, but I'm still exploring. For that, what matters is: 100% Textile; Imported. For that, what matters is: fabric. For that, what matters is: Rubber sole."
+  slots: {'feature': 'Rubber sole', 'material': 'fabric'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=['budget', 'color', 'feature', 'material', 'size', 'style', 'use_case'] last_ask='brand' disclosed=4
+  shown=100 suppressed=False frames={'browsing_open': 1, 'refusal': 1, 'disclosure': 3, 'exhaustion': 5}
+
+### end boundary_template: turns=10 first_hit_turn=4

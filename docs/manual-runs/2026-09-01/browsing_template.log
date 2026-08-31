@@ -1,0 +1,233 @@
+### browsing_template public_0105 B07Q46M2J2   degraded=False   target=B07Q46M2J2
+
+--- turn 1 ---
+  user: I'm looking for Women Leggings, but I'm still exploring.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08LVNLF6J  TOKY Women's high Waist Yoga Leggings Printing Yoga Pants Tummy Control Workout Training P
+    2. B07XVS4BKZ  THE NORTH FACE Aphrodite Motion 4in Womens Shorts  [$29.22]
+    3. B08QMN6K7V  GAYHAY 3 Pack Leggings with Pockets for Women - High Waisted Tummy Control Buttery Soft Wo
+    4. B091QC6QXK  Reebok Girls' Leggings - 2 Pack Active Performance Sports Tights (Size: 7-16)  [$16.95]
+    5. B08GSKQSRK  Reshe High Waisted Women's Leggings Compression Pants for Yoga Running Gym Everyday Fitnes
+    6. B097NJ37NJ  THE NORTH FACE Women's Tamburello Insulated Jacket (Standard and Plus Size), New Taupe Gre
+    7. B09DW6MCGD  Outdoor Research Women's Snowcrew Jacket - Waterproof & Windproof Outdoor Skiing Jacket, B  [$148.03]
+    8. B074RBSWLX  Sofra Women's Plus Sized Full Length Leggings-Black
+    9. B072LYC58R  Copper Compression Womens Leggings - High Waist Tights, Yoga Pants Women
+    10. B07L8GMXV3  Havaianas Women's Slim USA Stars Flip Flop Sandal
+  scenario='browsing' override_applied=False turn=1
+  ledger(1): ["I'm looking for Women Leggings, but I'm still exploring."]
+  query: "I'm looking for Women Leggings, but I'm still exploring."
+  slots: {}
+  asked=['material'] retired=[] last_ask='material' disclosed=0
+  shown=10 suppressed=False frames={'browsing_open': 1}
+
+--- turn 2 ---
+  user: For that, what matters is: polyester; 77% Polyester, 23% Spandex.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=6
+    1. B08K8V3GXW  Hanno Women's Mesh Yoga Pants with Pockets High Waist Tummy Control Workout Leggings
+    2. B0899GKNQQ  HOFI High Waist Yoga Pants with Pockets, 4 Way Stretch Workout Running Pants, Yoga Legging
+    3. B086PW98YT  TQD Women Leggings with Pockets, High Waist Yoga Pants Tummy Control, 4 Way Stretch Workou
+    4. B086QKCK2T  TQD Women's Yoga Pants with Pockets High Waist Capris Workout Running Athletic Sports Legg
+    5. B088D46Y26  TQD Women's Yoga Pants with Pockets High Waist Capris Workout Running Athletic Sports Legg
+    6. B07Q46M2J2  IUGA High Waisted Yoga Pants for Women with Pockets Capri Leggings for Women Workout Leggi  [$23.99] <== TARGET
+    7. B08NDXJQQB  LifeSky Women Yoga Leggings Pants: High Waist Tummy Control 4-Way Stretch Yoga Pants with 
+    8. B085TB5CGJ  CUGOAO High Waist Yoga Pants with Pockets, Workout Pants for Women, Yoga Leggings with Poc
+    9. B087CX9LKZ  Fengbay High Waist Yoga Pants with Pockets, Capri Leggings for Women Tummy Control Running
+    10. B087CYC9NR  Fengbay High Waist Yoga Pants with Pockets, Capri Leggings for Women Tummy Control Running
+  scenario='browsing' override_applied=False turn=2
+  ledger(2): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex."
+  slots: {'material': '77% Polyester, 23% Spandex'}
+  asked=['material', 'feature'] retired=[] last_ask='feature' disclosed=2
+  shown=20 suppressed=False frames={'browsing_open': 1, 'disclosure': 1}
+
+--- turn 3 ---
+  user: For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08R7755DM  VOEONS Printed Yoga Pants for Women Pattern Exercise Leggings with Pockets High Waisted Tu
+    2. B07ZLPXMHP  Youmymine Women High Waist Yoga Sport Pants Workout Fashion Skinny Leggings Fitness Athlet  [$6.99]
+    3. B083TLNBGW  Persit Leggings for Women-Workout High Waisted Womens Leggings with Pockets Tummy Control   [$9.99]
+    4. B0BCH3YSV1  SANTINY Women's Fleece Lined Winter Leggings Water Resistant High Waisted Thermal Hiking R  [$28.99]
+    5. B096WW7MXD  High Waisted Biker Shorts Women - 8 inches Soft Tummy Control Shorts for Workout, Gym, Yog  [$10.49]
+    6. B087FWG8QL  Ritiriko Women's Yoga Pants High Waisted Crop Workout Running Leggings with Side Pocketed 
+    7. B083HVVN29  LAPASA Women's High Waist Tummy Control Biker Shorts with Pockets Active Yoga Workout Runn
+    8. B0B6J4XR6N  TNNZEET High Waisted Pattern Leggings for Women - Buttery Soft Tummy Control Printed Pants
+    9. B0B7BPDNFR  LAWAKE Fleece Lined Leggings with Pockets for Women - Soft Black Thermal High Waisted Wint
+    10. B0BTPS8XXV  New Lifting Leggings Women High Waisted Seamless Workout Leggings Gym Booty Tights Tummy C  [$19.99]
+  scenario='browsing' override_applied=False turn=3
+  ledger(3): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr'}
+  asked=['material', 'feature', 'color'] retired=[] last_ask='color' disclosed=4
+  shown=30 suppressed=False frames={'browsing_open': 1, 'disclosure': 2}
+
+--- turn 4 ---
+  user: For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08LN1DSCP  Ritiriko Women's Yoga Pants High Waisted Crop Workout Running Leggings with Side Pocketed 
+    2. B096LZTHJ1  PERSIT Women's High Waist Yoga Pants with Pockets Capri Leggings for Women Elastic Tummy C  [$8.99]
+    3. B08Q73LQMF  RIMICK High Waist Yoga Pants with Pockets Tummy Control, Workout 4 Way Stretch Leggings
+    4. B09N78FT2W  Free Leaper High Waisted Yoga Pants with Pockets for Women-Comfortable Running Seamless Le  [$23.99]
+    5. B0BFS2LF46  90 Degree By Reflex High Waist Tummy Control Interlink Squat Proof Ankle Length Leggings  [$26.98]
+    6. B07MBLHYHP  CADMUS High Waist Yoga Capri,Tummy Control,Workout Pants with Pockets for Womens,1002,Blac
+    7. B074JB5HT6  +MD Women's Tummy Control Yoga Leggings with Hidden Pocket, High Waist Colorful Athletic P
+    8. B0BJ29GF6J  B Birdie B High Waist Capri Leggings for Women with Pockets, Athletic Tummy Control Pants   [$27.99]
+    9. B08GJWGHTC  I2CRAZY High Waisted Yoga Pants for Women with Pockets Tummy Control Workout Leggings
+    10. B09GVL2MP4  ROSA High Waisted Yoga Leggings for Women with Pockets Tummy Control Yoga Pants Tie Dye So
+  scenario='browsing' override_applied=False turn=4
+  ledger(4): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris'}
+  asked=['material', 'feature', 'color', 'style'] retired=[] last_ask='style' disclosed=6
+  shown=40 suppressed=False frames={'browsing_open': 1, 'disclosure': 3}
+
+--- turn 5 ---
+  user: For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07NPJX2KV  CAMPSNAIL High Waisted Capri Leggings for Women - Printed Tummy Control Soft Compression P
+    2. B09YTWCT9W  Dragon Fit High Waist Commute Yoga Leggings for Women,Tummy Control Gym Workout Running Ca  [$15.98]
+    3. B08GKP2ZGS  SYKROO Women's Bootcut Yoga Long Pants High Waist Tummy Control Workout Sweatpants Bootleg
+    4. B09PHD7DJR  HIGHDAYS Leggings for Women with Pockets - High Waist Capri Workout Running Yoga Pants
+    5. B07TQMNJCX  HIGHDAYS Leggings for Women with Pockets - High Waist Capri Workout Running Yoga Pants
+    6. B07YV9T2MF  jonivey Yoga Shorts Yoga Capri Leggings High Waist Pocket Workout Running Non See-Through 
+    7. B082W9PST1  FIRST WAY Buttery Soft Women's Yoga Leggings Capris with Pockets High Waist Peach Skin Wor
+    8. B08C7BKKDZ  OMANTIC Womens High Waist Pockets Yoga Pants Running Pants Workout Leggings
+    9. B08VRN834Y  TNNZEET 7 Pack High Waisted Leggings for Women - Buttery Soft Workout Running Yoga Pants
+    10. B08FBDZCTL  uideazone Sweatpants Sports Yoga Pants Women Casual Loose High Waist Trousers Butterfly Pr
+  scenario='browsing' override_applied=False turn=5
+  ledger(5): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.', 'For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris', 'style': 'Style: Capri'}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=[] last_ask='size' disclosed=8
+  shown=50 suppressed=False frames={'browsing_open': 1, 'disclosure': 4}
+
+--- turn 6 ---
+  user: For that, what matters is: Size: XX-Large.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09N8SYG7Q  AUROLA Workout Leggings for Women Seamless Scrunch Tights Tummy Control Gym Fitness Girl S  [$35.99]
+    2. B086GTPQFB  GREFER Workout Leggings for Women Leopard Color Block Patchwork Pants - Fashion High Waist  [$4.29]
+    3. B08XN11MR2  Marika Women's Plus Size Elsa High Rise Capri Legging
+    4. B06ZZY6152  Epic Brand Workout Pants for Women | Dry-Fit Performance Hot Yoga Pants Capri Leggings Zum
+    5. B09VL1SBKN  HODOSPORTS Women's 5" Running Shorts High Waist Quick Dry Gym Workout Sports Shorts with P
+    6. B0899KKR32  qualidyne Yoga Shorts with Pockets for Women High Waist Leggings with Pocket Tummy Control
+    7. B087T4SHF2  Promover Womens Yoga Pants Capri Leggings with Pockets 20" 7/8 High Waist Tummy Control Ru
+    8. B088RDMJC1  ATTRACO Leopard Leggings for Women High Waist Yoga Pants with Pockets Workout Tummy Contro
+    9. B07JWJBHKJ  HOFI High Waist Yoga Pants for Women Workout Leggings with Pockets Tummy Control
+    10. B08K2G4KJG  Lingswallow High Waist Yoga Pants, Leggings with Pockets for Women Workout Sports Pattern 
+  scenario='browsing' override_applied=False turn=6
+  ledger(6): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.', 'For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.', 'For that, what matters is: Size: XX-Large.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris', 'style': 'Style: Capri', 'size': 'Size: XX-Large'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=['size'] last_ask='use_case' disclosed=9
+  shown=60 suppressed=False frames={'browsing_open': 1, 'disclosure': 5}
+
+--- turn 7 ---
+  user: For that, what matters is: Sport Type: Cycling, Running.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08FH5YC4L  CGHJPQ Workout Shorts for Women with Pockets High Waisted Biker Shorts for Women Yoga Shor
+    2. B09Z9G7HW2  GAYHAY 3 Pack Womens Biker Shorts - 5" High Waisted Buttery Soft Shorts for Athletic Worko  [$19.99]
+    3. B08K36CCJ7  Lingswallow High Waist Yoga Pants, Leggings with Pockets for Women Workout Sports Pattern 
+    4. B094QMQRK9  HZORI Womens Yoga Leggings Tummy Control Buttery Soft 7/8 Length Running Pants 4 Way Stret
+    5. B08V9576J8  CAMEL Women's High Waist Capri Yoga 3/4 Workout Leggings Tummy Control Non See-Through Run
+    6. B07QLPDDNC  Bulouin Yoga Leggings for Women Workout High Waist 4 Way Stretch Capris Tummy Control Yoga
+    7. B07JHX99VT  LifeSky Women Yoga Leggings Pants: High Waist Tummy Control 4-Way Stretch Yoga Pants with 
+    8. B092VT959N  QUEST NEW Leopard High Waisted Leggings for Women Soft Tummy Control Pants 4 Way Stretch W
+    9. B0BJDV4ZS1  NEW YOUNG 3 Pack Biker Shorts with Pockets for Women – High Waisted Tummy Control 8" Worko  [$19.99]
+    10. B089291TSH  XMLMRY Women's Yoga Shorts Running Workout Bike Hiking Athletic High Waist Shorts with Sid
+  scenario='browsing' override_applied=False turn=7
+  ledger(7): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.', 'For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.', 'For that, what matters is: Size: XX-Large.', 'For that, what matters is: Sport Type: Cycling, Running.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris', 'style': 'Style: Capri', 'size': 'Size: XX-Large', 'use_case': 'Sport Type: Cycling, Running'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['size', 'use_case'] last_ask='budget' disclosed=10
+  shown=70 suppressed=False frames={'browsing_open': 1, 'disclosure': 6}
+
+--- turn 8 ---
+  user: For that, what matters is: budget around $23.99.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0C145HTY3  IEPOFG Womens Yoga Pants Workout Stretchy Bootcut Flare Cargo Pants with Pockets High-Wais  [$9.99]
+    2. B083LNQ3X4  Maternity Capri Leggings Over The Belly Butt Lift - Buttery Soft Non-See-Through Workout P
+    3. B01N22524A  TSLA CLSL Yoga Tights Pants Leggings Mid-Waist/High-Waist Tummy Control w Inner-Pocket Ser
+    4. B07HNZ2YN8  ZEALOTPOWER Women's Running Shorts, Athletic Shorts High Waist Sporty Shorts 2 in 1 Workou
+    5. B081N3GZH3  Hopgo Women's Yoga Pants High Waisted Workout Running Butt Lifting Leggings Compression Se
+    6. B0BGLHVG7H  Women’s Tops Casual V-Neck Long Sleeve T-Shirts Solid Color Camouflage Leopard Floral Prin
+    7. B07HLRZ6H4  Ferrieswheel Story Spandex Capri Pants for Women 3/4 Shorts with Pockets Elastic Waist Wor  [$19.99]
+    8. B08GQSDZ21  Aonour Workout Leggings for Women High Waisted with Pockets Tummy Control Yoga Leggings Bl
+    9. B07X4W1J52  HKJIEVSHOP High Waist Yoga Pants, Pocket Yoga Pants Tummy Control Workout Pants 4 Way Stre
+    10. B07P88KKLV  SERHOM Yoga Pants, High Waist Tummy Control Workout Women Yoga Leggings with Pockets
+  scenario='browsing' override_applied=False turn=8
+  ledger(8): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.', 'For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.', 'For that, what matters is: Size: XX-Large.', 'For that, what matters is: Sport Type: Cycling, Running.', 'For that, what matters is: budget around $23.99.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris', 'style': 'Style: Capri', 'size': 'Size: XX-Large', 'use_case': 'Sport Type: Cycling, Running', 'budget': 'budget around $23.99'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=['budget', 'size', 'use_case'] last_ask='brand' disclosed=11
+  shown=80 suppressed=False frames={'browsing_open': 1, 'disclosure': 7}
+
+--- turn 9 ---
+  user: I don't have an additional preference for brand.
+  ask_attribute: 'category'
+  message: 'Here are the closest matches I found so far. What kind of item are you after, specifically?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09LCFJR57  NEEKEY Women's Christmas Reindeer Printed Xmas Leggings High Waist Tummy Control Leggings   [$6.99]
+    2. B0757MMZ3M  V FOR CITY Womens Workout Leggings Yoga High Waist Tihgts Tummy Control Capri Running Pant
+    3. B09MVMYF3S  Esuo Women 2 Pcs Yoga Sports Suit High Waist Yoga Legging Sets Running Sports Long Sleeve   [$26.99]
+    4. B08D3TNWTW  BALEAF Women 28" Scrunch Butt Yoga Leggings High Waist Booty Pocketed Workout Seamless Pan
+    5. B08T8S4SDK  JANVUR TIK Tok Textured Leggings for Women Butt Lifting Anti Cellulite Leggings Scrunch Bo
+    6. B09JSQ86LH  ccko High Waisted Leggings for Women with Pockets, Womens Yoga Pants Stretch Workout Leggi  [$22.99]
+    7. B0BRPKSDCS  Sunzel Softmax Workout Leggings for Women, Tummy Control Compression Workout Gym Yoga Pant  [$27.99]
+    8. B09Q5X9JSG  Durio White Tennis Skirt High Waisted Tennis Skorts Skirts for Women with Pockets Athletic
+    9. B08NGTPG9P  EEKOO Women's High Waist Yoga Pants with Pockets, Leggings with Pockets, Tummy Control Nak
+    10. B08P9F9TFF  ANGABRIEL High Waist Leggings with Pockets,Non See-Through Tummy Control Workout Leggings 
+  scenario='browsing' override_applied=False turn=9
+  ledger(8): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.', 'For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.', 'For that, what matters is: Size: XX-Large.', 'For that, what matters is: Sport Type: Cycling, Running.', 'For that, what matters is: budget around $23.99.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris', 'style': 'Style: Capri', 'size': 'Size: XX-Large', 'use_case': 'Sport Type: Cycling, Running', 'budget': 'budget around $23.99'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'size', 'use_case'] last_ask='category' disclosed=11
+  shown=90 suppressed=False frames={'browsing_open': 1, 'disclosure': 7, 'exhaustion': 1}
+
+--- turn 10 ---
+  user: I don't have an additional preference for category.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08DXLQRGH  TNNZEET 8" Buttery Soft Biker Shorts for Women – Print High Waisted Workout Yoga Athletic 
+    2. B0925FJ95R  Ritiriko Women's Capri Yoga Pants Loss Lounge Wide Leg Comfy Drwastring Capris Workout Pan  [$18.99]
+    3. B08FL9B9NR  HISKYWIN Womens Athletic Yoga Lounge Pants Active Joggers Sweatpants Drawstring Cotton Swe
+    4. B09CDC14HG  LOVE FANG Sweatpants for Women with Pockets High Waisted Ladies Joggers Loose Drawstring W  [$26.99]
+    5. B08MJXPJSZ  LABEYZON Women's Bootcut Yoga Pants High Waist Leggings Stretch Casual Flared Pants Lounge
+    6. B087M7VHS7  Fengbay High Waist Yoga Pants with Pockets, Yoga Pants for Women Tummy Control Yoga Leggin
+    7. B01M22QTWT  BALEAF Women's 5" Volleyball Biker Running Yoga Shorts Spandex Compression High Waisted Sh
+    8. B092CBBPTV  LEINIDINA Women’s High Waisted Capri Leggings Printed with Color Combo, Knee Length Shorts
+    9. B07KW2531F  youyou Yoga Pants Women's High Waist Seamless Yoga Leggings Tummy Control Ankle Workout Ti
+    10. B092QT3YL3  Bun Large Bootcut Yoga Pants for Women, High Waisted Bootleg Workout Pants Tummy Control L
+  scenario='browsing' override_applied=False turn=10
+  ledger(8): ["I'm looking for Women Leggings, but I'm still exploring.", 'For that, what matters is: polyester; 77% Polyester, 23% Spandex.', 'For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr.', 'For that, what matters is: Side Pockets & Hidden Waistband Pocket: The IUGA Yoga Capri Leggings for Women provide Two Large Side Pockets for cell phone and credit cards, and a Hidden Inner Pocket in the Wais; Color: Maroon Capris.', 'For that, what matters is: IUGA is a lifestyle brand that combines Style, Comfort and Performance. The High Quality Activewear is perfect for Fitness Enthusiasts and Everyday Athleisure as it is Affordable a; Style: Capri.', 'For that, what matters is: Size: XX-Large.', 'For that, what matters is: Sport Type: Cycling, Running.', 'For that, what matters is: budget around $23.99.']
+  query: "I'm looking for Women Leggings, but I'm still exploring. For that, what matters is: polyester; 77% Polyester, 23% Spandex. For that, what matters is: Imported; High Waist for Better Tummy Control: say goodbye to Muffin T"
+  slots: {'material': '77% Polyester, 23% Spandex', 'feature': 'High Waist for Better Tummy Control: say goodbye to Muffin Top and hello to a Smooth, Flat Tummy. These High Rise Tummy Control Leggings with Pockets for Women provide Gentle Compr', 'color': 'Color: Maroon Capris', 'style': 'Style: Capri', 'size': 'Size: XX-Large', 'use_case': 'Sport Type: Cycling, Running', 'budget': 'budget around $23.99'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'category', 'size', 'use_case'] last_ask='material' disclosed=11
+  shown=100 suppressed=False frames={'browsing_open': 1, 'disclosure': 7, 'exhaustion': 2}
+
+### end browsing_template public_0105 B07Q46M2J2: turns=10 first_hit_turn=2

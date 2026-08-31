@@ -1,0 +1,233 @@
+### browsing_natural same target B07Q46M2J2 free-form phrasing   degraded=False   target=B07Q46M2J2
+
+--- turn 1 ---
+  user: not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09QZQKSDR  LARSD Strappy Sports Bras for Women Wireless Yoga Tank Bra Criss Cross Back Longline Worko  [$14.99]
+    2. B08THFGHX4  OUDOTA Women's High Waisted Seamless Yoga Leggings Ruched Butt Lifting Gym Tights Smile Co
+    3. B085TLQKVH  ZKESS Women Casual Lace Sleeveless V Neck Pattern Printed Cap Sleeve Tank Tops Summer Chif
+    4. B06ZZY6152  Epic Brand Workout Pants for Women | Dry-Fit Performance Hot Yoga Pants Capri Leggings Zum
+    5. B06VV5JYDD  ShirtLoco Men's Worlds Okayest Shooter T-Shirt
+    6. B0861HTCFL  TOP LEGGING Compression Running Shorts, High Waist Performance Quick Dry Gym Yoga Boy-Shor  [$20.0]
+    7. B09L7YP1BX  ZEFOTIM Winter Coats For Women,Womens Sherpa Fleece Pockets Coat,Womens Winter Thicken Puf
+    8. B072LYC58R  Copper Compression Womens Leggings - High Waist Tights, Yoga Pants Women
+    9. B08KP3CM45  OYS Women's Workout 2 Piece Outfits Seamless High Waist Yoga Leggings Running Sports Long   [$25.99]
+    10. B09NFNHCXS  REYEOGO Women Seamless Shapewear Bodysuit Tummy Control Full Body Shaper Waist Trainer Sli  [$21.99]
+  scenario='unknown' override_applied=False turn=1
+  ledger(1): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.']
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.'
+  slots: {}
+  asked=['material'] retired=[] last_ask='material' disclosed=0
+  shown=10 suppressed=False frames={'unknown': 1}
+
+--- turn 2 ---
+  user: something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B094GB3J57  OVRUNS Women's Biker Shorts High Waisted Tummy Control Running Athletic Workout Yoga Casua
+    2. B09GVL2MP4  ROSA High Waisted Yoga Leggings for Women with Pockets Tummy Control Yoga Pants Tie Dye So
+    3. B0BN36K156  HYKEE Flare Leggings for Women - Yoga Pants - High Waisted Wide Leg Pants - Buttery Soft F  [$21.9]
+    4. B0BTPS8XXV  New Lifting Leggings Women High Waisted Seamless Workout Leggings Gym Booty Tights Tummy C  [$19.99]
+    5. B07JHX99VT  LifeSky Women Yoga Leggings Pants: High Waist Tummy Control 4-Way Stretch Yoga Pants with 
+    6. B07CN3V7HN  Leggings for Women and Girls-High Waisted Brushed Buttery Soft Pants- One/Plus Size 35+ De
+    7. B08JH28MY9  M MOTEEPI Womens 25" High Waisted Workout Leggings with Pockets Gym Yoga Running Pants
+    8. B07MNWBP6Y  FITTIN Women's TikTok Butt Leggings - Workout Yoga Pants Running Sports Fitness Gym Jogger
+    9. B087WRMBKT  CFR Womens Workout Leggings High Waist Anti Cellulite Scrunch Butt Lift Running Tights Yog
+    10. B089M2VZT2  Aphratti Womens High Waist Yoga Pants Workout Running Leggings with Pockets
+  scenario='unknown' override_applied=False turn=2
+  ledger(2): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.']
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature'] retired=[] last_ask='feature' disclosed=0
+  shown=20 suppressed=False frames={'unknown': 2}
+
+--- turn 3 ---
+  user: pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08NDXJQQB  LifeSky Women Yoga Leggings Pants: High Waist Tummy Control 4-Way Stretch Yoga Pants with 
+    2. B09Q3211PD  Sunzel 8" / 5" / 3" Biker Shorts for Women with Pockets, High Waisted Yoga Workout Shorts 
+    3. B08VGQ5WVJ  Aitangee High Waisted Leggings with Pockets for Women Tummy Control 4 Way Stretch Pants fo
+    4. B086PW98YT  TQD Women Leggings with Pockets, High Waist Yoga Pants Tummy Control, 4 Way Stretch Workou
+    5. B096LZTHJ1  PERSIT Women's High Waist Yoga Pants with Pockets Capri Leggings for Women Elastic Tummy C  [$8.99]
+    6. B07QLPDDNC  Bulouin Yoga Leggings for Women Workout High Waist 4 Way Stretch Capris Tummy Control Yoga
+    7. B08C7BKKDZ  OMANTIC Womens High Waist Pockets Yoga Pants Running Pants Workout Leggings
+    8. B0BRPKSDCS  Sunzel Softmax Workout Leggings for Women, Tummy Control Compression Workout Gym Yoga Pant  [$27.99]
+    9. B09JSQ86LH  ccko High Waisted Leggings for Women with Pockets, Womens Yoga Pants Stretch Workout Leggi  [$22.99]
+    10. B092CBBPTV  LEINIDINA Women’s High Waisted Capri Leggings Printed with Color Combo, Knee Length Shorts
+  scenario='unknown' override_applied=False turn=3
+  ledger(3): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color'] retired=[] last_ask='color' disclosed=0
+  shown=30 suppressed=False frames={'unknown': 3}
+
+--- turn 4 ---
+  user: hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B088RDMJC1  ATTRACO Leopard Leggings for Women High Waist Yoga Pants with Pockets Workout Tummy Contro
+    2. B08DXJMXHF  Roadbox Men's 7" Workout Athletic Gym Shorts Lightweight Basketball Shorts Whit Pocket for
+    3. B076P9H38P  BALEAF Women's Mid Waist Yoga Leggings with Pockets 28" Workout Athletic Pants Running Tig
+    4. B086QKCK2T  TQD Women's Yoga Pants with Pockets High Waist Capris Workout Running Athletic Sports Legg
+    5. B088D46Y26  TQD Women's Yoga Pants with Pockets High Waist Capris Workout Running Athletic Sports Legg
+    6. B08PCJGQJP  YOFIT Women's Ruched Butt Lifting High Waist Yoga Pants Tummy Compression Workout Leggings
+    7. B0899KKR32  qualidyne Yoga Shorts with Pockets for Women High Waist Leggings with Pocket Tummy Control
+    8. B08NGTPG9P  EEKOO Women's High Waist Yoga Pants with Pockets, Leggings with Pockets, Tummy Control Nak
+    9. B089291TSH  XMLMRY Women's Yoga Shorts Running Workout Bike Hiking Athletic High Waist Shorts with Sid
+    10. B08D6J17MQ  OMANTIC Yoga Shorts for Women - High Waist Stretch Biker Gym Shorts with Side Pockets for 
+  scenario='unknown' override_applied=False turn=4
+  ledger(4): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style'] retired=[] last_ask='style' disclosed=0
+  shown=40 suppressed=False frames={'unknown': 4}
+
+--- turn 5 ---
+  user: capri length, cropped just below the knee. i find full-length ones too hot in summer.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=8
+    1. B083HVVN29  LAPASA Women's High Waist Tummy Control Biker Shorts with Pockets Active Yoga Workout Runn
+    2. B08TRDNCKT  Roadbox mens Gym Shorts
+    3. B07Q4MMQLJ  VISNXGI Workout Yoga Pants for Women High Waist Athletic Compression Ankle Length Leggings
+    4. B08KXRB15C  Lrady Women's Workout Outfit 2 Pieces Tracksuit-Seamless Yoga Leggings and Stretch Sports 
+    5. B087FWG8QL  Ritiriko Women's Yoga Pants High Waisted Crop Workout Running Leggings with Side Pocketed 
+    6. B08KZQ6NKQ  Fengbay TIK Tok Leggings,Butt Lifting Leggings Yoga Pants Scrunch Booty Workout Leggings f
+    7. B07Q3912B9  90 Degree By Reflex High Waist Slim Stretch Yoga Jogger - Tapered Lounge Trouser Pants wit
+    8. B07Q46M2J2  IUGA High Waisted Yoga Pants for Women with Pockets Capri Leggings for Women Workout Leggi  [$23.99] <== TARGET
+    9. B089K2CNS6  Mens Elastic Waist Drawstring Casual Gym Joggers Short Pants Lounge Pajamas Summer Sweat S  [$9.99]
+    10. B08P9F9TFF  ANGABRIEL High Waist Leggings with Pockets,Non See-Through Tummy Control Workout Leggings 
+  scenario='unknown' override_applied=False turn=5
+  ledger(5): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.", 'capri length, cropped just below the knee. i find full-length ones too hot in summer.']
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=[] last_ask='size' disclosed=0
+  shown=50 suppressed=False frames={'unknown': 5}
+
+--- turn 6 ---
+  user: depends on the brand honestly. usually an XX-Large in this kind of thing, but sizing is all over the place so i'd want a size chart.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08GJWGHTC  I2CRAZY High Waisted Yoga Pants for Women with Pockets Tummy Control Workout Leggings
+    2. B08CSQGXTC  LETAOTAO Mens Big & Tall Athletic Basketball Shorts Performance Workout Gym Shorts Zipper 
+    3. B08B5VMX8Y  FitsT4 High Waisted Yoga Biker Shorts for Women Gym Workout Running-7 Inch Long Athletic C
+    4. B09N78FT2W  Free Leaper High Waisted Yoga Pants with Pockets for Women-Comfortable Running Seamless Le  [$23.99]
+    5. B092VT959N  QUEST NEW Leopard High Waisted Leggings for Women Soft Tummy Control Pants 4 Way Stretch W
+    6. B081N3GZH3  Hopgo Women's Yoga Pants High Waisted Workout Running Butt Lifting Leggings Compression Se
+    7. B08V9576J8  CAMEL Women's High Waist Capri Yoga 3/4 Workout Leggings Tummy Control Non See-Through Run
+    8. B08GP6NK8W  Leggings for Women - Premium Stretch Skinny Jeggings for Women - Women Jeggings
+    9. B08GNYS2KB  Leggings for Women - Premium Stretch Skinny Jeggings for Women - Women Jeggings
+    10. B08G4SZDN7  AFITNE womens Soft
+  scenario='unknown' override_applied=False turn=6
+  ledger(6): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.", 'capri length, cropped just below the knee. i find full-length ones too hot in summer.', "depends on the brand honestly. usually an XX-Large in this kind of thing, but sizing is all over the place so i'd want a size chart."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=[] last_ask='use_case' disclosed=0
+  shown=60 suppressed=False frames={'unknown': 6}
+
+--- turn 7 ---
+  user: cycling and running mostly, plus a yoga class on wednesdays. and then lounging around the house, which is probably 80% of it if i'm honest.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07ZLPXMHP  Youmymine Women High Waist Yoga Sport Pants Workout Fashion Skinny Leggings Fitness Athlet  [$6.99]
+    2. B0CC6KDZN9  Green Town Women's V-Neck Tuck-In Top/Slim Fit Jogger Yoga Pant Scrub Set Medical Nursing   [$32.99]
+    3. B086GTPQFB  GREFER Workout Leggings for Women Leopard Color Block Patchwork Pants - Fashion High Waist  [$4.29]
+    4. B082W9PST1  FIRST WAY Buttery Soft Women's Yoga Leggings Capris with Pockets High Waist Peach Skin Wor
+    5. B08XKH2X2G  MANIFIQUE womens Leggings
+    6. B09JNTFZTR  JOYSPELS Women's Maternity Pants with Pockets Over The Belly Pregnancy Bootcut Yoga Pants   [$28.99]
+    7. B096WW7MXD  High Waisted Biker Shorts Women - 8 inches Soft Tummy Control Shorts for Workout, Gym, Yog  [$10.49]
+    8. B08R7755DM  VOEONS Printed Yoga Pants for Women Pattern Exercise Leggings with Pockets High Waisted Tu
+    9. B07JWJBHKJ  HOFI High Waist Yoga Pants for Women Workout Leggings with Pockets Tummy Control
+    10. B0BG8PJQKW  CRZ YOGA Women's Naked Feeling Yoga Pants 28 Inches - High Waisted Workout Leggings Full L  [$26.0]
+  scenario='unknown' override_applied=False turn=7
+  ledger(7): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.", 'capri length, cropped just below the knee. i find full-length ones too hot in summer.', "depends on the brand honestly. usually an XX-Large in this kind of thing, but sizing is all over the place so i'd want a size chart.", "cycling and running mostly, plus a yoga class on wednesdays. and then lounging around the house, which is probably 80% of it if i'm honest."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=[] last_ask='budget' disclosed=0
+  shown=70 suppressed=False frames={'unknown': 7}
+
+--- turn 8 ---
+  user: nothing crazy - twenty to twenty five dollars is about right. i'm not paying lululemon money for something i mostly wear on the sofa.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07CCKQDKT  HIG Yoga Pants High Waist Leggings Tummy Control Workout Pants for Women with Outside Pock
+    2. B07C8BZFTC  HIG Yoga Pants High Waist Leggings Tummy Control Workout Pants for Women with Outside Pock
+    3. B09DSJ2Y7T  HUSKARY Women's Summer Casual Midi Dresses Short Sleeve V Neck Adjustable Waistline Drawst
+    4. B087CYC9NR  Fengbay High Waist Yoga Pants with Pockets, Capri Leggings for Women Tummy Control Running
+    5. B087CX9LKZ  Fengbay High Waist Yoga Pants with Pockets, Capri Leggings for Women Tummy Control Running
+    6. B07YV9T2MF  jonivey Yoga Shorts Yoga Capri Leggings High Waist Pocket Workout Running Non See-Through 
+    7. B08D3TNWTW  BALEAF Women 28" Scrunch Butt Yoga Leggings High Waist Booty Pocketed Workout Seamless Pan
+    8. B08K8V3GXW  Hanno Women's Mesh Yoga Pants with Pockets High Waist Tummy Control Workout Leggings
+    9. B07Q8KD36B  Mangrove Yoga Leggings for Women High Waist Tummy Control Yoga Pants with Pocket
+    10. B0B1HLDQ61  URBAN DAIZY Women's Joggers Sweatpants - Elastic Waistband Drawstring Melange Velboa Loung  [$20.95]
+  scenario='unknown' override_applied=False turn=8
+  ledger(8): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.", 'capri length, cropped just below the knee. i find full-length ones too hot in summer.', "depends on the brand honestly. usually an XX-Large in this kind of thing, but sizing is all over the place so i'd want a size chart.", "cycling and running mostly, plus a yoga class on wednesdays. and then lounging around the house, which is probably 80% of it if i'm honest.", "nothing crazy - twenty to twenty five dollars is about right. i'm not paying lululemon money for something i mostly wear on the sofa."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=[] last_ask='brand' disclosed=0
+  shown=80 suppressed=False frames={'unknown': 8}
+
+--- turn 9 ---
+  user: honestly i don't have any extra preference on brand - whatever fits the budget is fine by me.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08K8N3TGP  Mens Lightweight Gym Jogger Pants, Men's Elastic Bottom Workout Sweatpants with Zip Pocket
+    2. B09PHD7DJR  HIGHDAYS Leggings for Women with Pockets - High Waist Capri Workout Running Yoga Pants
+    3. B07WQW8HY6  DCRT High Waisted Tummy Control Leggings - Super Compression Leggings Pants with Inner Poc
+    4. B088ZTJD57  DIBAOLONG Yoga Pants for Women High Waist Yoga Leggings Tummy Control Workout Sport Patter
+    5. B083TLNBGW  Persit Leggings for Women-Workout High Waisted Womens Leggings with Pockets Tummy Control   [$9.99]
+    6. B08V5975K3  KUTAPU High Waist Yoga Shorts for Women with 2 Pockets Women Biker Workout Athletic Butt L
+    7. B019DGD6ZC  90 Degree By Reflex Squat Proof Super High Waist Odor Control Ankle Length Leggings
+    8. B083LDYTWJ  Women's Medical Uniform Scrub Sets - 2 Piece V Neck Top and Pants Stretch Lightweight with
+    9. B09MVMYF3S  Esuo Women 2 Pcs Yoga Sports Suit High Waist Yoga Legging Sets Running Sports Long Sleeve   [$26.99]
+    10. B07NPJX2KV  CAMPSNAIL High Waisted Capri Leggings for Women - Printed Tummy Control Soft Compression P
+  scenario='unknown' override_applied=False turn=9
+  ledger(8): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.", 'capri length, cropped just below the knee. i find full-length ones too hot in summer.', "depends on the brand honestly. usually an XX-Large in this kind of thing, but sizing is all over the place so i'd want a size chart.", "cycling and running mostly, plus a yoga class on wednesdays. and then lounging around the house, which is probably 80% of it if i'm honest.", "nothing crazy - twenty to twenty five dollars is about right. i'm not paying lululemon money for something i mostly wear on the sofa."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=[] last_ask='brand' disclosed=0
+  shown=90 suppressed=False frames={'unknown': 9}
+
+--- turn 10 ---
+  user: ok if you're pushing me - IUGA. a friend has their capri leggings and swears by them.
+  ask_attribute: 'category'
+  message: 'Here are the closest matches I found so far. What kind of item are you after, specifically?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07L49L275  ENIDMIL Women 2 Piece Outfits Crop Top Long Pants Leggings Yoga Set Tracksuits
+    2. B08DFVFZSP  Naggoo Women's High Waisted Joggers Lightweight Sweatpants Workout Running Lounge Sport Pa
+    3. B07JLHNGL9  HonourSex Womens Capri Skirt Tennis Casual Skirted Leggings Skort, Sport Running Athletic 
+    4. B074RBSWLX  Sofra Women's Plus Sized Full Length Leggings-Black
+    5. B08T8S4SDK  JANVUR TIK Tok Textured Leggings for Women Butt Lifting Anti Cellulite Leggings Scrunch Bo
+    6. B08BNX4MR2  O2 COLLECTION Women High Waist Wide Waistband Out Side Pocket Full Length Yoga Workout Cot  [$24.99]
+    7. B087Q66BVY  Matymats Women's Yoga Harem Pants Side Slit Lounge Dancing Workout Sweatpants
+    8. B0BFS2LF46  90 Degree By Reflex High Waist Tummy Control Interlink Squat Proof Ankle Length Leggings  [$26.98]
+    9. B08WLNBX5B  GLASS TWO High Waisted Leggings – Women's Yoga Active Workout Running Sports Casual Stretc
+    10. B07HHYDKK7  HUSKARY Women's Summer Maxi Dress Casual Loose Pockets Long Dress Short Sleeve Split
+  scenario='unknown' override_applied=False turn=10
+  ledger(9): ['not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around.', 'something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polyester with some spandex and they were great, squat proof and not see through.', "pockets, that's the big one. a proper side pocket that fits my phone and ideally a little hidden one in the waistband for keys. high waisted with tummy control too.", "hmm. maroon? or honestly anything dark. i had a maroon capri pair once and loved the colour, but i'm flexible.", 'capri length, cropped just below the knee. i find full-length ones too hot in summer.', "depends on the brand honestly. usually an XX-Large in this kind of thing, but sizing is all over the place so i'd want a size chart.", "cycling and running mostly, plus a yoga class on wednesdays. and then lounging around the house, which is probably 80% of it if i'm honest.", "nothing crazy - twenty to twenty five dollars is about right. i'm not paying lululemon money for something i mostly wear on the sofa.", "ok if you're pushing me - IUGA. a friend has their capri leggings and swears by them."]
+  query: 'not totally sure what i want yet tbh, just browsing. leggings for women maybe? something i could wear to the gym and also just around. something soft and stretchy - 4-way stretch, spandex-y. my last pair was mostly polye'
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=[] last_ask='category' disclosed=0
+  shown=100 suppressed=False frames={'unknown': 10}
+
+### end browsing_natural same target B07Q46M2J2 free-form phrasing: turns=10 first_hit_turn=5

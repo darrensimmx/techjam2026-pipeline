@@ -1,0 +1,233 @@
+### buying_template public_0101 B07QMS8TX8   degraded=False   target=B07QMS8TX8
+
+--- turn 1 ---
+  user: I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01MQUDPPO  Iflex Scrubs for Women, Yoga-Inspired Knit Waistband Scrub Pants CK002  [$34.99]
+    2. B0082153QU  Cherokee Women's Low-Rise Drawstring Pant, Fuchsia Rose, XXX-Large
+    3. B01CFX0G3K  KOI Big and Tall James Elastic Men's Big & Tall Scrub Pants with Zip Fly and Drawstring Wa  [$39.95]
+    4. B078XJN2ZS  Urbane Performance 9733 Activate Pant
+    5. B007R0PO1G  Ecko Unltd Men's Scrubs Harrison Pant
+    6. B08GR3VKSN  Medline Men's Straight  [$13.88]
+    7. B015P3O4O4  M&M SCRUBS Women Scrub Set Medical Scrub Top and Pants MYellow
+    8. B01FON9H5G  M&M SCRUBS Women's Super Soft Medical Scrub Pants for Women - Drawstring Yoga Pant Inspire  [$17.95]
+    9. B00JRN4NGI  Cherokee Women's Mid-Rise Slim Drawstring Pant, Black, Small Petite
+    10. B07MR3H7H1  Cherokee Workwear Revolution WW110 Espresso XLP  [$23.98]
+  scenario='buying' override_applied=False turn=1
+  ledger(1): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester."]
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester."
+  slots: {'material': 'polyester'}
+  asked=['material'] retired=[] last_ask='material' disclosed=1
+  shown=10 suppressed=False frames={'buying_open': 1}
+
+--- turn 2 ---
+  user: For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B07QMS8TX8  Medical Cargo Pants for Men Workwear Originals, Zipper Fly Scrubs for Men 4000  [$19.19] <== TARGET
+    2. B005K02WQA  Cherokee Workwear Scrubs Big-Tall Unisex V-Neck Top
+    3. B07P6MPQY5  Sivvan Scrubs for Men - Zippered Short Sleeve Jacket  [$15.29]
+    4. B00E9AOVX4  Cherokee Women's Scrubs Flexibles Zip-Front Warm-up Jacket
+    5. B06XV1865Z  Uncommon Threads mens Unisex Restaurant Utility Shirt With Snap Closure  [$15.95]
+    6. B004QVJ4BA  Dickies Occupational Workwear LR303NV Polyester/Cotton Relaxed Fit Men's Industrial Flat F
+    7. B083JSMQNC  Natural Uniforms Women's Warm Up Jacket Medical Scrub Jacket (XS to 5XL) (Medium, Ceil Blu
+    8. B00L9IZVR4  Natural Uniforms Women's Contrast Jersey Scrub Set (Chocolate) (X-Small)
+    9. B002V8WPBG  Workwear Revolution Women Scrubs Top V-Neck WW620
+    10. B00WAXEEU2  Cherokee Workwear Women's Infinity Crew Neck Scrubs Shirt  [$32.99]
+  scenario='buying' override_applied=False turn=2
+  ledger(2): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi'}
+  asked=['material', 'feature'] retired=[] last_ask='feature' disclosed=3
+  shown=20 suppressed=False frames={'buying_open': 1, 'disclosure': 1}
+
+--- turn 3 ---
+  user: For that, what matters is: Imported; Pull On closure.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B00ZUS7UG4  LL516 Long Sleeve Premium Performance Shirt
+    2. B08Q3B6DK8  Women Short Sleeve V-Neck Tops Workwear T-Shirt Christmas Thanksgiving Print Cute Scrub_To
+    3. B08X65FTS5  Fankle Women Cute Scrub_Top Working Uniform Short Sleeve V-Neck Tops Workwear T-Shirt St. 
+    4. B0B5F3NPN7  Tooniforms Women Scrubs Top V-Neck Print TF736  [$33.48]
+    5. B07MQX5B9R  Mim Jogger Scrub Top for Women, Navy Blue, Black, Burgundy, Green  [$49.0]
+    6. B083LDYTWJ  Women's Medical Uniform Scrub Sets - 2 Piece V Neck Top and Pants Stretch Lightweight with
+    7. B0CC6KDZN9  Green Town Women's V-Neck Tuck-In Top/Slim Fit Jogger Yoga Pant Scrub Set Medical Nursing   [$32.99]
+    8. B00K9DJLYO  Dagacci Medical Uniform Relaxed Style V-Neck Set Zipper Detail Pocket
+    9. B013R5RWV4  koi Classic 137 Women's Katelyn Mock-Wrap Scrub Top  [$19.95]
+    10. B00AZO9Q4W  BARCO ICU Women's Missy Fit 2 Pocket Snap Front Scrub Jacket
+  scenario='buying' override_applied=False turn=3
+  ledger(3): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure'}
+  asked=['material', 'feature', 'color'] retired=[] last_ask='color' disclosed=5
+  shown=30 suppressed=False frames={'buying_open': 1, 'disclosure': 2}
+
+--- turn 4 ---
+  user: For that, what matters is: color: white.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01N5GBF0I  Red Kap Men's Diamond Plate Long-Sleeve Work Shirt
+    2. B01AATZJA6  Allure by White Cross Women's V-Neck Curved Side Stretch Scrub Top X-Large Black
+    3. B01F44GD66  SIVVAN Women's Scrubs Y-Neck Partial Mock Wrap Top - S8300 - White - S
+    4. B07G8Q53DN  Grey's Anatomy Spandex-Stretch 3-Pocket Color Block V-Neck Scrub Top for Women
+    5. B0042A809W  Landau Essentials Relaxed Fit 1-Pocket V-Neck Scrub Top for Men 7594
+    6. B07RMKCNMH  TiScrubs Men's Fitted Slim Fit Scrub Top  [$38.0]
+    7. B07QMS6WQW  Cherokee Professionals Women Scrubs Vest Lace Trimmed 2610  [$23.98]
+    8. B089ZYNKD9  Nideen Men's Professional White Long Sleeves Lab Coats Unisex  [$10.99]
+    9. B07HB5WMLB  Propper Men's Lightweight Ripstop Station Pant
+    10. B002B61ERE  Landau Essentials Women’s Drawstring Warm-Up Scrub Jacket
+  scenario='buying' override_applied=False turn=4
+  ledger(4): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white'}
+  asked=['material', 'feature', 'color', 'style'] retired=['color'] last_ask='style' disclosed=6
+  shown=40 suppressed=False frames={'buying_open': 1, 'disclosure': 3}
+
+--- turn 5 ---
+  user: For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07YLW6RM2  Vopmocld Christmas Family Matching Pajama Red Holiday Pjs Sets Cotton Sleepwear  [$23.99]
+    2. B0B8TMX7G7  Natural Uniforms Women's Long Sleeve Extra Wide Scoop-Neck T-Shirt Under Scrub  [$12.95]
+    3. B07KJHJJJ8  Athletic Works Women's Straight Leg Pant: Avaliable in Regular & Petite
+    4. B077TGQ6BW  Amazon Essentials Men's Standard Quick-Dry Stretch Scrub Top
+    5. B0036GGPAE  Dickies Men's Big Boys' Flexwaist Double Knee Pant
+    6. B07QTPM2S8  Dickies EDS Women Scrubs Top V-Neck Print DK616  [$24.27]
+    7. B01DQ2CE6Q  MedPro Women's Contrast Trimmed Solid Medical Scrub Set Mock Wrap Top and Cargo Pants
+    8. B07F6QDHM2  Cherokee Infinity CK902 Men's V-Neck Top, Down The Line, Large
+    9. B01MYUM67T  Med Couture Women's in-Seam Zip Front Solid Warm Up Scrub Jacket
+    10. B097QG31KD  Strictly Scrubs Women's Stretch Watercolor Zebra Print Scrub Jacket (XS-3X) – Warm Up Medi
+  scenario='buying' override_applied=False turn=5
+  ledger(5): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.', "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti."]
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white', 'style': 'ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti'}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=['color'] last_ask='size' disclosed=8
+  shown=50 suppressed=False frames={'buying_open': 1, 'disclosure': 4}
+
+--- turn 6 ---
+  user: For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09L6NMKDM  Mens Camouflage Military BDU Pants Army Cargo Fatigues Camo Fashion Trousers  [$40.99]
+    2. B0725R2TLT  Lee Women's Misses Secretly Shapes Regular Fit Straight Leg Jean
+    3. B01J4DR362  Med Hanger Womens White Lab Coat Uniform - 40 Inch Professional Unisex 3 Pocket with Belt,
+    4. B07GZ3GG8N  Grey's Anatomy Spandex-Stretch Kim Top for Women- Easy Care Medical Scrub Top
+    5. B096DMZRSB  Dagacci Medical Uniform Women's Scrubs Set Stretch Ultra Soft Y-Neck Wrap Top and Pants
+    6. B01GGH20BC  Med Couture MC2 8709 Men's Tactical Cargo Pant
+    7. B002UDCVMK  Cherokee Workwear Professionals WW665 Orange Squeeze L
+    8. B00N398C3M  M&M Scrubs Women Scrub Set Medical Scrub Top and Pants S Khaki
+    9. B0B9GS7R8P  Dwaloeno Christmas Nurse Uniforms Women Cartoon Dinosaur Print V Neck Short Sleeve Medical  [$3.99]
+    10. B002ABJYMC  Jockey 2411 Women's Amazing Comfort Scrub Pant - Comfort Guaranteed
+  scenario='buying' override_applied=False turn=6
+  ledger(6): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.', "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.", "For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S."]
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white', 'style': 'ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti', 'size': "MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S"}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=['color', 'size'] last_ask='use_case' disclosed=9
+  shown=60 suppressed=False frames={'buying_open': 1, 'disclosure': 5}
+
+--- turn 7 ---
+  user: For that, what matters is: SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0764JZF5K  Vera Bradley Healthcare Apparel Women's Maya V-Neck Top
+    2. B0755BD5GQ  Dickies Flex Work Pant Slim Taper Fit Big  [$50.0]
+    3. B09F2QMD7W  jambeau Thermal Underwear for Men Soft Long Johns Set with Fleece Lined Winter Warm Base L
+    4. B017V7VQR0  Women's Gen Flex Low Rise Drawstring Scrub Pants
+    5. B074YB4QMR  Dickies Essence Women Scrubs Pant Mid Rise Tapered Leg Pull-on DK140, XXS, Wine
+    6. B0056X6THE  Port Authority Women's Long Sleeve Value Poplin Shirt S White
+    7. B00R8I7PTG  KOI Women's Fefe Zipper-Front Sweater with 4-Way Stretch and Metal Details
+    8. B007R0PI26  Ecko Unltd Men's Scrubs Riverside V-Neck Top
+    9. B0122ZWAKS  NU Dimension 5003 Luxury Touch Stretch Classic V-Neck Women Scrub Top
+    10. B07MJC9H5J  Tooniforms Women Scrubs Top V-Neck TF608
+  scenario='buying' override_applied=False turn=7
+  ledger(7): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.', "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.", "For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S.", 'For that, what matters is: SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white', 'style': 'ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti', 'size': "MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S", 'use_case': 'SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['color', 'size', 'use_case'] last_ask='budget' disclosed=10
+  shown=70 suppressed=False frames={'buying_open': 1, 'disclosure': 6}
+
+--- turn 8 ---
+  user: For that, what matters is: budget around $19.19.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B002XFY8IU  Dickies Men's Relaxed Fit Flannel-Lined Work Pant
+    2. B0B3797S33  Personalized Chef Jacket Custom Name Chef Coat DIY Short Sleeve Chef Jacket Classic Chef S  [$15.99]
+    3. B0B1HLDQ61  URBAN DAIZY Women's Joggers Sweatpants - Elastic Waistband Drawstring Melange Velboa Loung  [$20.95]
+    4. B00UYE32DO  Dickies Women's Jr. Fit Mid-Rise Slim Drawstring Pant
+    5. B07932CBBT  Cherokee Women's V-Neck Nurse Owl Print Scrub Top Medium Print
+    6. B01N3CTB2Q  CollegeWear, Inc. Unisex Long White Lab Coat - Chemistry, Biology, Organic Chem, Science S
+    7. B003YLTSK0  Cherokee iFlex CKK075 Women's Katie Duke Mid Rise Moderate Flare Leg Pull-on Pant
+    8. B079H4JNLW  Adar Active Classic Scrub Set for Women - Crossover Top and Multi Pocket Pants
+    9. B0036GH4MM  Dickies Men's Premium Industrial Cargo Short, Navy Blue, 31" Waist Size, 11" Inseam
+    10. B01N7TWD24  Iguanamed MA146022 Women's 5500 Quattro Pant, Medium, Merlot
+  scenario='buying' override_applied=False turn=8
+  ledger(8): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.', "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.", "For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S.", 'For that, what matters is: SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo.', 'For that, what matters is: budget around $19.19.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white', 'style': 'ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti', 'size': "MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S", 'use_case': 'SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo', 'budget': 'budget around $19.19'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=['budget', 'color', 'size', 'use_case'] last_ask='brand' disclosed=11
+  shown=80 suppressed=False frames={'buying_open': 1, 'disclosure': 7}
+
+--- turn 9 ---
+  user: I don't have an additional preference for brand.
+  ask_attribute: 'category'
+  message: 'Here are the closest matches I found so far. What kind of item are you after, specifically?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B077TF1W28  Amazon Essentials Women's Quick-Dry Stretch Scrub Top
+    2. B01MAYVQ68  CAMIXA Women's Gingham Shirt Checkered Casual Long Sleeve Button Down Plaid Top
+    3. B01B3N1VHS  Beverly Hills Women's Plus Size 504
+    4. B0083IB2SK  Med Couture Drawstring Signature Scrub Pants for Women, Navy, X-Large Tall
+    5. B0776ZV79T  Jachs Men's Flannel Pajama Pants Comfortable Lounge Pants with Pockets
+    6. B00IPPFAUW  GTMA Karate Uniform 7oz Poly/Cotton
+    7. B078W92WV1  BBST Men Lab Coat White Medical Uniforms Scrubs 2018 New Improvement Elastic Sleeves Thin 
+    8. B07FZBPQVB  Renegader Sportswear Men's Multiple Pocket Water Resistant Poplin Shell Polar Fleece Lined  [$29.99]
+    9. B00U1U4LIG  Legendary Whitetails Womens Hidden Creek Cargo Short
+    10. B099J5YWNQ  PSD Womens GON Killua Split Sports Bra Multi 33904
+  scenario='buying' override_applied=False turn=9
+  ledger(8): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.', "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.", "For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S.", 'For that, what matters is: SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo.', 'For that, what matters is: budget around $19.19.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white', 'style': 'ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti', 'size': "MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S", 'use_case': 'SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo', 'budget': 'budget around $19.19'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'color', 'size', 'use_case'] last_ask='category' disclosed=11
+  shown=90 suppressed=False frames={'buying_open': 1, 'disclosure': 7, 'exhaustion': 1}
+
+--- turn 10 ---
+  user: I don't have an additional preference for category.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B00IY7XQV6  Dickies Women's EDS Signature Scrubs 86706 Missy Fit V-Neck Top, Caribbean Blue, XXXX-Larg
+    2. B09QHP674V  THE NORTH FACE Men's TNF Bear Pullover Hoodie, Arrowwood Yellow, Large  [$99.0]
+    3. B0B81VGFNL  PATPAT Go-Neat Boys' Girls Unisex Short Sleeve T-Shirts Stain Resistant Water Repellent Ts
+    4. B08BJMT9M7  Longwu Women's Casual V-Neck Sleeveless/Short Sleeve Side Split Drawstring Waist Midi Leng
+    5. B08C24BVHH  Longwu Women's Casual V-Neck Sleeveless Side Split Drawstring Waist Midi Length Vest Dress
+    6. B0BYNTT3FY  Women's Christmas Printed Scrub Tops Plus Size V-Neck Fun T Shirts Health Care Center Holi  [$15.99]
+    7. B077Y6FQTB  S.H. Churchill & Co. Boy's 6 Piece Vest and Pant Set, Includes Shirt, Long Tie, Bow Tie an
+    8. B00SLFIZGW  Dockers Men's Signature Performance Classic Flat-Front Pant
+    9. B07G4FMZML  Cherokee Tooniforms Men's V-Neck Dc Comics Print Scrub Top X-Large Print
+    10. B07MQBVDW3  GIOVANNI UOMO Men's Traditional Fit Solid Color Dress Shirt-More Colors
+  scenario='buying' override_applied=False turn=10
+  ledger(8): ["I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.", 'For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.', 'For that, what matters is: Imported; Pull On closure.', 'For that, what matters is: color: white.', "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.", "For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S.", 'For that, what matters is: SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo.', 'For that, what matters is: budget around $19.19.']
+  query: "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester. For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* "
+  slots: {'material': 'DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi', 'feature': 'Pull On closure', 'color': 'color: white', 'style': 'ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti', 'size': "MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S", 'use_case': 'SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo', 'budget': 'budget around $19.19'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'category', 'color', 'size', 'use_case'] last_ask='material' disclosed=11
+  shown=100 suppressed=False frames={'buying_open': 1, 'disclosure': 7, 'exhaustion': 2}
+
+### end buying_template public_0101 B07QMS8TX8: turns=10 first_hit_turn=2

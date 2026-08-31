@@ -1,0 +1,233 @@
+### boundary_hedge_probe (retire brand at t2, see whether the hedge still asks it)   degraded=False   target=B0BN6CCHB7
+
+--- turn 1 ---
+  user: I'm looking for Athletic Walking, but I'm still exploring.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08R86WZ11  RIBONGZ Wide Toddler Boys Shoes Slip On Little Girls Sneakers for Athletic Walking Running
+    2. B07PV6BFVZ  aeepd Women Nurse Shoes Walking Slip On Sneakers Mary Jane Velcro Breathable Mesh Platform
+    3. B083Q1ZGHC  Lxso Womens Flat Sandals with Arch Support Braided Strap for Walking/Hiking/Beach/Water Sp
+    4. B01MXVW2VN  LIUID Stan Men's Lightweight Running Shoes - Athletic Knit Mesh Comfortable Walking Shoes 
+    5. B072BD7LYK  ECCO Men's Terra 3s Athletic Sandal
+    6. B0089NAT92  Columbia Women's Sunlight II Sandal
+    7. B094GB3J57  OVRUNS Women's Biker Shorts High Waisted Tummy Control Running Athletic Workout Yoga Casua
+    8. B071J7BXY2  Papa Bear T-Shirt Awesome Camping Father's Gift Tee
+    9. B0827QXZBR  Forcool Copper Military Socks, Men's Women's Cushion Sports Crew Socks,1 Pairs Camouflage 
+    10. B092HTCXDN  dripdrop Kids Rain Boots for Girls Boys, Toddler Animal Printed Waterproof Rubber Boots wi
+  scenario='browsing' override_applied=False turn=1
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material'] retired=[] last_ask='material' disclosed=0
+  shown=10 suppressed=False frames={'browsing_open': 1}
+
+--- turn 2 ---
+  user: I don't have an additional preference for brand.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0BF6BL7WM  THE NORTH FACE TKA Glacier 1/4 Zip Mens Fleece  [$58.91]
+    2. B0BGGD6Q3Z  waterproof Socks for Men & Women, Breathable Hiking Socks Mid Crew 1 Pair
+    3. B07XVS4BKZ  THE NORTH FACE Aphrodite Motion 4in Womens Shorts  [$29.22]
+    4. B007PG229E  Patagonia Men's Maui Walking Shoe
+    5. B09QHP674V  THE NORTH FACE Men's TNF Bear Pullover Hoodie, Arrowwood Yellow, Large  [$99.0]
+    6. B00HQ5I194  Patagonia Men's Evader Walking Shoe
+    7. B07W68FZK9  HAOJIALI Women's Flats Walking Shoes Mesh Lightweight Breathable Slip-Ons Sneakers
+    8. B0B6DT91Q7  Women's Fashion Sneakers,Women's Slip On Sneakers Loafer Shoes Cow Leopard Pattern Low Top
+    9. B074ZKBYT4  Darn Tough Men's Vertex No Show Tab Ultra-Light Cushion Sock
+    10. B002LVV4WE  The North Face Betasso Sneaker (Little Kid/Big Kid)
+  scenario='browsing' override_applied=False turn=2
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature'] retired=['brand'] last_ask='feature' disclosed=0
+  shown=20 suppressed=False frames={'browsing_open': 1, 'exhaustion': 1}
+
+--- turn 3 ---
+  user: I don't have an additional preference for material.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01N1MFO07  Darn Tough Breakaway Micro Crew Ultralight Sock - Men's
+    2. B074ZTFX43  Gerlobal Mens Gym Workout Active Muscle Bodybuilding Long Sleeve Hoodies Casual Hooded Swe
+    3. B087JHRTHV  SAGUARO Women's Mens Mesh Garden Clog Shoes Sandals Summer Indoor Outdoor Unisex Walking S
+    4. B07G733N6S  EQUICK Kids Aqua Shoes Breathable Slip-on Sneakers
+    5. B07D8TCYKF  SAGUARO Women's Mens Mesh Garden Clog Shoes Sandals Summer Indoor Outdoor Unisex Walking S
+    6. B00C31HKWA  Breckelle's Women's Sahara-51 Athletic Walking Shoe
+    7. B0972ZHF2Z  MAINCH Men's Fashion Sneakers Casual Walking Shoes Athletic Work Shoes (Black, Size 15)
+    8. B08JPG26WF  Akk Women's Running Shoes Lightweight Breathable Mesh Sneakers Sports Athletic Casual Walk
+    9. B08Y91Y5KL  UUBARIS Women's Fashion Gym Sneakers Lightweight Athletic Running Shoes Breathable Walking
+    10. B0822HFZS9  Women's Casual Breathable Athletic Running Sport Shoes Walking Fashion Sneakers
+  scenario='browsing' override_applied=False turn=3
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color'] retired=['brand', 'material'] last_ask='color' disclosed=0
+  shown=30 suppressed=False frames={'browsing_open': 1, 'exhaustion': 2}
+
+--- turn 4 ---
+  user: I don't have an additional preference for feature.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07SNQYPY6  Men's Walking Shoes Casual Sneakers - Athletic Running Non-Slip Lightweight Outdoor Fashio
+    2. B083VTTSPY  konhill Women's Mesh Walking Shoes - Lightweight Athletic Tennis Gym Sneakers 9 US Black,L
+    3. B091F49R8N  Akk Womens Sneakers Running Shoes - Fashion Tennis Walking Athletic Shoes for Workout Gym 
+    4. B08RMT7665  Womens Tennis Shoes - Women Sneakers Workout Running Walking Athletic Gym Fashion Lightwei
+    5. B08F3FVWHX  Kapsen Mens Athletic Walking Non Slip Blade Running Tennis Shoes Fashion Sneakers Black Wh
+    6. B001V5J61M  Darn Tough Vermont Merino Wool Standard Issue Crew Cushion Sock  [$24.95]
+    7. B07TT9FB84  Pamray Women's Running Shoes Tennis Athletic Jogging Sport Walking Sneakers Gym Fitness Go
+    8. B07VNL2XLS  Socviis Men's Non Slip Minimalist Running Shoes Lightweight Breathable Athletic Walking Te
+    9. B08JLGGXG1  Akk Womens Sneakers Running Shoes - Fashion Tennis Walking Athletic Shoes for Workout Gym 
+    10. B08SC7QKC8  UUBARIS Men's Walking Shoes Lightweight Breathable Athletic Running Shoe Casual Tennis Sne
+  scenario='browsing' override_applied=False turn=4
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style'] retired=['brand', 'feature', 'material'] last_ask='style' disclosed=0
+  shown=40 suppressed=False frames={'browsing_open': 1, 'exhaustion': 3}
+
+--- turn 5 ---
+  user: I don't have an additional preference for color.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07PLCCVHT  LANCROP Women's Tennis Shoes - Casual Breathable Knitted Athletic Gym Walking Running Snea
+    2. B083PSSQXP  Zuwoigo Women’s Walking Shoes Mesh Athletic Elasticity Comfortable Tennis Sneakers 9.5 B(M
+    3. B01KXFLXO8  Odema Women's Athletic Running Sneakers Fitness Workout Gym Jogging Walking Shoes Black
+    4. B0814HRT47  Socviis Mens Running Shoes Fashion Breathable Sneakers Lightweight Tennis Sport Casual Wal
+    5. B092Z73G1R  Ahico Mens Running Sneakers Walking Shoes Mesh Breathable Lightweight Tennis Comfortable S
+    6. B07BQFDRNF  Ezywear Women Lightweight Sneakers Athletic Casual Mesh-Comfortable Slip-On Walking Shoes 
+    7. B08TLVZXKL  DUOYANGJIASHA Women's Athletic Running Walking Fabric Breathable Slip On Sports Tennis Mes
+    8. B089W81PSB  Ezkrwxn Sneakers for Men Running Shoes Athletic Tennis Walking Shoes Fashion Sneaker mesh 
+    9. B08KG7B1GH  Akk Women's Sneakers Walking Tennis Shoes Comfortable Athletic Road Running Workout Casual
+    10. B099Z861BT  Casual Shoes for Women Tennis Athletic Running Jogging Gym Sneakers Breathable mesh Stylis
+  scenario='browsing' override_applied=False turn=5
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=['brand', 'color', 'feature', 'material'] last_ask='size' disclosed=0
+  shown=50 suppressed=False frames={'browsing_open': 1, 'exhaustion': 4}
+
+--- turn 6 ---
+  user: I don't have an additional preference for style.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07Z4D1525  YHOON Women's Walking Shoes - Sock Sneakers Slip on Mesh Platform Air Cushion Athletic Sho
+    2. B08T8YGXNK  Womens Tennis Shoes - Women Sneakers Workout Running Walking Athletic Gym Fashion Lightwei
+    3. B0856X78YD  Voxge Men's and Women's Sock Sneakers Lightweight Breathable Athletic Running Shoes Fashio
+    4. B07KFQGV1J  Dr. Scholl's Men's Warum Athletic Wide Width Walking Shoes (11.5 2E US, Black)
+    5. B07D5GH22L  Ezywear Women Lightweight Sneakers Athletic Casual Mesh-Comfortable Slip-On Walking Shoes 
+    6. B08GBLQPGW  MOERDENG Men's Lightweight Fashion Sneaker Breathable Athletic Running Walking Shoes Navy,
+    7. B08XTRSD3B  Women's Walking Shoes Slip-On Socks Sneakers Fashion Lightweight Breath Mesh Air Cushion S
+    8. B09FYZS434  LARNMERN PLUS Mens Tennis Shoes Running Walking Sneakers Lighweight Slip on Blade Athletic
+    9. B088CQJK78  Honnesserry Men's Sneakers Non Slip Tennis Work Shoes Graffiti Fashion Slip on Resistant A
+    10. B09F96X5J1  YYZ Mens Running Tennis Shoes – Non Slip Men Slip On Sneakers Lightweight Men’s Walking Sh
+  scenario='browsing' override_applied=False turn=6
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=['brand', 'color', 'feature', 'material', 'style'] last_ask='use_case' disclosed=0
+  shown=60 suppressed=False frames={'browsing_open': 1, 'exhaustion': 5}
+
+--- turn 7 ---
+  user: I don't have an additional preference for size.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B097NJ37NJ  THE NORTH FACE Women's Tamburello Insulated Jacket (Standard and Plus Size), New Taupe Gre
+    2. B07G5FQ9V5  TIOSEBON Women's Lightweight Casual Walking Athletic Shoes Breathable Running Slip-On Snea
+    3. B08NDB5LR7  UUBARIS Men's Supportive Walking Shoes Lightweight Fashion Sneakers Breathable Running Sho
+    4. B08M9TL1P6  DADAWEN Women's Walking Shoes Sequin Lightweight Non Slip Tennis Sneakers Lady Girls Comfo
+    5. B005BQXZV4  The North Face Men's Single-Track GTX XCR II Trail Running Shoe
+    6. B002LVV5LE  The North Face Betasso Sneaker (Little Kid/Big Kid)
+    7. B08H5JWWS8  Women's Lightweight Walking Shoes - Memory Foam Slip On for Gym Tennis Breathable Mesh Sne
+    8. B07TPV87XH  QAUPPE Men's Memory Foam Tennis Shoes Lightweight Comfortable Casual Mesh Slip On Athletic
+    9. B08BFV2B6M  INZCOU Mens Womens Gym Grey Sneakers Mesh Breathable Lightweight Non Slip Running Athletic
+    10. B07D8J2PCM  Alibress Men's Women's Lightweight Breathable Running Athletic Casual Shoes Walking Mesh S
+  scenario='browsing' override_applied=False turn=7
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['brand', 'color', 'feature', 'material', 'size', 'style'] last_ask='budget' disclosed=0
+  shown=70 suppressed=False frames={'browsing_open': 1, 'exhaustion': 6}
+
+--- turn 8 ---
+  user: I don't have an additional preference for use_case.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07FZ16V34  Wonvatu Walking Shoes for Women Lightweight Athletic Slip-On Running Shoes Fashion Sneaker
+    2. B08ZK7NZBX  SKDOIUL Fashion Men Sport Athletic Walking Shoes mesh Breathable Comfort Sneakers Runner J
+    3. B07Q2M3N93  Oberm Men's Trail Running Shoes Minimalist Wide Toe Box Barefoot Trainers Water Shoes
+    4. B08WC1XBS1  AODONG Walking Shoes for Women,Womens Breathable Sneakers Athletic Running Shoes Slip Ons 
+    5. B08CKSNG2L  Frank Mully Men Walking Shoes Blade Outdoor Sneakers Breathable Fashion Athletic Shoes Bla
+    6. B07DWLD28G  SHAKE Women's Breathable Athletic Casual Mesh Running Walking Shoes Lightweight Sneaker fo
+    7. B07L3W74QQ  Escort Runners Walking Shoes for Men and Women Slip-on Sneakers Flyknit Light Athletic Sho
+    8. B08ZK6FSTX  SKDOIUL Fashion Men Sport Athletic Walking Shoes mesh Breathable Comfort Sneakers Runner J
+    9. B0055K823M  Born Lewis
+    10. B085FY5YP2  RUNMAXX Men Fashion Sneakers Laces Stylish Athletic Walking Running Shoes Casual Walk Shoe
+  scenario='browsing' override_applied=False turn=8
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=['brand', 'color', 'feature', 'material', 'size', 'style', 'use_case'] last_ask='brand' disclosed=0
+  shown=80 suppressed=False frames={'browsing_open': 1, 'exhaustion': 7}
+
+--- turn 9 ---
+  user: I don't have an additional preference for budget.
+  ask_attribute: 'category'
+  message: 'Here are the closest matches I found so far. What kind of item are you after, specifically?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0788JWT9J  TSLA Men's Boost Running Walking Sneakers Performance Shoes, Lightweight Mesh(l513) - Navy
+    2. B09DW6MCGD  Outdoor Research Women's Snowcrew Jacket - Waterproof & Windproof Outdoor Skiing Jacket, B  [$148.03]
+    3. B00HF6K5ZM  Merrell Women's All Out Rave Walking Shoe
+    4. B0885ZH2TK  Sneakers for Men Athletic Tennis Walking Shoes Fashion Sport Running Shoes Green Size 11
+    5. B072HSQX3X  Avia Solution Mens Running Walking Athletic Shoes (8, Grey)
+    6. B07SB28QLF  Ezywear Women Lightweight Sneakers Athletic Casual Mesh-Comfortable Slip-On Walking Shoes 
+    7. B09N94GHN2  Mens Low top Running Shoes Tennis Walking Sneakers Comfort Soft Sole Fashion Non Slip Work
+    8. B0888C4SVT  Ezkrwxn Sneakers for Men Athletic Tennis Walking Shoes Fashion Sport Running Shoes White S
+    9. B07YPRKSPB  Aszeller Sneakers Running Tennis Shoes for Men Fashion Comfort Athletic Shoes Casual Breat
+    10. B00XQAXLCA  Levi's Women's Stan Buck Stars Walking Shoe
+  scenario='browsing' override_applied=False turn=9
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'color', 'feature', 'material', 'size', 'style', 'use_case'] last_ask='category' disclosed=0
+  shown=90 suppressed=False frames={'browsing_open': 1, 'exhaustion': 8}
+
+--- turn 10 ---
+  user: I don't have an additional preference for category.
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0827LLBMJ  XIDISO Mens Fashion Sneaker High Top Shoes Walking Shoe for Ourdoor Indoor Casual Sports A
+    2. B07Q8TY22Y  A-PIE Men's Running Athletic Shoes Breathable Lightweight Fashion Sneakers Casual Walking 
+    3. B08519FW5R  Ahico Mens Fashion Sneakers Walking Shoes Running Shoes Sport Athletic Casual Shoe Vogue S
+    4. B09YQCNHZG  DAFAJGY Women's Men's Volcano 450 Knitted Gym Walking Sneakers Mesh Hollow Shock Non-Slip 
+    5. B098PGHQS8  NewDenBer Men's Big and Tall Lightweight Sneakers Comfortable Athletic Walking Running Ten
+    6. B0875R1642  Skechers GO Walk 5 Women Athletic 9 Wide Black
+    7. B091H1C6DH  Sneakers for Men Sport Running Shoes Athletic Tennis Walking Shoes Fashion Jogging Sneaker
+    8. B08RCBBZJJ  NewDenBer Men's Lightweight Sneakers Comfy Breathable Athletic Walking Running Tennis Shoe
+    9. B0873133WH  RUNMAXX Mens Womens Running Shoes Fashion Sneakers Indoor Outdoor Walking Fitness Jogging 
+    10. B00ITKSNFM  Skechers Performance Women's Go Walk 2 Extreme Walking Shoe
+  scenario='browsing' override_applied=False turn=10
+  ledger(1): ["I'm looking for Athletic Walking, but I'm still exploring."]
+  query: "I'm looking for Athletic Walking, but I'm still exploring."
+  slots: {}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'category', 'color', 'feature', 'material', 'size', 'style', 'use_case'] last_ask='material' disclosed=0
+  shown=100 suppressed=False frames={'browsing_open': 1, 'exhaustion': 9}
+
+### end boundary_hedge_probe (retire brand at t2, see whether the hedge still asks it): turns=10 first_hit_turn=None

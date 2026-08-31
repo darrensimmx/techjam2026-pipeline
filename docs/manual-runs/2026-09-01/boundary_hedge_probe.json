@@ -1,0 +1,16 @@
+{
+ "label": "boundary_hedge_probe (retire brand at t2, see whether the hedge still asks it)",
+ "target": "B0BN6CCHB7",
+ "messages": [
+  "I'm looking for Athletic Walking, but I'm still exploring.",
+  "I don't have an additional preference for brand.",
+  "I don't have an additional preference for material.",
+  "I don't have an additional preference for feature.",
+  "I don't have an additional preference for color.",
+  "I don't have an additional preference for style.",
+  "I don't have an additional preference for size.",
+  "I don't have an additional preference for use_case.",
+  "I don't have an additional preference for budget.",
+  "I don't have an additional preference for category."
+ ]
+}

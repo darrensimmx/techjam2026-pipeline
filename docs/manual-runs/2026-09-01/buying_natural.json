@@ -1,0 +1,28 @@
+{
+  "label": "buying_natural same target B07QMS8TX8 free-form phrasing",
+  "target": "B07QMS8TX8",
+  "profile": {
+    "average_prior_rating": 5.0,
+    "preference_tags": [
+      "material",
+      "comfort",
+      "fit",
+      "durability"
+    ],
+    "purchase_frequency": "3-4 prior purchases",
+    "rating_style": "usually positive",
+    "summary": "Prior purchases emphasize material, comfort, fit, durability; ratings are usually positive."
+  },
+  "messages": [
+    "hey, i need new scrub pants for work - men's, cargo style if you have them. honestly the big thing is the fabric, it's gotta be that poly cotton blend that survives being washed every single day.",
+    "like i said, poly-cotton. my last pair was a 65/35 poplin and it held up for years, so something in that ballpark. definitely not 100% cotton, that stuff wrinkles like crazy.",
+    "pockets mostly. i carry a phone, shears and a couple of pens, so the more cargo pockets the better. oh and a real zipper fly - the drawstring-only ones drive me nuts.",
+    "eh, no strong preference on color really. whatever's standard for a hospital.",
+    "traditional fit, nothing skinny. natural rise, tapered leg, and an elastic waistband with a drawstring tie is ideal.",
+    "i'm a large, sometimes an XL depending on the brand. regular inseam, i'm about 5'10\".",
+    "hospital floor shifts, twelve hours on my feet. i also wear them for prep work in the kitchen at home, so they need to take a beating and wash out.",
+    "cheap-ish, under $25 a pair. around twenty bucks would be perfect since i need three of them.",
+    "i don't have a strong preference for brand, honestly. cherokee has been fine but whatever lasts.",
+    "ok fine - cherokee workwear if you've got it, that's what my unit issues. style 4000 i think."
+  ]
+}

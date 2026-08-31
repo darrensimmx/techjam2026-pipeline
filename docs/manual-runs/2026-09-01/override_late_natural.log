@@ -1,0 +1,233 @@
+### override_late_natural (adversarial: paraphrased override at t6, template override at t8)   degraded=False   target=B09YMTWDXJ
+
+--- turn 1 ---
+  user: I'm looking for Watches Wrist Watches. Stainless Steel Band
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0196A59GY  ABCsell 22mm Milanese Stainless Steel Wrist Watch Band
+    2. B07FYFXPSS  Fashion Watch for Men Business Stainless Steel Band Quartz Analog Chronograph Waterproof S
+    3. B01NCJGY9P  Avaner Mens Luxury Elegant Stainless Steel Band Blue Round Dial Analog Diaplay Quartz Wris
+    4. B013W4LCFC  YouYouPifa Mesh Stainless Steel Bracelet Wrist Watch Band Strap Silver Clasp
+    5. B0763JD5SK  Infantry Mens Dual Display Military Tactical Analog Digital Sport Wrist Watch Black Stainl
+    6. B07CYNQZ3Z  COMIO Mens Wrist Watch Mens Stainless Steel Watch Waterproof Quartz Watches
+    7. B08KW55D2S  CHEETAH Mens Wrist Watch Mesh Stainless Steel Band 3ATM Waterproof Chronograph Auto Date Q
+    8. B09H3VT8JH  Invicta Women's Pro Diver 36543 Quartz Watch
+    9. B07NJFNRG9  SHENGKE Creative Simplicity Women Watch Mesh Band Elegant Women Watches Ladies Business Wr
+    10. B001KSFIS0  Casio General Ladies Watches Metal Fashion LTP-1241D-1ADF  [$28.99]
+  scenario='intent_override' override_applied=False turn=1
+  ledger(1): ["I'm looking for Watches Wrist Watches. Stainless Steel Band"]
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band"
+  slots: {'feature': 'Stainless Steel Band'}
+  asked=['material'] retired=[] last_ask='material' disclosed=1
+  shown=0 suppressed=True frames={'override_open': 1}
+
+--- turn 2 ---
+  user: I don't have an additional preference for material.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B0196A59GY  ABCsell 22mm Milanese Stainless Steel Wrist Watch Band
+    2. B07FYFXPSS  Fashion Watch for Men Business Stainless Steel Band Quartz Analog Chronograph Waterproof S
+    3. B01NCJGY9P  Avaner Mens Luxury Elegant Stainless Steel Band Blue Round Dial Analog Diaplay Quartz Wris
+    4. B013W4LCFC  YouYouPifa Mesh Stainless Steel Bracelet Wrist Watch Band Strap Silver Clasp
+    5. B0763JD5SK  Infantry Mens Dual Display Military Tactical Analog Digital Sport Wrist Watch Black Stainl
+    6. B07CYNQZ3Z  COMIO Mens Wrist Watch Mens Stainless Steel Watch Waterproof Quartz Watches
+    7. B08KW55D2S  CHEETAH Mens Wrist Watch Mesh Stainless Steel Band 3ATM Waterproof Chronograph Auto Date Q
+    8. B09H3VT8JH  Invicta Women's Pro Diver 36543 Quartz Watch
+    9. B07NJFNRG9  SHENGKE Creative Simplicity Women Watch Mesh Band Elegant Women Watches Ladies Business Wr
+    10. B001KSFIS0  Casio General Ladies Watches Metal Fashion LTP-1241D-1ADF  [$28.99]
+  scenario='intent_override' override_applied=False turn=2
+  ledger(1): ["I'm looking for Watches Wrist Watches. Stainless Steel Band"]
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band"
+  slots: {'feature': 'Stainless Steel Band'}
+  asked=['material', 'feature'] retired=['material'] last_ask='feature' disclosed=1
+  shown=0 suppressed=True frames={'override_open': 1, 'exhaustion': 1}
+
+--- turn 3 ---
+  user: For that, what matters is: Water Resistant; 3 Year Battery.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B09YMTWDXJ  Casio Men's Wrist Watch AQ-800E-7A  [$47.95] <== TARGET
+    2. B09H3VT8JH  Invicta Women's Pro Diver 36543 Quartz Watch
+    3. B07PQK7WC4  Mens Watches,CURREN Watches Quartz Analog Calendar,Wrist Watch for Men, Fashion Waterproof
+    4. B07YCH6HLZ  Luminox Atacama Adventurer Field XL.1768 Mens Watch 42mm - Automatic Watch in Braun Date F  [$294.94]
+    5. B09TSQZYCF  HaiQin Classic Men’s Automatic Watches Full Stainless Steel Tourbillon Mechanical Watch fo  [$49.99]
+    6. B013W4LCFC  YouYouPifa Mesh Stainless Steel Bracelet Wrist Watch Band Strap Silver Clasp
+    7. B07DFPJZQ8  Casio Men's EFV-530D-2AVCF Edifice Analog Display Quartz Silver Watch  [$119.99]
+    8. B08WC6K224  NOVE Trident Automatic - Swiss Made Ultra Slim Dive Watches for Men & Women, 13.05mm Thin,
+    9. B07MXQ9K42  Olmeca Men's Casual Simple Dress Watch Unique Analog Quartz Watches Stainless Steel Band C
+    10. B07CYNQZ3Z  COMIO Mens Wrist Watch Mens Stainless Steel Watch Waterproof Quartz Watches
+  scenario='intent_override' override_applied=False turn=3
+  ledger(2): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.']
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery."
+  slots: {'feature': '3 Year Battery'}
+  asked=['material', 'feature', 'color'] retired=['material'] last_ask='color' disclosed=3
+  shown=0 suppressed=True frames={'override_open': 1, 'exhaustion': 1, 'disclosure': 1}
+
+--- turn 4 ---
+  user: I don't have an additional preference for color.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B09YMTWDXJ  Casio Men's Wrist Watch AQ-800E-7A  [$47.95] <== TARGET
+    2. B09H3VT8JH  Invicta Women's Pro Diver 36543 Quartz Watch
+    3. B07PQK7WC4  Mens Watches,CURREN Watches Quartz Analog Calendar,Wrist Watch for Men, Fashion Waterproof
+    4. B07YCH6HLZ  Luminox Atacama Adventurer Field XL.1768 Mens Watch 42mm - Automatic Watch in Braun Date F  [$294.94]
+    5. B09TSQZYCF  HaiQin Classic Men’s Automatic Watches Full Stainless Steel Tourbillon Mechanical Watch fo  [$49.99]
+    6. B013W4LCFC  YouYouPifa Mesh Stainless Steel Bracelet Wrist Watch Band Strap Silver Clasp
+    7. B07DFPJZQ8  Casio Men's EFV-530D-2AVCF Edifice Analog Display Quartz Silver Watch  [$119.99]
+    8. B08WC6K224  NOVE Trident Automatic - Swiss Made Ultra Slim Dive Watches for Men & Women, 13.05mm Thin,
+    9. B07MXQ9K42  Olmeca Men's Casual Simple Dress Watch Unique Analog Quartz Watches Stainless Steel Band C
+    10. B07CYNQZ3Z  COMIO Mens Wrist Watch Mens Stainless Steel Watch Waterproof Quartz Watches
+  scenario='intent_override' override_applied=False turn=4
+  ledger(2): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.']
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery."
+  slots: {'feature': '3 Year Battery'}
+  asked=['material', 'feature', 'color', 'style'] retired=['color', 'material'] last_ask='style' disclosed=3
+  shown=10 suppressed=False frames={'override_open': 1, 'exhaustion': 2, 'disclosure': 1}
+
+--- turn 5 ---
+  user: I don't have an additional preference for style.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B003BGYKYM  Aqua Force Marines Two Tone Watch with 38mm Face and Two Tone Strap
+    2. B001KSFIS0  Casio General Ladies Watches Metal Fashion LTP-1241D-1ADF  [$28.99]
+    3. B08R3J6GRL  Sangdo Women Watch with Diamond Round Dial Stainless Steel Band Automatic Mechanical Watch
+    4. B0763JD5SK  Infantry Mens Dual Display Military Tactical Analog Digital Sport Wrist Watch Black Stainl
+    5. B0B7QFCWPX  Invicta Men's Pro Diver Quartz Diving Watch with Stainless-Steel Strap, Two Tone, 22 (Mode  [$69.99]
+    6. B017X96YW8  DKNY Women's Stanhope Quartz Stainless Steel Casual Watch (Model: NY2398)
+    7. B00X5KA1OW  Skagen Men's SKW6231 Ancher Stainless Steel Link Watch
+    8. B08F77LVQ5  Invicta Men's Aviator 39312 Quartz Watch  [$79.99]
+    9. B0B6CYH17L  Citizen Men's Classic Corso Eco-Drive Watch, 3-Hand Date, Luminous Hands and Markers, Two-  [$300.0]
+    10. B07GBT82S7  Casio Mud Resistant Stainless Steel Quartz Watch with Resin Strap, Black, 27.6 (Model: TRT  [$31.92]
+  scenario='intent_override' override_applied=False turn=5
+  ledger(2): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.']
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery."
+  slots: {'feature': '3 Year Battery'}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=['color', 'material', 'style'] last_ask='size' disclosed=3
+  shown=20 suppressed=False frames={'override_open': 1, 'exhaustion': 3, 'disclosure': 1}
+
+--- turn 6 ---
+  user: Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07RKL1BTT  Invicta Mens Pro Diver Quartz Watch, Silver, 27981
+    2. B081ZQBNGM  Invicta Men's Bolt Quartz Watch with Stainless Steel Strap, Silver, Gold, 30 (Model: 31163
+    3. B07VDXF4NP  LIGE Mens Watches Luxury Business Watch for Men Stainless Steel Sports Waterproof Wristwat
+    4. B00737GGW4  St. Moritz Momentum M1 Cyclone Chrono Men's Dive Watch & Underwater Timer for Scuba Divers
+    5. B089JY2X5D  Mens Watches Minimalist Stainless Steel Waterproof Analog Quartz Watch Fashion Wrist Watch
+    6. B0BQ6XY143  Citizen Eco-Drive Avatar Watch  [$236.0]
+    7. B07PFT3M1L  BUREI Black Watches for Men Watches Minimalist Business Stainless Steel Quartz Analog Wais
+    8. B0183NSVJM  Citizen Eco-Drive Women's 'Sport' Quartz Stainless Steel Casual Watch, Color: Two Tone (Mo
+    9. B07JJB67BX  OLMECA Men’s Watch Fashion Sports Dress Simple Wrist Watches Analog Quartz Waterproof Stai
+    10. B06XYN5XBD  GUESS Iconic Retro Logo 3-Hand 42mm Watch
+  scenario='intent_override' override_applied=False turn=6
+  ledger(3): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.', "Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch."]
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery. Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a wat"
+  slots: {'feature': '3 Year Battery'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=['color', 'material', 'style'] last_ask='use_case' disclosed=3
+  shown=30 suppressed=False frames={'override_open': 1, 'exhaustion': 3, 'disclosure': 1, 'unknown': 1}
+
+--- turn 7 ---
+  user: I don't have an additional preference for use_case.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B008JWMJGE  ESQ Movado Men's 07301405 esq Synthesis Rectangular Stainless Steel Dress Watch
+    2. B07YW48NP7  Fossil Sullivan Multifunction Black Stainless Steel Watch BQ2448  [$95.0]
+    3. B079VQPVY1  Citizen Women's EW2510-50D Eco-Drive Analog Display Japanese Quartz Silver Watch  [$459.99]
+    4. B08GHDQLPK  KIMOMT Mens Watches Fashion Minimalist Quartz Analog Date Watch with Stainless Steel Mesh 
+    5. B08KW55D2S  CHEETAH Mens Wrist Watch Mesh Stainless Steel Band 3ATM Waterproof Chronograph Auto Date Q
+    6. B07T9DMR21  SEIKO Automatic Watch (Model: SRPD39J1)
+    7. B0007N53K2  Seiko Men's SFP602 Strap Watch
+    8. B09NHS8ZNJ  ORKINA Mens Luxury Mechanical Tourbillon Multifunctional Watches, Self-Wind Automatic Wris  [$45.99]
+    9. B016R913GC  Drive From Citizen Eco-Drive Men's Quartz Stainless Steel and Polyurethane Casual Watch, C
+    10. B00I18X6AY  Swiss Precimax Women's SP13354 Allure Analog Display Swiss Quartz Gold Watch
+  scenario='intent_override' override_applied=False turn=7
+  ledger(3): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.', "Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch."]
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery. Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a wat"
+  slots: {'feature': '3 Year Battery'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['color', 'material', 'style', 'use_case'] last_ask='budget' disclosed=3
+  shown=40 suppressed=False frames={'override_open': 1, 'exhaustion': 4, 'disclosure': 1, 'unknown': 1}
+
+--- turn 8 ---
+  user: Actually, ignore my earlier preference. What I need is: Water Resistant.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B09YMTWDXJ  Casio Men's Wrist Watch AQ-800E-7A  [$47.95] <== TARGET
+    2. B07YCH6HLZ  Luminox Atacama Adventurer Field XL.1768 Mens Watch 42mm - Automatic Watch in Braun Date F  [$294.94]
+    3. B09H3VT8JH  Invicta Women's Pro Diver 36543 Quartz Watch
+    4. B09TSQZYCF  HaiQin Classic Men’s Automatic Watches Full Stainless Steel Tourbillon Mechanical Watch fo  [$49.99]
+    5. B07PQK7WC4  Mens Watches,CURREN Watches Quartz Analog Calendar,Wrist Watch for Men, Fashion Waterproof
+    6. B07DFPJZQ8  Casio Men's EFV-530D-2AVCF Edifice Analog Display Quartz Silver Watch  [$119.99]
+    7. B08R3J6GRL  Sangdo Women Watch with Diamond Round Dial Stainless Steel Band Automatic Mechanical Watch
+    8. B013W4LCFC  YouYouPifa Mesh Stainless Steel Bracelet Wrist Watch Band Strap Silver Clasp
+    9. B07MXQ9K42  Olmeca Men's Casual Simple Dress Watch Unique Analog Quartz Watches Stainless Steel Band C
+    10. B07CYNQZ3Z  COMIO Mens Wrist Watch Mens Stainless Steel Watch Waterproof Quartz Watches
+  scenario='intent_override' override_applied=True turn=8
+  ledger(4): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.', "Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch.", 'Actually, ignore my earlier preference. What I need is: Water Resistant.']
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery. Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a wat"
+  slots: {'feature': 'Water Resistant'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['color', 'material', 'style', 'use_case'] last_ask='budget' disclosed=3
+  shown=10 suppressed=False frames={'override_open': 1, 'exhaustion': 4, 'disclosure': 1, 'unknown': 1, 'override': 1}
+
+--- turn 9 ---
+  user: I don't have an additional preference for budget.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08WC6K224  NOVE Trident Automatic - Swiss Made Ultra Slim Dive Watches for Men & Women, 13.05mm Thin,
+    2. B07RKL1BTT  Invicta Mens Pro Diver Quartz Watch, Silver, 27981
+    3. B003BGYKYM  Aqua Force Marines Two Tone Watch with 38mm Face and Two Tone Strap
+    4. B0763JD5SK  Infantry Mens Dual Display Military Tactical Analog Digital Sport Wrist Watch Black Stainl
+    5. B07VDXF4NP  LIGE Mens Watches Luxury Business Watch for Men Stainless Steel Sports Waterproof Wristwat
+    6. B0B6CYH17L  Citizen Men's Classic Corso Eco-Drive Watch, 3-Hand Date, Luminous Hands and Markers, Two-  [$300.0]
+    7. B00737GGW4  St. Moritz Momentum M1 Cyclone Chrono Men's Dive Watch & Underwater Timer for Scuba Divers
+    8. B07GBT82S7  Casio Mud Resistant Stainless Steel Quartz Watch with Resin Strap, Black, 27.6 (Model: TRT  [$31.92]
+    9. B08F77LVQ5  Invicta Men's Aviator 39312 Quartz Watch  [$79.99]
+    10. B089JY2X5D  Mens Watches Minimalist Stainless Steel Waterproof Analog Quartz Watch Fashion Wrist Watch
+  scenario='intent_override' override_applied=True turn=9
+  ledger(4): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.', "Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch.", 'Actually, ignore my earlier preference. What I need is: Water Resistant.']
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery. Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a wat"
+  slots: {'feature': 'Water Resistant'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['budget', 'color', 'material', 'style', 'use_case'] last_ask='feature' disclosed=3
+  shown=20 suppressed=False frames={'override_open': 1, 'exhaustion': 5, 'disclosure': 1, 'unknown': 1, 'override': 1}
+
+--- turn 10 ---
+  user: For that, what matters is: Day / Date Indicator.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B07PFT3M1L  BUREI Black Watches for Men Watches Minimalist Business Stainless Steel Quartz Analog Wais
+    2. B000EQU0NW  Citizen Eco-Drive Corso Quartz Mens Watch, Stainless Steel with Leather strap, Classic, Br
+    3. B0BQ6XY143  Citizen Eco-Drive Avatar Watch  [$236.0]
+    4. B07JJB67BX  OLMECA Men’s Watch Fashion Sports Dress Simple Wrist Watches Analog Quartz Waterproof Stai
+    5. B01KIKLVVS  Casio Sports Watch Men's Stainless Steel Quartz with Strap Black  [$239.5]
+    6. B08GHDQLPK  KIMOMT Mens Watches Fashion Minimalist Quartz Analog Date Watch with Stainless Steel Mesh 
+    7. B0183NSVJM  Citizen Eco-Drive Women's 'Sport' Quartz Stainless Steel Casual Watch, Color: Two Tone (Mo
+    8. B0B8JZN5W2  Solstice Men's Stainless Steel Watch - Sapphire Crystal Glass - Water Resistant Timepiece   [$250.0]
+    9. B09NHS8ZNJ  ORKINA Mens Luxury Mechanical Tourbillon Multifunctional Watches, Self-Wind Automatic Wris  [$45.99]
+    10. B06XYN5XBD  GUESS Iconic Retro Logo 3-Hand 42mm Watch
+  scenario='intent_override' override_applied=True turn=10
+  ledger(5): ["I'm looking for Watches Wrist Watches. Stainless Steel Band", 'For that, what matters is: Water Resistant; 3 Year Battery.', "Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a water resistant watch.", 'Actually, ignore my earlier preference. What I need is: Water Resistant.', 'For that, what matters is: Day / Date Indicator.']
+  query: "I'm looking for Watches Wrist Watches. Stainless Steel Band For that, what matters is: Water Resistant; 3 Year Battery. Actually, scrap that - the stainless steel band doesn't matter any more. What I really want is a wat"
+  slots: {'feature': 'Day / Date Indicator'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=['budget', 'color', 'feature', 'material', 'style', 'use_case'] last_ask='brand' disclosed=4
+  shown=30 suppressed=False frames={'override_open': 1, 'exhaustion': 5, 'disclosure': 2, 'unknown': 1, 'override': 1}
+
+### end override_late_natural (adversarial: paraphrased override at t6, template override at t8): turns=10 first_hit_turn=3

@@ -1,0 +1,233 @@
+### override_template   degraded=False   target=B0C65TFM9F
+
+--- turn 1 ---
+  user: I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp
+  ask_attribute: 'material'
+  message: 'Here are the closest matches I found so far. Do you have a material preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B0C65TFM9F  Vionic Women's Gemma <== TARGET
+    2. B084Q4DP7L  EverFoams Men's Comfy Open Toe Thong Spa Slippers with Adjustable Hook and Loop
+    3. B08F7CD4Y6  bebe Jeanna Womens Slipper
+    4. B079YGDJ2F  Copper Fit Women's Cozy Slide Slipper
+    5. B079YC72RN  Copper Fit Women's Cozy Slide Slipper
+    6. B07X75XRFX  Boys Slippers Booties Plush Animal Comfort Outdoor House Slippers Toddler Kid
+    7. B079331J8C  Vionic Women's Snug Carnegie Mule - Ladies Slip-on with Concealed Orthotic Support
+    8. B08RN3H5P4  Vionic Women's Magnolia Darla Mule- Ladies Slip-on with Concealed Orthotic Arch Support
+    9. B07HJ18QRQ  Vionic Sadie Women's Adjustable Strap Orthotic Slippers  [$45.0]
+    10. B07YFJX9C8  Komyufa Cute Animal Giraffe Slippers for Women Girls Home Fuzzy Slippers Memory Foam Anti-
+  scenario='intent_override' override_applied=False turn=1
+  ledger(1): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp"]
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp'}
+  asked=['material'] retired=[] last_ask='material' disclosed=1
+  shown=0 suppressed=True frames={'override_open': 1}
+
+--- turn 2 ---
+  user: I don't have an additional preference for material.
+  ask_attribute: 'feature'
+  message: 'Here are the closest matches I found so far. Is there a specific feature that matters most to you?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B0C65TFM9F  Vionic Women's Gemma <== TARGET
+    2. B084Q4DP7L  EverFoams Men's Comfy Open Toe Thong Spa Slippers with Adjustable Hook and Loop
+    3. B08F7CD4Y6  bebe Jeanna Womens Slipper
+    4. B079YGDJ2F  Copper Fit Women's Cozy Slide Slipper
+    5. B079YC72RN  Copper Fit Women's Cozy Slide Slipper
+    6. B07X75XRFX  Boys Slippers Booties Plush Animal Comfort Outdoor House Slippers Toddler Kid
+    7. B079331J8C  Vionic Women's Snug Carnegie Mule - Ladies Slip-on with Concealed Orthotic Support
+    8. B08RN3H5P4  Vionic Women's Magnolia Darla Mule- Ladies Slip-on with Concealed Orthotic Arch Support
+    9. B07HJ18QRQ  Vionic Sadie Women's Adjustable Strap Orthotic Slippers  [$45.0]
+    10. B07YFJX9C8  Komyufa Cute Animal Giraffe Slippers for Women Girls Home Fuzzy Slippers Memory Foam Anti-
+  scenario='intent_override' override_applied=False turn=2
+  ledger(1): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp"]
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp'}
+  asked=['material', 'feature'] retired=['material'] last_ask='feature' disclosed=1
+  shown=0 suppressed=True frames={'override_open': 1, 'exhaustion': 1}
+
+--- turn 3 ---
+  user: For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B0C65TFM9F  Vionic Women's Gemma <== TARGET
+    2. B01MUBVR4C  Vionic Women's Prim Ava Ballet Flat Shoes - Dress Casual Flats with Concealed Orthotic Arc
+    3. B079331J8C  Vionic Women's Snug Carnegie Mule - Ladies Slip-on with Concealed Orthotic Support
+    4. B08RN3H5P4  Vionic Women's Magnolia Darla Mule- Ladies Slip-on with Concealed Orthotic Arch Support
+    5. B071X4VZS3  Vionic Men's Spring Lloyd Boat Shoe - Slip-on with Concealed Orthotic Arch Support
+    6. B09DZJ5X78  JBU Womens Samaria Mules Flats Casual Casual - Brown
+    7. B09WG2J6RW  JBU by Jambu Women's Amber Oxford Flat
+    8. B00LM8K69E  Wellrox Women's Santa Fee-Sedona Casual Sandal
+    9. B09W8HSXPT  Vionic Women's Rest Danita Backstrap Sandal- Supportive Ladies Slip on Sandals That Includ  [$79.95]
+    10. B084Q4DP7L  EverFoams Men's Comfy Open Toe Thong Spa Slippers with Adjustable Hook and Loop
+  scenario='intent_override' override_applied=False turn=3
+  ledger(2): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Received APMA (American Podiatric Medical Association) Seal of Acceptance'}
+  asked=['material', 'feature', 'color'] retired=['material'] last_ask='color' disclosed=3
+  shown=0 suppressed=True frames={'override_open': 1, 'exhaustion': 1, 'disclosure': 1}
+
+--- turn 4 ---
+  user: Actually, ignore my earlier preference. What I need is: Rubber sole.
+  ask_attribute: 'style'
+  message: 'Here are the closest matches I found so far. What style are you looking for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=1
+    1. B0C65TFM9F  Vionic Women's Gemma <== TARGET
+    2. B01MUBVR4C  Vionic Women's Prim Ava Ballet Flat Shoes - Dress Casual Flats with Concealed Orthotic Arc
+    3. B079331J8C  Vionic Women's Snug Carnegie Mule - Ladies Slip-on with Concealed Orthotic Support
+    4. B08RN3H5P4  Vionic Women's Magnolia Darla Mule- Ladies Slip-on with Concealed Orthotic Arch Support
+    5. B071X4VZS3  Vionic Men's Spring Lloyd Boat Shoe - Slip-on with Concealed Orthotic Arch Support
+    6. B09DZJ5X78  JBU Womens Samaria Mules Flats Casual Casual - Brown
+    7. B00LM8K69E  Wellrox Women's Santa Fee-Sedona Casual Sandal
+    8. B09WG2J6RW  JBU by Jambu Women's Amber Oxford Flat
+    9. B00LM8PDZG  Wellrox Women's Santa Fee-Blossom Casual Sandal
+    10. B00CX9U132  Wellrox Women's Terra-Chloe Sandal
+  scenario='intent_override' override_applied=True turn=4
+  ledger(3): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole'}
+  asked=['material', 'feature', 'color', 'style'] retired=['material'] last_ask='style' disclosed=3
+  shown=10 suppressed=False frames={'override_open': 1, 'exhaustion': 1, 'disclosure': 1, 'override': 1}
+
+--- turn 5 ---
+  user: For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.
+  ask_attribute: 'size'
+  message: 'Here are the closest matches I found so far. Do you have a size in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09W8HSXPT  Vionic Women's Rest Danita Backstrap Sandal- Supportive Ladies Slip on Sandals That Includ  [$79.95]
+    2. B084Q4DP7L  EverFoams Men's Comfy Open Toe Thong Spa Slippers with Adjustable Hook and Loop
+    3. B0015AUOCS  pediped Flex Jake Sneaker (Toddler/Little Kid)
+    4. B01HOVZQ5G  Vionic with Orthaheel Technology Women's Bella II Sandal,Pink,US 8 W
+    5. B07X75XRFX  Boys Slippers Booties Plush Animal Comfort Outdoor House Slippers Toddler Kid
+    6. B008FU16KA  Sperry A/O 2-Eye Richtown
+    7. B08NQ3XXYG  Therafit Savannah Women's Athletic Casual Shoe - for Plantar Fasciitis/Foot Pain  [$99.0]
+    8. B018TJC99I  Vionic Women’s Agile Opal Slip On Sneakers – Ladies Casual Flats with Concealed Orthotic S
+    9. B07HJ18QRQ  Vionic Sadie Women's Adjustable Strap Orthotic Slippers  [$45.0]
+    10. B077QRQ9W8  FitFlop Women's Lulu Toe-Thong Sandals-Shimmer-Check
+  scenario='intent_override' override_applied=True turn=5
+  ledger(4): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.', 'For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole'}
+  asked=['material', 'feature', 'color', 'style', 'size'] retired=['material', 'style'] last_ask='size' disclosed=3
+  shown=20 suppressed=False frames={'override_open': 1, 'exhaustion': 1, 'disclosure': 2, 'override': 1}
+
+--- turn 6 ---
+  user: I don't have an additional preference for size.
+  ask_attribute: 'use_case'
+  message: 'Here are the closest matches I found so far. What will you mainly use this for?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B01CGZOAJI  Sanita Women's Original Pro-Pebble Mule
+    2. B0078PWD3W  pediped Flex Mercury Running Shoe (Toddler/Little Kid)
+    3. B00J09XJPK  Robeez Basic Brian Shoe (Infant/Toddler)
+    4. B00LPV3SOS  pediped Axel Flex Athletic Sneaker (Toddler/Little Kid)
+    5. B00KT48NC4  isotoner Women's Microsuede Sonja Woodlands Hoodback Slipper
+    6. B06XKRPKXP  UGG Women's Ansley Petal Slipper, seal, 8 M US
+    7. B011PTO1VI  Acorn Women's Spa Thong with Premium Memory Foam
+    8. B00LPRU9GC  pediped Olivia Grip-N-Go Sandal (Toddler)
+    9. B09RZJ3P96  Zizor Women's Adjustable Strap Closed Back Slipper with Memory Foam, Ladies' Cozy House Sl
+    10. B09S8MD3RX  Git-up Diabetic Slippers Shoes for Men Arthritis Edema Adjustable Closure Toe Swollen Feet  [$29.69]
+  scenario='intent_override' override_applied=True turn=6
+  ledger(4): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.', 'For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case'] retired=['material', 'size', 'style'] last_ask='use_case' disclosed=3
+  shown=30 suppressed=False frames={'override_open': 1, 'exhaustion': 2, 'disclosure': 2, 'override': 1}
+
+--- turn 7 ---
+  user: I don't have an additional preference for use_case.
+  ask_attribute: 'budget'
+  message: 'Here are the closest matches I found so far. Roughly what budget did you have in mind?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08N6VDT2H  Bioworld The Nightmare Before Christmas Zero Dog Character Slipper Socks with No-Slip Sole  [$16.95]
+    2. B07NHK91S3  Fitflop Women's Sola Slide
+    3. B07GB2ZCPH  ChayChax Men's Women's Winter Warm Slippers Slip On Clog House Shoes with Plush Lining, In
+    4. B0BY1MFJBZ  ONCAI Women’s-House-Slippers-Winter-Fluffy-Slipper-for-Women Knitted Fleece Memory Foam Sl  [$11.99]
+    5. B08CTFPBN5  RockDove Women's Nomad Slipper with Memory Foam  [$27.99]
+    6. B07JMSHFKW  Slipper Boots for Women Men House Slippers Snow Boots Winter Warm Plush Booties Slipper So
+    7. B097MTHTLX  Women's Fluff Slide Slipper with Elastic band Anti-slip Open Toe Slippers Memory foam Faux
+    8. B07XFBYDSW  FitFlop Women's Lottie Shimmermesh Sandal
+    9. B08MV1VVKR  NineCiFun Women's Slip on Fuzzy House Slippers Memory Foam Slippers Scuff Outdoor Indoor W  [$24.99]
+    10. B08K8HVG2F  FANTURE Men's Memory Foam Slippers Cotton Knitted House Slippers Closed Toe Non-Slip House  [$24.88]
+  scenario='intent_override' override_applied=True turn=7
+  ledger(4): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.', 'For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['material', 'size', 'style', 'use_case'] last_ask='budget' disclosed=3
+  shown=40 suppressed=False frames={'override_open': 1, 'exhaustion': 3, 'disclosure': 2, 'override': 1}
+
+--- turn 8 ---
+  user: I don't have an additional preference for budget.
+  ask_attribute: 'color'
+  message: 'Here are the closest matches I found so far. Do you have a color preference?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B09T9MWYR9  Qiucdzi Mens Leather Sandals, Closed-Toe Hiking Sandals Slip-on Summer Sandals Adjustable   [$29.99]
+    2. B00KWKHRN6  Chaco Women's ZX2 Yampa W Sandal
+    3. B07L5DMKKG  Vionic Women's Hoola Astrid II Wedges - Adjustable Sandals with Concealed Orthotic Arch Su
+    4. B00KAZSLFQ  kensie Women's Forest Friends Ankle Slipper Bootie
+    5. B08MZQ4TCP  ASELU Moccasins Women House Slippers, Memory Foam Faux Fur Moccasin Shoes Warm Bedroom Coz
+    6. B00SLBF21C  FitFlop Women's Banda Slide Dress Sandal
+    7. B08792Z12Y  See Kai Run Kids Girl's Atlas II WP/in (Toddler/Little Kid/Big Kid) Purple/Hot Pink 10 Tod
+    8. B09DSN4KJN  Pamray Men's Women's Memory Foam House Slippers Fuzzy Plush Lining Comfy Slip On Bedroom S
+    9. B08NSVMTWM  Women's Cross Band Fuzzy Fluffy Slippers Slip On Open Toe Cozy House Plush Fleece Anti-ski
+    10. B08GXDP5V9  Women’s House Slippers Memory Foam Knit Slip on Slippers Fuzzy Lining Warm Plush Bedroom H
+  scenario='intent_override' override_applied=True turn=8
+  ledger(4): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.', 'For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget'] retired=['budget', 'material', 'size', 'style', 'use_case'] last_ask='color' disclosed=3
+  shown=50 suppressed=False frames={'override_open': 1, 'exhaustion': 4, 'disclosure': 2, 'override': 1}
+
+--- turn 9 ---
+  user: For that, what matters is: Textile Upper. Textile Covered EVA Footbed. Rubber Outsole.
+  ask_attribute: 'brand'
+  message: 'Here are the closest matches I found so far. Is there a brand you prefer?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B014K5Z8SY  Chaco Chiefton Slip On Shoe
+    2. B00KWKCRZY  Chaco Women's
+    3. B07H5278M9  Chaco Men's Odyssey Sport Sandal  [$99.99]
+    4. B00AR2QASC  Chaco Women's Winsome-W Hiking Shoe
+    5. B00KWKMVM8  Chaco Women's Cordova Sandal
+    6. B00NJXNC46  Chaco Women's Abril Flip Sandal  [$57.05]
+    7. B0943ZSRXM  Women's Mens Fur Lined Clogs Waterproof Non Slip Garden Shoes Warm Plush House Slippers In  [$18.99]
+    8. B09GL5GCSL  Territory Mens Meander Slip-on Genuine Sheepskin Moccasin Slipper  [$89.99]
+    9. B01HHGRFVQ  UGG Women's Tamara Slip on Slipper
+    10. B00QH3G91S  FitFlop Women's F-Pop Ballerina Canvas Ballet Flat
+  scenario='intent_override' override_applied=True turn=9
+  ledger(5): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.', 'For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.', 'For that, what matters is: Textile Upper. Textile Covered EVA Footbed. Rubber Outsole.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole', 'color': 'Textile Upper. Textile Covered EVA Footbed. Rubber Outsole'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand'] retired=['budget', 'color', 'material', 'size', 'style', 'use_case'] last_ask='brand' disclosed=4
+  shown=60 suppressed=False frames={'override_open': 1, 'exhaustion': 4, 'disclosure': 3, 'override': 1}
+
+--- turn 10 ---
+  user: I don't have an additional preference for brand.
+  ask_attribute: 'category'
+  message: 'Here are the closest matches I found so far. What kind of item are you after, specifically?'
+  usage: {'prompt_tokens': 0, 'completion_tokens': 0}
+  recs: n=10 hit_rank=None
+    1. B08X2X83DW  isotoner Women's Terry Slip on Clog Slipper with Memory Foam for Indoor/Outdoor Comfort  [$15.3]
+    2. B07D2XKSP8  Flexus Women's Wool Slipper Prancer
+    3. B08F25G4QR  Homitem Men Slippers Memory Foam Moccasin Slipper
+    4. B07MBC394L  Floopi Slippers for Women Jersey Clog| Indoor-Outdoor Mule Home Shoes | Hard Rubber, Anti-
+    5. B076Q4XC5W  konhill Women's Slippers Faux Fur Moccasins Loafers Flats Shoes
+    6. B0BCDTVSX6  Clarks Women's Moccasin Bootie Slippers, JMH1814B - Suede Indoor/Outdoor Slip-Ons with Fau  [$44.95]
+    7. B07RX5TRPY  POLAR Mens Memory Foam Moccasin Loafer Outdoor Durable Rubber Sole Cozy Faux Fur Plush Hou
+    8. B0772HD834  DADAWEN Boy's Girl's Casual Strap Light Weight Sneakers Running Shoes(Toddler/Little Kid/B
+    9. B07RY6MB3X  POLAR Mens Memory Foam Cozy Winter Rubber Sole Warm Plush Luxury Outdoor House Fleece Line
+    10. B079QHR6VF  Wishcotton Men's Slip On Memory Foam Slippers Washable House Shoes with Non-Slip Sole
+  scenario='intent_override' override_applied=True turn=10
+  ledger(5): ["I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp", 'For that, what matters is: Rubber sole; Received APMA (American Podiatric Medical Association) Seal of Acceptance.', 'Actually, ignore my earlier preference. What I need is: Rubber sole.', 'For that, what matters is: YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp.', 'For that, what matters is: Textile Upper. Textile Covered EVA Footbed. Rubber Outsole.']
+  query: "I'm looking for Shoes Slippers. YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp For that, what matters is: Rubber s"
+  slots: {'style': 'YOUR NEW FAVORITE SLIPPERS: Slip into divine comfort with Gemma, a plush mule-style spa slipper with an adjustable hook-and-loop closure across the vamp', 'feature': 'Rubber sole', 'color': 'Textile Upper. Textile Covered EVA Footbed. Rubber Outsole'}
+  asked=['material', 'feature', 'color', 'style', 'size', 'use_case', 'budget', 'brand', 'category'] retired=['brand', 'budget', 'color', 'material', 'size', 'style', 'use_case'] last_ask='category' disclosed=4
+  shown=70 suppressed=False frames={'override_open': 1, 'exhaustion': 5, 'disclosure': 3, 'override': 1}
+
+### end override_template: turns=10 first_hit_turn=1

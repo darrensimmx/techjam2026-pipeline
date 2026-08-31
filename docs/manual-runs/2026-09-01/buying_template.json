@@ -1,0 +1,28 @@
+{
+  "label": "buying_template public_0101 B07QMS8TX8",
+  "target": "B07QMS8TX8",
+  "profile": {
+    "average_prior_rating": 5.0,
+    "preference_tags": [
+      "material",
+      "comfort",
+      "fit",
+      "durability"
+    ],
+    "purchase_frequency": "3-4 prior purchases",
+    "rating_style": "usually positive",
+    "summary": "Prior purchases emphasize material, comfort, fit, durability; ratings are usually positive."
+  },
+  "messages": [
+    "I'm looking for Medical Scrub Bottoms. A key requirement is: polyester.",
+    "For that, what matters is: 65% Polyester, 35% Cotton; DURABLE, EASY-CARE FABRIC - Workwear Originals mens scrubs pants are made from a poly/cotton* blend poplin fabric, a dependable staple of medical uniforms for years. This fade-resi.",
+    "For that, what matters is: Imported; Pull On closure.",
+    "For that, what matters is: color: white.",
+    "For that, what matters is: ZIPPER FLY - Don't settle for a lesser-quality men's scrub pant without a zip fly. Style 4000 men's cargo pants include a functional zipper fly and drawstring closure. These are we; ELASTIC WAIST - Mens elastic waist pants get an upgrade with the security and comfort of the all-around elastic waistband in Workwear Originals style 4000. There is a drawstring ti.",
+    "For that, what matters is: MEN'S TRADITIONAL FIT, SIZES UP TO 5XL - Cherokee mens cargo pants are very comfortable and come in the sizes you want with the fit and features you need. Available in sizes from S.",
+    "For that, what matters is: SEVEN POCKETS FOR LOTS OF STORAGE - These medical cargo work pants for men have two roomy front pockets, double cargo pockets on each side, and a back pocket with button closure fo.",
+    "For that, what matters is: budget around $19.19.",
+    "I don't have an additional preference for brand.",
+    "I don't have an additional preference for category."
+  ]
+}
