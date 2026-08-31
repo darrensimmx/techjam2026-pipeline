@@ -28,3 +28,7 @@ results*.json
 # Bake-off harness: regenerable artifacts (bakeoff/README.md documents how)
 bakeoff/cache/
 bakeoff/trajectories-*.json
+
+# demo/ trace streams: one JSONL per run, regenerable by re-running the demo.
+# Same reasoning as results*.json -- a per-session dump, not a durable record.
+demo/runs/

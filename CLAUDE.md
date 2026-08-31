@@ -19,8 +19,19 @@ src/        the system: 18 modules, standard library only
 **`starter/` is the superseded first-generation system and is NOT part of the
 submission.** It is retained unmodified as the historical record and as the
 baseline the rebuild is measured against — do not edit it, and do not add
-features to it. Everything else (`cli/`, `tests/`, `scripts/`, `bakeoff/`) is dev
-tooling that never reaches the organizer.
+features to it. Everything else (`cli/`, `demo/`, `tests/`, `scripts/`,
+`bakeoff/`) is dev tooling that never reaches the organizer.
+
+`demo/` is the two-terminal demo — a chat frontend and a pipeline explainer,
+driven by the evaluator's own simulated customer over `data/public_set.jsonl`.
+It observes `src/` by **monkeypatching the private stage functions of
+`src/pipeline.py` at runtime and restoring them in a `finally`**, so the
+submission stays byte-identical and the graded path pays nothing. Two rules bind
+anyone editing it, both enforced by `tests/test_demo_tracer_targets.py`: the
+original stage function is called *before* any recording and every recorder sits
+in its own `try/except` (a raise there would be swallowed by `run_turn` into
+`_degraded_plan()`, and the demo would silently show a *different* agent), and
+`demo/` never sets a seam flag. See `demo/README.md`.
 
 The trap this creates: `evaluator/local_evaluator.py:12` hardcodes
 `from starter.agent import Agent`, so running the vendored evaluator directly
@@ -46,7 +57,7 @@ Always run from the repo root — `src`, `starter`, `evaluator`, and `cli` are
 imported as top-level packages, and tests resolve paths relative to the root.
 
 ```powershell
-# Full suite (390 tests). Check the count before believing green.
+# Full suite (438 tests). Check the count before believing green.
 python -m unittest discover -s tests -p "test_*.py" -t .
 
 # One class / one test
@@ -55,8 +66,8 @@ python -m unittest tests.test_agent_contract.TestAgentContract.test_never_raises
 
 # Mirror the two CI jobs exactly. Modules are named EXPLICITLY in ci.yml, not
 # discovered, so a NEW TEST FILE DOES NOT RUN UNTIL IT IS ADDED THERE.
-python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval tests.test_src_shown tests.test_src_slots -v
-python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end -v
+python -m unittest tests.test_agent_contract tests.test_ledger_scheduler tests.test_offline tests.test_p1_offline_safety tests.test_src_agent tests.test_src_askpolicy tests.test_src_contract tests.test_src_frames tests.test_src_layering tests.test_src_layers tests.test_src_ledger tests.test_src_no_network tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval tests.test_src_shown tests.test_src_slots tests.test_demo_tracer_targets -v
+python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end tests.test_demo_trace -v
 
 # Real scoring run — THE SUBMISSION (needs data/catalog.jsonl).
 # --bracket both reports the leaky/scrubbed spread; quote both, never one.
@@ -179,7 +190,7 @@ is the equivalent for `src/` and is the one that matters now. CI names its test
 modules explicitly rather than discovering them, so **a new test file is silently
 not run until it is added to `.github/workflows/ci.yml`.** And `python -m unittest
 discover` reports `Ran 0 tests ... OK` if `tests/__init__.py` is ever deleted —
-check the count before believing green (it is 390). `docs/windows-dev-setup.md` §7
+check the count before believing green (it is 438). `docs/windows-dev-setup.md` §7
 has the full list.
 
 ## Silent failure to check first
