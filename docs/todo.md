@@ -21,27 +21,50 @@ override guard, the slot-value contradiction diff, the wire-contract coercion
 layer, and the overlap instrument (observation only — it never removes a
 candidate).
 
-**Present but INERT — a seam with a null implementation behind it:**
+**Shipped and live as of 1 Sep 2026 (commit `cb5817e`) — three Layer 3 seams
+that this table described as inert until that day:**
+
+| Layer | Module | Flag | Needs | Falls back to |
+|---|---|---|---|---|
+| Tier 2 semantic fallback | `src/semantic.py` | `TIER2_ENABLED = True`, rung 3 | `model2vec` **+** weights vendored at `data/models/potion-base-8m/` | `NullSemanticDecoder` (abstains always) |
+| Cross-encoder rerank | `src/rerank.py` | `load_reranker(enabled=True)` | `sentence-transformers`, `torch` **+** weights at `data/models/ms-marco-MiniLM-L-6-v2/` | `NullReranker` (identity) |
+| LLM ranking escalation | `src/llm_rerank.py` | `LLM_RERANK_ENABLED = True`, `gemini-3.5-flash` | `google-genai` **+** `GEMINI_API_KEY` in the environment **+** network | `NullLlmReranker` (identity, `usage() == (0, 0)`) |
+
+**Still INERT — a seam with a null implementation behind it:**
 
 | Layer | Module | Flag | Ships as |
 |---|---|---|---|
-| Tier 2 semantic fallback | `src/semantic.py` | `TIER2_ENABLED = False` | `NullSemanticDecoder` (abstains always) |
-| Cross-encoder rerank | `src/rerank.py` | `load_reranker(enabled=False)` | `NullReranker` (identity) |
-| LLM ranking escalation | `src/llm_rerank.py` | `LLM_RERANK_ENABLED = False` | `NullLlmReranker` (identity, `usage() == (0, 0)`) |
 | Ask-yield adaptive ordering | `src/askyield.py` | `ADAPTIVE_ENABLED = False` | the fixed schedule |
 
-Inert means *inert*: each loader checks its flag **before** it checks for a
-dependency, so `pip install -r requirements-optional.txt` changes nothing at
-all. Every entry in that file is commented out, because no checkpoint and no
-model has been chosen and pinning a version would imply a decision nobody made.
-`requirements.txt` stays comments-only, deliberately — the graded path is
-standard library only.
+Two things that were true about this section before 1 Sep 2026 and are now the
+opposite, called out because both were load-bearing claims elsewhere:
 
-**No language model runs anywhere in the shipped system today.** The one place a
-language model is even proposed is `src/llm_rerank.py`, which sits in *ranking*.
-Intent is never model-backed: Tier 1 is regex, and the Tier 2 fallback behind it
-is an **encoder**, not a generative model (item 2 explains why that distinction
-is load-bearing rather than stylistic).
+- **`pip install -r requirements-optional.txt` used to change nothing at all**
+  (each loader checks its flag before its dependency, and every flag was
+  `False`). The flags are `True` now, so the dependency is the only thing
+  standing between the null implementation and the live one. That file's entries
+  are no longer commented out either — a checkpoint and a model *have* been
+  chosen (items 1, 3, 4).
+- **A language model now does run in the shipped system**, where none did
+  before: `gemini-3.5-flash` in `src/llm_rerank.py`. It sits in *ranking*, on a
+  branch that fires only when the overlap gate finds zero literal overlap.
+  **Intent is still never model-backed** — Tier 1 is regex and the Tier 2
+  fallback behind it is an *encoder*, not a generative model, and item 2 explains
+  why that distinction is load-bearing rather than stylistic.
+
+`requirements.txt` stays comments-only, deliberately and unchanged — the graded
+path is standard library only, and **all three live seams still degrade to their
+null implementation with nothing installed.** That degradation is the contract;
+it is what makes enabling them safe rather than a bet.
+
+**The degradation is silent, and `Agent.degraded` will not tell you** — it tracks
+the BM25 index only. The only signal is the loader's own name:
+
+```powershell
+python -c "from src.rerank import load_reranker; print(load_reranker().name)"
+python -c "from src.semantic import load_semantic_decoder; print(load_semantic_decoder().name)"
+python -c "from src.llm_rerank import load_llm_reranker; print(load_llm_reranker().name)"
+```
 
 ---
 
@@ -167,6 +190,45 @@ only at scoring time) chosen **before** it is generated, not after.
 match are cheap, deterministic, and we build them anyway as the floor beneath
 whichever of rung 3 / rung 4 wins.
 
+**⚠ Two debts this layer carries live, recorded the way the `+0.047`
+reconciliation debt in item 4 is — because the difference between a recorded
+result and an unsourced number is worth keeping visible.**
+
+*Debt 1 — the comparison has no harness.* The potion-8m vs mpnet table above
+(168 paraphrases, 0 wrong vs 29 wrong) has **no reproducible source in this
+repo**. `bakeoff/` has no centroid or paraphrase harness at all; the prose table
+in `src/semantic.py`'s docstring is the run's only trace. An earlier version of
+that docstring cited an image, `potion-8m-evidence.png`, which is not in the tree
+either. This is strictly weaker footing than item 4 axis 1, which at least has
+`bakeoff/part4_checkpoint_comparison.py` behind it. Whoever builds the harness
+inherits the constraint four paragraphs above: **the control has to be chosen
+before the holdout is generated, not after**, or building it *is* the
+circularity.
+
+*Debt 2 — `REFUSAL_BIAS_MARGIN = 0.15` is an unvalidated designed default,
+carried live.* It is the asymmetry that makes rung 3 resolve a near-tie between
+`refusal` and `exhaustion` toward `refusal` — the one guard that turns "zero
+wrong" from a property of the table into a property of the code. The value came
+from ad hoc probing (real confusion pairs under 0.05 apart; 0.15 chosen to clear
+that with margin), **not** from the held-out run. `src/semantic.py` used to say
+it "should be re-measured before this ships to a graded run"; it shipped at
+`cb5817e`, so the honest form is the reverse — it is live, disclosed, and the
+re-measurement is **owed**, not awaited. Nobody may cite 0.15 as validated.
+
+Observed on the first live exercise of the decoder (1 Sep 2026): a light
+exhaustion paraphrase scored `exhaustion` 0.649 / `refusal` 0.590 — a +0.059
+delta, inside the margin — and resolved to `refusal`. Intended behaviour, and a
+real trade: the frame read was wrong, and the price was one idle-turn re-ask
+rather than a bucket retired forever.
+
+*A bug found at that guard while writing this, and fixed rather than recorded.*
+`refusal`'s score defaulted to `0.0` when the refusal anchor was missing from the
+scored set, which made the guard a **no-op exactly when the refusal signal was
+what had gone missing** — it failed open. It now uses a `None` sentinel and takes
+the same branch as a near-tie. **This does not validate `0.15`**; debt 2 stands
+exactly as written above. Fixing the guard only means the margin is applied when
+it should be, not that it is the right margin.
+
 **Seam.** `src/semantic.py`. A rung registers itself in `RUNG_BUILDERS` and
 declares its imports in `RUNG_DEPENDENCIES`; `load_semantic_decoder()` gates on
 the flag, then the chosen rung, then `try_import`, then a callable `decode`, and
@@ -275,12 +337,10 @@ exactly what hangs on a network-disabled rig.
 
 **LIVE 1 Sep 2026 — `cross-encoder/ms-marco-MiniLM-L-6-v2`.** `load_reranker`
 now defaults `enabled=True`; `src/rerank.py::_load_checkpoint` loads the
-vendored checkpoint at `data/models/ms-marco-MiniLM-L-6-v2/`. It is the only
-checkpoint this project ever measured (below), so shipping it is not a blind
-choice — the "never compared" axis (below) is still genuinely open, just not
-a reason to withhold a validated default. Degrades to `NullReranker` if the
-checkpoint isn't vendored on a given machine or `sentence_transformers` isn't
-installed, exactly as before.
+vendored checkpoint at `data/models/ms-marco-MiniLM-L-6-v2/`. It has since been
+compared against a field of alternatives and won (axis 1, closed below).
+Degrades to `NullReranker` if the checkpoint isn't vendored on a given machine
+or `sentence_transformers` isn't installed, exactly as before.
 
 **The decision (superseded framing below, kept for context).** Whether to ship
 a local cross-encoder rerank, and which checkpoint. It is bundled and offline
@@ -310,10 +370,36 @@ reorders or overrides the approved position; it is recorded so the next person
 does not re-derive it. (ESCI corroborates the *direction* independently: recall@10
 0.8233 → 0.845 and MRR@10 0.6686 → 0.7173 on 600 human queries.)
 
-**The three open axes.**
+**The three axes — one closed, two open.**
 
-1. **Which checkpoint — never compared.** The bake-off measured *a*
-   cross-encoder, not a field of them. No checkpoint comparison exists.
+1. ~~**Which checkpoint — never compared.**~~ **CLOSED 1 Sep 2026.** A field
+   was measured: four arms over 32 sessions, each reranking BM25's top-50.
+
+   | model | hit rate | tech score | time |
+   |---|---|---|---|
+   | **minilm-l6** | **84.38%** | **0.7229** | 343 s |
+   | tinybert-l2 | 78.12% | 0.6930 | 110 s |
+   | mminilm-l12 | 68.75% | 0.5832 | 852 s |
+   | minilm-l112 | 65.62% | 0.5668 | 804 s |
+
+   MiniLM-L6 — the checkpoint already shipping — wins on quality *and* is the
+   second-cheapest arm. **This is not a speed/quality trade:** the two slowest
+   arms are also the two worst, so there is no bigger-is-better frontier here to
+   buy latency on.
+
+   *Source, stated as carefully as the reconciliation debt above.* The harness
+   is `bakeoff/part4_checkpoint_comparison.py` over
+   `data/TechJam_32_Sessions.jsonl`, cherry-picked onto this branch from PR #21
+   (unmerged). It is **reproducible but not archived** — no
+   `results-checkpoint-comparison.json` was ever committed, so re-running it is
+   the only way to recover the numbers. Two limits travel with the table: the
+   harness holds **six** arms and `distilroberta` and `zerank-1-small` are absent
+   from these four rows, so this is not the full sweep; and it is 32 sessions on
+   one seed with **no confidence interval**, unlike `part4_rerank.py`, which
+   bootstraps. It settles *which* checkpoint, not *how much* the rerank is worth
+   — the latter is still the `+0.047` debt above, and closing axis 1 does not
+   touch it.
+
 2. **Cost against a per-turn timeout the organizers have never published.**
    This is the load-bearing unknown. We are weighing a known cost against an
    unknown limit, which is why it stays open rather than resolving on the
@@ -324,17 +410,25 @@ does not re-derive it. (ESCI corroborates the *direction* independently: recall@
    obligation. Do not model it as a score trade-off; it is an availability
    trade-off.
 
-**What would settle it.** Axis 1: a checkpoint comparison on ESCI (cheap — the
-bake-off caches candidates, so each arm is a re-ranking, not an evaluator
-re-run). Axis 2: either the organizers publish a timeout, or we pick a window
-whose worst-case per-turn cost is defensible without one and say so in the
-report. Axis 3: nothing to measure — it is a reading, and it is recorded above.
+**What would settle the rest.** Axis 1 is settled — what remains for it is
+optional: archive a results JSON, and run the two arms the table omits. Axis 2:
+either the organizers publish a timeout, or we pick a window whose worst-case
+per-turn cost is defensible without one and say so in the report. Axis 3:
+nothing to measure — it is a reading, and it is recorded above.
 
-**Seam.** `src/rerank.py`, `load_reranker`. `_load_checkpoint()` is the single
-function that changes: it loads the bundled model, wraps it behind the
-`Reranker` protocol, and returns it — or returns `None`, and we ship BM25's
-order, which is what we ship today. Weights would ship as a **local asset**, not
+**Seam.** `src/rerank.py`, `load_reranker`. `_load_checkpoint()` loads the
+bundled model, wraps it behind the `Reranker` protocol, and returns it — or
+returns `None`, and we ship BM25's order. Weights ship as a **local asset**, not
 as a download at load time.
+
+**No timeout is enforced anywhere in that module**, which is worth stating
+because axis 2 makes it easy to assume otherwise. `load_reranker` used to accept
+a `timeout_s=1.2` that `_load_checkpoint` took and ignored; the parameter was
+deleted on 1 Sep 2026 rather than left to imply a budget it never applied. The
+~1.2 s figure is a measured cost and a disclosure, not a limit the code holds
+itself to. Enforcing one is a real change, not a flag:
+`sentence_transformers.predict()` is a blocking call with no cancellation, so a
+wall-clock bound needs a worker process, not an argument.
 
 ---
 

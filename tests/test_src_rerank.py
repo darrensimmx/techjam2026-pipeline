@@ -45,14 +45,16 @@ class TestLoadReranker(unittest.TestCase):
         try:
             rerank_module.CE_MODEL_PATH = original_path / "definitely-not-here"
             self.assertIsInstance(load_reranker(enabled=True), NullReranker)
-            self.assertIsInstance(load_reranker(enabled=True, timeout_s=0.001), NullReranker)
         finally:
             rerank_module.CE_MODEL_PATH = original_path
 
     def test_never_raises_on_junk_arguments(self) -> None:
-        for args in ((None, None), ("yes", "soon"), (object(), object())):
-            with self.subTest(args=repr(args)[:40]):
-                self.assertTrue(callable(getattr(load_reranker(*args), "rerank", None)))
+        """`load_reranker` used to take a second `timeout_s` argument that
+        `_load_checkpoint` accepted and ignored; it was deleted rather than left
+        to imply a budget it never enforced, so these are single-argument now."""
+        for arg in (None, "yes", object()):
+            with self.subTest(arg=repr(arg)[:40]):
+                self.assertTrue(callable(getattr(load_reranker(arg), "rerank", None)))
 
     def test_null_reranker_is_the_identity(self) -> None:
         candidates = pool()

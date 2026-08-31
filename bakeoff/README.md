@@ -59,7 +59,32 @@ both. See the planning repo's `project/standing-findings.md`.
 | `part2_dense.py` | Part 2 — the dense ceiling (union recall, dense-only rescues) |
 | `part3_fusion.py` | Part 3 — R1–R4 retrieval arms, including the weight sweep |
 | `part4_rerank.py` | Part 4 — K0/K1 cross-encoder rerank, cost and wall-clock |
+| `part4_checkpoint_comparison.py` | Part 4 follow-up — *which* cross-encoder. Six checkpoints over `data/TechJam_32_Sessions.jsonl`, reranking BM25's top-50. See the caveats below. |
 | `part5_realqueries.py` | Part 5 — the same arms on ESCI's human-authored queries |
+
+### `part4_checkpoint_comparison.py` — read this before citing it
+
+This is the harness behind the checkpoint table now quoted in `src/rerank.py`,
+`requirements-optional.txt` and `docs/todo.md` item 4. Cherry-picked onto this
+branch from PR #21 (`feature/add-zeroentropy-zerank-1-small`) together with its
+input, `data/TechJam_32_Sessions.jsonl`; PR #21 itself is not merged and the two
+scratch `.md` files it also carries were deliberately left behind.
+
+Three caveats, none of which invalidate the table but all of which change how
+much it can be leaned on:
+
+- **The run is reproducible; the run is not archived.** No
+  `results-checkpoint-comparison.json` was ever committed, so the numbers in the
+  docs have a harness but no artifact. Re-running it regenerates them — that is
+  the difference between this and the centroid comparison, which has no harness
+  at all.
+- **`MODELS` holds six arms; the quoted table has four.** `distilroberta` and
+  `zerank-1-small` (the arm PR #21 exists to add) are not in it. Do not present
+  the table as the full sweep.
+- **32 sessions, one seed, no confidence interval** — unlike `part4_rerank.py`,
+  which bootstraps. It settles *which* checkpoint, not *how much* the rerank is
+  worth; the latter is still `part4_rerank.py`'s +0.047 and its own open
+  reconciliation debt (`docs/todo.md` item 4).
 
 ## Reproducing
 
@@ -83,6 +108,7 @@ python bakeoff/part1_ceiling.py
 .venv/Scripts/python bakeoff/part2_dense.py
 .venv/Scripts/python bakeoff/part3_fusion.py
 .venv/Scripts/python bakeoff/part4_rerank.py
+.venv/Scripts/python bakeoff/part4_checkpoint_comparison.py   # ~40 min, 6 arms, CPU
 .venv/Scripts/python bakeoff/part5_realqueries.py
 ```
 

@@ -1,10 +1,14 @@
 """The Layer 3 seams, and the invariant that keeps the core dependency-free.
 
-Everything under test here is INERT by design, so these tests are not checking
-that a feature works -- they are checking that a feature that does not exist
-cannot hurt us. Three properties, all of them about failure:
+The seams here are LIVE as of 1 Sep 2026 -- this file used to open by saying
+everything under test was inert, and that is no longer true. What has NOT
+changed is what these tests are for: they still check failure, not features.
+A live seam whose dependency is missing must behave exactly like the inert one
+did, and that degradation is the property under test. Four of them:
 
-  1. Both seams default to the null implementation.
+  1. The flags are on and a checkpoint is selected for each seam -- if someone
+     turns one off, that is a submission-level decision and this test should be
+     the thing that notices.
   2. Turning a seam on with nothing behind it returns the null implementation
      rather than raising. This is the one that matters: `load_*` runs inside
      Agent.__init__, which the evaluator does NOT wrap (local_evaluator.py:306),
@@ -12,11 +16,14 @@ cannot hurt us. Three properties, all of them about failure:
   3. `safe_decode` converts every possible Tier 2 misbehaviour into `None`,
      which is exactly what the null decoder returns -- so a Tier 2 failure falls
      back to Tier 1's miss handling UNCHANGED.
+  4. `requirements.txt` stays comments-only, and `requirements-optional.txt`
+     carries nothing but reviewed dependencies.
 
-Plus the guard on `requirements.txt` being empty, which is a real invariant of
-this project rather than a coincidence: the graded path is standard library
-only, deliberately, because the organizer reserves the right to run the
-submission with the network disabled.
+Property 4's first half is a real invariant of this project rather than a
+coincidence: the graded path is standard library only, deliberately, because
+the organizer reserves the right to run the submission with the network
+disabled. Its second half replaced a stricter rule (everything commented out)
+that the seams going live made false.
 """
 from __future__ import annotations
 
@@ -30,6 +37,20 @@ from src.semantic import NullSemanticDecoder, load_semantic_decoder, safe_decode
 from src.types import Candidate, Decode
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _requirement_name(line: str) -> str:
+    """The bare distribution name from one requirements line.
+
+    Strips an inline `#` comment (the torch entry carries the CPU index-url note
+    that way), then any version specifier or extras, then normalises case and
+    `_`/`.` to `-` the way PEP 503 does -- so `Model2Vec >= 0.9  # note` and
+    `model2vec` are the same name to the allow-list below.
+    """
+    text = line.split("#", 1)[0].strip()
+    for separator in ("==", ">=", "<=", "~=", "!=", ">", "<", "[", ";", " "):
+        text = text.split(separator, 1)[0].strip()
+    return text.lower().replace("_", "-").replace(".", "-")
 
 
 class _RaisingDecoder:
@@ -70,12 +91,14 @@ class _NotADecoder:
     name = "no-decode-method"
 
 
-class TestSeamsDefaultInert(unittest.TestCase):
+class TestSeamsAreLiveAndSelected(unittest.TestCase):
     """Semantic (Tier 2, rung 3) and LLM ranking escalation (Gemini) are both
-    now LIVE -- docs/todo.md items 1 and 3. Both still degrade to their null
-    implementation whenever their real dependency isn't reachable -- see
-    TestEnabledWithoutDependencies below, which is the test that actually
-    matters for the graded path."""
+    now LIVE -- docs/todo.md items 1 and 3. Renamed from TestSeamsDefaultInert,
+    which asserted the opposite of what its own body checks.
+
+    Both still degrade to their null implementation whenever their real
+    dependency isn't reachable -- see TestEnabledWithoutDependencies below,
+    which is the test that actually matters for the graded path."""
 
     def test_module_flags_are_on(self):
         self.assertTrue(semantic.TIER2_ENABLED)
@@ -93,8 +116,25 @@ class TestSeamsDefaultInert(unittest.TestCase):
     def test_load_semantic_decoder_defaults_to_null_when_disabled(self):
         self.assertIsInstance(load_semantic_decoder(enabled=False), NullSemanticDecoder)
 
-    def test_load_llm_reranker_defaults_to_null(self):
-        self.assertIsInstance(load_llm_reranker(), NullLlmReranker)
+    def test_load_llm_reranker_returns_null_when_disabled(self):
+        self.assertIsInstance(load_llm_reranker(enabled=False), NullLlmReranker)
+
+    def test_load_llm_reranker_never_raises_whatever_the_machine_has(self):
+        """This replaces an unconditional `assertIsInstance(..., NullLlmReranker)`,
+        which was true only while `google-genai` was uninstalled everywhere. It
+        is now installed in the dev venv, so that assertion passed in CI and
+        failed on a developer's box -- the worst shape for a test to have.
+
+        The property that actually holds on every machine is this one: the call
+        is total. It returns a usable reranker whether or not the package and
+        the key are present, and it never raises -- which is what matters, since
+        it runs inside an Agent.__init__ the evaluator does not wrap. WHICH
+        implementation comes back is environment-dependent by design; the
+        degradation direction is pinned by TestEnabledWithoutDependencies below.
+        """
+        reranker = load_llm_reranker()
+        self.assertTrue(callable(getattr(reranker, "rerank", None)))
+        self.assertIsInstance(getattr(reranker, "name", None), str)
 
     def test_null_decoder_always_abstains(self):
         decoder = NullSemanticDecoder()
@@ -298,8 +338,15 @@ class TestTryImport(unittest.TestCase):
 class TestRequirementsStaysEmpty(unittest.TestCase):
     """`requirements.txt` is comments-only DELIBERATELY -- the graded path is
     standard library only, because the organizer reserves the right to run the
-    submission under network restrictions. Optional-layer candidates belong in
-    `requirements-optional.txt`, commented out, and never move across."""
+    submission under network restrictions. Optional-layer dependencies live in
+    `requirements-optional.txt` and never move across; CI installs only
+    `requirements.txt`, so anything moved over becomes a hard build dependency
+    of the graded path.
+
+    Two different rules, one per file, and the distinction is the point:
+    `requirements.txt` must be EMPTY; `requirements-optional.txt` must be
+    REVIEWED. Since 1 Sep 2026 the second file legitimately carries uncommented
+    entries -- the seams are live and their dependencies are real installs."""
 
     def test_no_uncommented_dependency_line(self):
         path = REPO_ROOT / "requirements.txt"
@@ -316,18 +363,41 @@ class TestRequirementsStaysEmpty(unittest.TestCase):
             + "; ".join(f"line {n}: {text!r}" for n, text in offenders),
         )
 
-    def test_requirements_optional_is_entirely_commented_out(self):
-        """Nothing is chosen yet, so every candidate stays commented. An
-        uncommented line here would install a dependency on a `pip install -r`
-        without anyone having made the decision it implies."""
+    def test_requirements_optional_entries_are_allow_listed(self):
+        """`requirements-optional.txt` MAY carry uncommented entries now -- as of
+        1 Sep 2026 all three seams are live and their dependencies are real
+        installs, which is the premise the previous version of this test
+        (`..._is_entirely_commented_out`, "nothing is chosen yet") denied.
+
+        The invariant that replaces it is narrower but still worth holding: an
+        uncommented line must be one of the four reviewed dependencies. That
+        keeps an unreviewed package from arriving on a `pip install -r` without
+        the submission-level decision and disclosure it implies -- which is the
+        thing the old test was actually protecting.
+
+        Note what this test does NOT protect: the stdlib-only graded path. That
+        is `test_no_uncommented_dependency_line` above, on `requirements.txt`,
+        and it is untouched."""
         path = REPO_ROOT / "requirements-optional.txt"
         self.assertTrue(path.is_file(), f"{path} is missing")
-        offenders = [
-            (number, line.rstrip())
-            for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1)
-            if line.strip() and not line.lstrip().startswith("#")
-        ]
-        self.assertEqual(offenders, [], f"uncommented entries in {path.name}: {offenders}")
+
+        allowed = {"model2vec", "sentence-transformers", "torch", "google-genai"}
+        offenders = []
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if not line.strip() or line.lstrip().startswith("#"):
+                continue
+            name = _requirement_name(line)
+            if name not in allowed:
+                offenders.append((number, line.rstrip()))
+
+        self.assertEqual(
+            offenders,
+            [],
+            f"unreviewed uncommented entries in {path.name} (allowed: "
+            + ", ".join(sorted(allowed))
+            + "); found "
+            + "; ".join(f"line {n}: {text!r}" for n, text in offenders),
+        )
 
 
 if __name__ == "__main__":

@@ -1,6 +1,12 @@
 # Architecture status — what `starter/` actually is, against the current design
 
-**Status:** ✅ current as of 30 Aug 2026. **Derived, not normative.**
+**Status:** ⚠️ current as of 30 Aug 2026 for `starter/`; **its Layer 3 claims were
+corrected 1 Sep 2026.** **Derived, not normative.**
+
+This file asks "which boxes exist in `starter/`", and `starter/` is superseded — the
+submission is `src/`. Two Layer 3 rows below said "Absent" / "not approved to build" and
+were read as claims about the *system* rather than about `starter/`; both are annotated in
+place. For what actually ships, read `CLAUDE.md` and `docs/todo.md`, not this file.
 
 **Authoritative source: `techjam2026-docs/project/architecture-diagram.md`** — the mermaid,
 and only the mermaid. This file is the *implementation* view of it: which boxes exist in
@@ -42,7 +48,7 @@ number.
 | Intent classifier · Tier 1 | **Partial** | `starter/ledger.py` → `_CONTENT_FREE_PATTERNS` | Two anchored patterns covering the three content-free frames. It is *not* the full frame decode: no decline split on the token `additional` (hard rule 4), no burned-ask signal, no override detection, no scenario-type readout. |
 | Constraint ledger | **Shipped** | `starter/ledger.py` → `SessionState` | None. Append-only, verbatim, and it *is* the query — matches the design exactly. |
 | Slot state | **Absent** | — | No typed slot dict exists. Blocks the G5 contradiction check. Scheduling-only by design: it must never reach retrieval. |
-| Cross-encoder rerank | **Absent from `starter/`** | measured only in `bakeoff/part4_rerank.py` | Model load, its own try/except, and the "keep BM25's order" bypass edge are all unbuilt. Also a packaging change: `requirements.txt` is comments-only today and a bundled local checkpoint ends that. |
+| Cross-encoder rerank | **Absent from `starter/`** — but **shipped and live in `src/`** since 1 Sep 2026 | `src/rerank.py`; measured in `bakeoff/part4_rerank.py` and `bakeoff/part4_checkpoint_comparison.py` | No gap remains. Model load, its own try/except, and the "keep BM25's order" bypass edge are all built in `src/rerank.py` (`safe_rerank` additionally discards any result that is not a permutation of its input). The packaging change landed as predicted, but *not* into `requirements.txt`: that file is still comments-only and the graded path is still stdlib-only. `sentence-transformers` and `torch` are uncommented in `requirements-optional.txt`, and the checkpoint is vendored at `data/models/ms-marco-MiniLM-L-6-v2/`. |
 | Response builder + overlap gate | **Partial** | `starter/agent.py` → `_validated`, `_limit` | Builder and schema coercion ship. The verbatim-overlap gate is absent. "Never repeat a shown product" is absent — no `shown` set exists. The override guard that puts pre-override products back in play is absent. |
 
 ### The ask channel (gate G3), inside the same turn loop
@@ -85,10 +91,15 @@ Seven gaps between v4 and the mermaid it was drawn from. Most of them touch `sta
 7. **`ITC` / intent trajectory is deleted from the diagram**; the two-tier intent
    classifier is what ships. Already reflected in `docs/hard-rules.md` → Naming.
 
-Tier 2 of the intent classifier remains **not approved to build**, and its implementation
-is an untested XOR — rung 3 (embedding nearest-centroid) or rung 4 (fine-tuned encoder
-head), one slot, one winner, decided on held-out paraphrase numbers. Rung 4 needs a
-training run, which this project's sandbox cannot do (no network to fetch weights).
+~~Tier 2 of the intent classifier remains **not approved to build**~~ — **superseded
+1 Sep 2026.** Tier 2 was approved, built, and is live in `src/semantic.py`: the XOR
+resolved to **rung 3** (embedding nearest-centroid, `potion-base-8m` via `model2vec`) on
+held-out paraphrase numbers — 0 wrong out of 168 against rung-4-style mpnet's 29, which
+wins under this project's asymmetric-cost rule even at much lower combined recovery.
+Rung 4 was never built; it needs a training run this project's sandbox cannot do (no
+network to fetch weights), and rung 3 won without it. `docs/todo.md` item 1 carries the
+decision, the two debts it ships with, and the caveat that the comparison has no
+reproducible harness in this repo.
 
 ## Numbers — read the bracket, and check the file
 

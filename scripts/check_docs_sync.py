@@ -189,12 +189,26 @@ def check_fixed_schedule_matches_docs() -> tuple[str, str]:
 
 def check_phase_crosswalk() -> tuple[str, str]:
     """Confirms the docs repo's G-key note still describes Phase 2 as
-    retrieval and Phase 3 as ask-yield -- guards a re-swap regression."""
+    retrieval and Phase 3 as ask-yield -- guards a re-swap regression.
+
+    Reads the `## Phases` TABLE, not `### Phase N — ` headings: the 1 Sep 2026
+    README rewrite replaced those headings with a table and this check failed
+    on the next push to main. The intent is unchanged -- Phase 2 must name
+    Retrieval, Phase 3 must name Ask-yield.
+
+    The search is deliberately scoped to the section rather than run over the
+    whole file. The layer table earlier in the README opens a row with
+    `| **2 — adaptive orchestration**`, which an unscoped pattern matches first
+    and which would make this check fail for the wrong reason.
+    """
     readme = read_local("README.md")
-    p2 = re.search(r"### Phase 2 — ([^\n(]+)", readme)
-    p3 = re.search(r"### Phase 3 — ([^\n(]+)", readme)
+    section = readme.partition("\n## Phases")[2]
+    if not section:
+        return "FAIL", "could not find the '## Phases' section in README.md"
+    p2 = re.search(r"\|\s*\*\*2 — ([^*|]+)\*\*", section)
+    p3 = re.search(r"\|\s*\*\*3 — ([^*|]+)\*\*", section)
     if not (p2 and p3):
-        return "FAIL", "could not find Phase 2 / Phase 3 headings in README.md"
+        return "FAIL", "could not find Phase 2 / Phase 3 rows in README.md's '## Phases' table"
     p2_name, p3_name = p2.group(1).strip(), p3.group(1).strip()
     if "Retrieval" not in p2_name or "Ask-yield" not in p3_name:
         return "FAIL", f"phase names drifted locally: Phase 2={p2_name!r}, Phase 3={p3_name!r}"
