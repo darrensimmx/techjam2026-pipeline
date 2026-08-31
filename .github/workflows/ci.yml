@@ -37,6 +37,7 @@ jobs:
           tests.test_src_overlap tests.test_src_pipeline tests.test_src_rerank tests.test_src_retrieval
           tests.test_src_semantic_rung3 tests.test_src_shown tests.test_src_slots
           tests.test_bakeoff_llmrr
+          tests.test_demo_tracer_targets
           -v
 
   barebone-app-smoke:
@@ -50,4 +51,4 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - name: CLI integration + real-evaluator smoke tests, and the src/ end-to-end assembly proof
-        run: python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end -v
+        run: python -m unittest tests.test_cli_integration tests.test_evaluator_smoke tests.test_src_end_to_end tests.test_demo_trace -v

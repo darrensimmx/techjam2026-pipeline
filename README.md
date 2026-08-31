@@ -123,6 +123,25 @@ The organizer's evaluator imports this class and calls `reset()` / `respond()`
 in-process. No CLI, no server, no network on the graded path. All paths resolve
 relative to the repository root.
 
+## Watching it work
+
+Two CLIs replay a scored session in two terminals — the conversation on one
+side, the pipeline's reasoning on the other. Start the backend first; it waits.
+
+```bash
+python -m demo.backend                                 # the reasoning
+python -m demo.frontend --bracket leaky --step         # the conversation
+```
+
+You get four cases by default — one session per scenario type (`buying`,
+`browsing`, `boundary`, `intent_override`) — revealed line by line so a turn
+looks computed rather than pasted. The customer is the evaluator's own
+simulator, so what you see is a session the scorer would actually have produced.
+`--bracket` is required and every number on screen carries its arm — see
+[`demo/README.md`](demo/README.md). This is dev tooling: it observes `src/` by
+wrapping its stage functions at runtime and changes nothing about the graded
+path.
+
 ## Reproducing our results
 
 ```bash
