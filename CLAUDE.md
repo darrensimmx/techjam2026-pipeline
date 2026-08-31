@@ -57,7 +57,9 @@ Always run from the repo root — `src`, `starter`, `evaluator`, and `cli` are
 imported as top-level packages, and tests resolve paths relative to the root.
 
 ```powershell
-# Full suite (492 tests). Check the count before believing green.
+# Full suite. Check the count before believing green: 492 at cfd6841 (main).
+# ANCHOR THE NUMBER TO A COMMIT when you update it -- a bare count is stale the
+# next time anyone adds a test, which is how 438 and 390 survived here so long.
 python -m unittest discover -s tests -p "test_*.py" -t .
 
 # One class / one test
@@ -211,8 +213,17 @@ is the equivalent for `src/` and is the one that matters now. CI names its test
 modules explicitly rather than discovering them, so **a new test file is silently
 not run until it is added to `.github/workflows/ci.yml`.** And `python -m unittest
 discover` reports `Ran 0 tests ... OK` if `tests/__init__.py` is ever deleted —
-check the count before believing green (it is 492). `docs/windows-dev-setup.md` §7
-has the full list.
+check the count before believing green (492 at `cfd6841`; `layer3-true-installable-sourced`
+carries more). `docs/windows-dev-setup.md` §7 has the full list.
+
+**A passing count is not a covered count, and this file has been wrong about it
+twice.** Two live examples, both found 1 Sep 2026: `test_load_llm_reranker_defaults_to_null`
+asserted an *unconditional* null, so it stayed green in CI while asserting
+nothing about the flag it was named for (fixed in `85f9f53`); and the whole of
+`CentroidSemanticDecoder` is dead code on any checkout without `model2vec` and
+the potion-8m weights, so a full green suite there exercises **none** of it. If
+a module's dependency is absent, its tests are not failing — they are not
+running. Say which configuration a green run was green *in*.
 
 ## Silent failure to check first
 
