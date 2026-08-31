@@ -1,7 +1,11 @@
 __pycache__/
 *.pyc
 .venv/
-.env
+# .env* not .env: the literal pattern matched only the one filename, and a
+# stray `.env_key_tmp5` holding a Gemini API key sat untracked-but-unignored,
+# one `git add -A` from being committed. Nothing in src/ autoloads any of
+# these -- exporting GEMINI_API_KEY is an operator step (docs/windows-dev-setup.md).
+.env*
 .DS_Store
 results.json
 # evaluate_src.py's per-session dump. results_src.md (the run log) IS tracked --

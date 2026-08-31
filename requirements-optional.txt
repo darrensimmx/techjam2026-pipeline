@@ -7,37 +7,76 @@
 #    submission decision, not an accident of the build: `submission_rules.md`
 #    reserves the organizer's right to run the submission under CPU, memory,
 #    timeout and network restrictions, so fewer dependencies is less that can
-#    fail when it counts. The agent must score with NOTHING from this file
-#    installed, and that is the configuration we ship.
+#    fail when it counts. The agent must still score with NOTHING from this file
+#    installed -- that is the degradation contract and it is load-bearing. What
+#    has changed (1 Sep 2026) is that this is no longer the configuration we
+#    ship: the two local layers below are now on, and the shipped configuration
+#    expects them installed and their weights vendored.
 #
 # 2. `requirements.txt` stays empty (comments only) DELIBERATELY. Do not move
-#    anything from here into it. If a layer below is ever approved and turned
-#    on, that is a submission-level decision with a disclosure attached -- not
-#    a line edit.
+#    anything from here into it. CI installs only that file, so anything moved
+#    across becomes a hard build dependency of the graded path.
 #
-# 3. Installing any of these changes NOTHING on its own. Every optional layer
-#    is gated by a flag that is False in the source, and each loader checks the
-#    flag BEFORE it checks for the dependency. A pip install with the flag
-#    still False leaves the null implementation in place, byte for byte.
+# 3. Installing these now DOES change behaviour -- this reverses what this
+#    paragraph said before 1 Sep 2026. Every seam's flag is True in the source,
+#    and each loader checks the flag BEFORE it checks for the dependency, so the
+#    dependency is now the only thing standing between the null implementation
+#    and the live one:
 #
-#      src/semantic.py    TIER2_ENABLED       = False   Tier 2 semantic fallback
-#      src/llm_rerank.py  LLM_RERANK_ENABLED  = False   LLM ranking escalation
-#      src/rerank.py      load_reranker(enabled=False)  cross-encoder rerank
+#      src/semantic.py    TIER2_ENABLED       = True    Tier 2 semantic fallback
+#      src/rerank.py      load_reranker(enabled=True)   cross-encoder rerank
+#      src/llm_rerank.py  LLM_RERANK_ENABLED  = True    LLM ranking escalation
 #
-#    Every entry is commented out because no checkpoint and no model has been
-#    chosen -- see docs/todo.md items 1, 3 and 4. Pinning a version here would
-#    imply a decision nobody has made.
+#    Confirm what actually loaded -- the null fallback is silent, and
+#    `Agent.degraded` tracks the BM25 index only and will NOT tell you:
 #
-# 4. Nothing here is importable except through `src/optional_deps.try_import`,
+#      python -c "from src.rerank import load_reranker; print(load_reranker().name)"
+#      python -c "from src.semantic import load_semantic_decoder; print(load_semantic_decoder().name)"
+#      python -c "from src.llm_rerank import load_llm_reranker; print(load_llm_reranker().name)"
+#
+#    Expect cross-encoder/ms-marco-MiniLM-L-6-v2, rung3_centroid, and
+#    gemini-3.5-flash. Any `null*` name means that layer is inert here.
+#
+# 4. The checkpoints below are chosen, and each was chosen against a measured
+#    field rather than adopted unopposed. Condensed; full tables and their
+#    provenance live in docs/todo.md items 1 and 4.
+#
+#    Cross-encoder -- 32 sessions, rerank of the BM25 top-50. Harness:
+#    bakeoff/part4_checkpoint_comparison.py (reproducible; the run itself is
+#    NOT archived -- no results JSON was committed).
+#
+#      model          hit rate   tech score   time
+#      minilm-l6      84.38%     0.7229       343 s   <- chosen
+#      tinybert-l2    78.12%     0.6930       110 s
+#      mminilm-l12    68.75%     0.5832       852 s
+#      minilm-l112    65.62%     0.5668       804 s
+#
+#    The two slowest arms are also the two worst, so this is not a
+#    speed/quality trade -- MiniLM-L6 wins outright and is second-cheapest.
+#
+#    Centroid -- intent classification, 168 paraphrases. NO reproducible
+#    harness exists in this repo; the tables are the only trace of the run.
+#
+#      model        recovered   wrong   abstained   combined
+#      potion-8m    39 (23%)    0       109 (65%)   0.3333   <- chosen
+#      mpnet        105 (63%)   29      14  (8%)    0.7262
+#
+#    The two are judged on DIFFERENT metrics on purpose. The centroid optimises
+#    for zero-wrong because its mistakes are permanent -- a misread refusal
+#    retires a live constraint bucket forever. The cross-encoder optimises for
+#    accuracy because its fallback, BM25's own order, is always available and
+#    always safe. Judging either by the other's metric picks the wrong winner.
+#
+# 5. Nothing here is importable except through `src/optional_deps.try_import`,
 #    which returns None on ANY failure -- including a package that raises at
 #    import time, which a narrow `except ImportError` would miss.
 
 
 # -- Tier 2 semantic fallback (src/semantic.py) --------------------------------
 # DECIDED 1 Sep 2026: rung 3 (embedding nearest-centroid), potion-8m. See
-# docs/todo.md item 1 for the held-out numbers (potion-8m/stripped @ 0.52:
-# 0 wrong vs. mpnet/multi @ 0.31: 29 wrong -- zero-wrong wins under this
-# project's asymmetric-cost rule even at a lower combined-recovery number).
+# docs/todo.md item 1 and the table above -- 0 wrong out of 168 against mpnet's
+# 29, which wins under this project's asymmetric-cost rule even at a much lower
+# combined-recovery number.
 #
 # model2vec is numpy-only inference for a static embedding model -- no torch,
 # no CUDA probe at import time. This is a lighter runtime than every other
@@ -48,40 +87,45 @@
 #
 # Rung 4 (fine-tuned encoder head) is NOT built -- needs a training run this
 # sandbox cannot do (no network to fetch weights), and rung 3 already won.
-#
-# model2vec
+model2vec
 
 
 # -- Cross-encoder rerank (src/rerank.py) --------------------------------------
-# LIVE 1 Sep 2026: cross-encoder/ms-marco-MiniLM-L-6-v2, the only checkpoint
-# ever measured (+0.047, CI excludes zero). Bundled and offline -- no network
-# once vendored. Weights ship as a local asset at data/models/ms-marco-MiniLM-L-6-v2/
+# LIVE 1 Sep 2026: cross-encoder/ms-marco-MiniLM-L-6-v2, chosen over three other
+# checkpoints (table above). Bundled and offline -- no network once vendored.
+# Weights ship as a local asset at data/models/ms-marco-MiniLM-L-6-v2/
 # (gitignored, fetch step in docs/windows-dev-setup.md), NOT a download at load
 # time. The per-turn cost (~1.2 s) against an unpublished organizer timeout is
-# still an open Feasibility disclosure -- docs/todo.md item 4.
-#
-# sentence-transformers
-# torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
+# still an open Feasibility disclosure -- docs/todo.md item 4, axis 2.
+sentence-transformers
+torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
 
 
 # -- LLM ranking escalation (src/llm_rerank.py) --------------------------------
-# UNDECIDED, and the only language model anywhere in the system. Whatever lands
-# here must be disclosed per `submission_rules.md`: model choice, approximate
-# cost, token usage, latency and fallback behaviour. API keys go in environment
-# variables and are never committed. Because official scoring may run with the
-# network disabled, an API-backed client must declare that it needs live
-# credentials AND keep the offline fallback -- which is NullLlmReranker.
-# See docs/todo.md item 3.
+# DECIDED 1 Sep 2026: gemini-3.5-flash, pinned to thinking_budget=0. This is the
+# only language model anywhere in the system, and the only entry in this file
+# for which `pip install -r` alone does NOT make the layer live -- unlike the two
+# local layers above, it additionally needs a live credential AND network:
 #
-# (no client library listed -- no provider has been chosen)
+#   GEMINI_API_KEY   read by google.genai.Client() straight from the
+#                    environment. Never committed, never logged, and never read
+#                    by any file in this repo. Nothing in src/ autoloads .env --
+#                    exporting it is an operator step (docs/windows-dev-setup.md).
+#
+# Because official scoring may run with the network disabled, this client
+# declares that requirement and keeps the offline fallback: load_llm_reranker()
+# returns NullLlmReranker when either the package or the key is missing, and it
+# never probes an endpoint at construction, precisely so it cannot hang on a rig
+# with the network off. Disclosure (model, cost, tokens, latency, fallback) is in
+# README.md; see docs/todo.md item 3.
+google-genai
 
 
 # -- Bake-off / measurement tooling -- NOT part of the submission ---------------
 # `bakeoff/` is dev tooling and never reaches the organizer. Its dependencies
 # are listed for reproducibility only; installing them has no effect on the
-# agent. See bakeoff/README.md.
+# agent. sentence-transformers and torch are already required above and are not
+# repeated as installable entries. See bakeoff/README.md.
 #
-# sentence-transformers
-# torch          # CPU wheel: --index-url https://download.pytorch.org/whl/cpu
 # pandas
 # pyarrow

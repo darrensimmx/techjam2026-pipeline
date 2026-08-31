@@ -16,7 +16,7 @@ makes a mediocre fallback safe here. It would also make the one subsystem we can
 prove deterministic stop being deterministic.
 
 RUNG 3 vs RUNG 4, decided (docs/todo.md item 1). Held-out numbers, 168-item
-paraphrase set (potion-8m-evidence.png):
+paraphrase set:
 
     setup                         recovered  wrong  abstained  combined
     potion-8m / stripped @ 0.52   39         0      109        0.3333
@@ -27,6 +27,33 @@ this project's own asymmetry rule -- a wrong refusal/exhaustion read silently
 loses a constraint bucket forever, an abstention costs nothing because Tier 1's
 miss handling just runs -- zero-wrong is the property to buy even at a much
 lower combined-recovery number. potion-8m wins.
+
+PROVENANCE, STATED PLAINLY: there is NO reproducible harness for this run in
+this repo. This table is its only trace. (An earlier version of this docstring
+cited `potion-8m-evidence.png`, which is not in the tree either.) That is a
+weaker footing than the cross-encoder's own comparison next door in
+src/rerank.py, which at least has bakeoff/part4_checkpoint_comparison.py behind
+it -- treated the same way docs/todo.md treats its +0.047 reconciliation debt,
+because the difference between a recorded result and an unsourced number is
+worth keeping visible. docs/todo.md:159-164 binds whoever builds that harness:
+a self-authored paraphrase holdout is CIRCULAR unless the control is chosen
+before the data is generated, not after.
+
+WHY THIS IS JUDGED ON A DIFFERENT METRIC FROM THE CROSS-ENCODER. Both are
+optional Layer 3 models and they sit at opposite ends of the same pass, but
+picking either by the other's rule picks the wrong winner:
+
+    aspect          this (centroid)          cross-encoder (src/rerank.py)
+    task            classify customer intent rank products by relevance
+    input           customer reply text      (query, product) pairs
+    output          one of 8 intent frames   a relevance score
+    failure cost    loses a constraint       falls back to BM25's own order
+                    bucket, permanently
+    can abstain?    yes -- returns None      no -- it always scores
+
+So the centroid optimises for ZERO-WRONG and the cross-encoder optimises for
+ACCURACY, and that asymmetry is the whole reason REFUSAL_BIAS_MARGIN below
+exists at all.
 
 WHY THE GUARDS BELOW ARE REAL
 ------------------------------------------------------------
@@ -118,10 +145,32 @@ CENTROID_THRESHOLD: float = 0.52
 # at all on uncertain input -- only an exact regex match can). Ad hoc probing
 # with light paraphrases ("I don't really have a preference on X" vs "I don't
 # have any more preferences for X") found real confusion pairs under 0.05
-# apart; 0.15 was chosen to clear that with margin. Flagged explicitly so
-# nobody cites this as validated: it is a designed default, not a held-out
-# number, and it should be re-measured against paraphrase-robustness-prompt.md's
-# holdout before this ships to a graded run.
+# apart; 0.15 was chosen to clear that with margin.
+#
+# STATUS, corrected 1 Sep 2026: this used to say the value "should be
+# re-measured before this ships to a graded run". It has already shipped -- the
+# seam went live at cb5817e. So the honest statement is the other way round: an
+# UNVALIDATED DESIGNED DEFAULT is carried live and disclosed, and the
+# re-measurement against paraphrase-robustness-prompt.md's holdout is a debt
+# owed, not a precondition anyone is waiting on. docs/todo.md tracks it beside
+# the +0.047 reconciliation debt. Nobody may cite 0.15 as validated.
+#
+# Observed live, the first time this decoder was ever exercised (1 Sep 2026): a
+# light exhaustion paraphrase scored exhaustion 0.649 / refusal 0.590 -- delta
+# +0.059, inside the margin -- and was duly resolved to `refusal`. That is the
+# intended behaviour, and it is worth being clear-eyed that it IS a trade: the
+# frame read was wrong, and the price paid for it was one idle-turn re-ask
+# instead of a bucket retired forever.
+#
+# ONE LIVE EDGE CASE, in the guard below rather than in this constant:
+# `scores_by_frame.get("refusal", 0.0)` defaults refusal's score to 0.0 when
+# refusal is absent from `scored`, which happens only if _cosine returns None
+# for the refusal anchor specifically (a shape mismatch on that one vector). In
+# that branch `best_score - 0.0` clears any sane margin, so the guard silently
+# becomes a no-op exactly when the refusal signal is the thing that has gone
+# missing. Left as-is because it is unreachable with real anchors from a single
+# embedder -- but it fails OPEN, not safe, and that is the wrong direction for
+# this particular check.
 REFUSAL_BIAS_MARGIN: float = 0.15
 
 
