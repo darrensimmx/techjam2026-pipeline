@@ -244,6 +244,17 @@ verbatim substrings of the target's own listing, so that case is ~5.5% of the
 local set by construction. Expect a local delta near zero and do not read that
 as a verdict on the private set; see framing point 1.
 
+> **Corrected 1 Sep 2026 — the ~5.5% above is not the firing rate.** The
+> prediction "barely ever fires" held; the number attached to it did not. 5.5%
+> is the per-*string* complement of the 94.5% verbatim-overlap figure, and the
+> gate is not per-string: `_llm_escalate` fires only when
+> `overlap.measure(...).rate == 0.0` — **not one** disclosed segment appearing
+> anywhere in the top-50 window — so one overlapping segment among several keeps
+> it shut. Measured over the 200 public sessions with the layer live against a
+> stubbed client: **0/571 turns leaky (0%)**, **24/1214 scrubbed (1.98%)**.
+> Do not re-derive a firing rate from the overlap percentage; measure it.
+> README.md carries the same correction under the cost table and "Limitations".
+
 **What would settle it.** A measurement on **ESCI queries**, not on the public
 set — human-authored queries are the only local proxy for the condition this
 layer targets. Pair it with the disclosure numbers the rules demand (tokens,

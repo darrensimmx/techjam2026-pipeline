@@ -145,7 +145,7 @@ path.
 ## Reproducing our results
 
 ```bash
-# full test suite -- 390 tests. Check the count before believing green.
+# full test suite -- 492 tests. Check the count before believing green.
 python -m unittest discover -s tests -p "test_*.py" -t .
 
 # score the submission. --bracket both reports the leaky/scrubbed spread.
@@ -302,7 +302,7 @@ it has one path with one optional re-ordering step.
 |---|---|
 | **Token usage — core** | `0` prompt, `0` completion, every turn. Truthfully, because no model is called. |
 | **Token usage — LLM layer, when it fires** | ~4,640 prompt (top-50 window), ~30 completion (10 integer indices, no rationale). Measured on the one successful live smoke call: 212 prompt / 9 completion on a 5-candidate synthetic query. Reported honestly through `usage.prompt_tokens` / `usage.completion_tokens`; `(0, 0)` on every turn it does not fire. |
-| **Estimated model cost** | **$0.00** for the core and both local checkpoints. The LLM layer is ~**$0.011 per turn it fires on**, and against this simulator it fires on ≈5.5% of turns by construction. |
+| **Estimated model cost** | **$0.00** for the core and both local checkpoints. The LLM layer is ~**$0.011 per turn it fires on**. Measured firing rate against this simulator (1 Sep 2026, 200 sessions): **0% of turns leaky (0/571)**, **1.98% scrubbed (24/1214)** — so ~**$0.00 per leaky session** and ~**$0.0013 per scrubbed session**. A superseded ≈5.5% estimate is corrected under "Limitations"; it was a per-string figure, and the gate needs *zero* overlap across all disclosed segments. |
 | **Latency — core** | Index build ~1.16 s once at construction; ~**19 ms per turn** end to end. 200 sessions / 571 turns in 9.7 s. |
 | **Latency — with the cross-encoder** | ~**1.2 s per turn** (single rig, top-50 window). This is a timeout/disqualification risk against a per-turn budget the organizers have never published — it is **not** a score cost, since Efficiency is turn-based and wall-clock never enters `TechnicalScore`. |
 | **Latency — LLM layer** | ~0.14–0.42 s added on the turns it fires. Pinned to `thinking_budget=0`: reasoning mode is disqualifying on latency (Gemini 3.5 Flash at `high` effort is 15.28 s to first token). |
@@ -380,9 +380,25 @@ sweep is the first thing we would run with more time.
 
 **The paraphrase probe is the layer's real falsifier and it has not run.** The
 honest claim for the escalation is *real-world robustness*, not local score:
-against this simulator it fires on ~5.5% of turns by construction, so its
-expected `TechnicalScore` delta is ≈0. We disclose that up front rather than let
-a reader infer a gain. What would substantiate it is perturbing the disclosed
+against this simulator it almost never fires, so its expected `TechnicalScore`
+delta is ≈0. We disclose that up front rather than let a reader infer a gain.
+
+**Measured firing rate, 1 Sep 2026**: **0 of 571 turns leaky (0%)** and **24 of
+1214 turns scrubbed (1.98%)**. Conditions: 200 public sessions, `gemini-3.5-flash`
+made live against a stubbed client so every call site is counted, cross-encoder
+and Tier 2 inert (deps absent). The cross-encoder's absence does **not** bias
+this: steps 14 and 15 are order-only and `_same_multiset_or_original` enforces
+it, so the *membership* of the window `overlap.measure` sees is `fresh[:50]`
+either way. Tier 2 could shift it, since a recovered decode changes the segments
+and the query — so read these as the stdlib-config rate, not a universal one. An earlier estimate of
+~5.5% appears in `docs/todo.md` and was reasoned from "94.5% of disclosed
+constraint strings are verbatim substrings of the target listing, so the
+complement is ~5.5%". That figure is a per-*string* complement and does not
+transfer to a per-*turn* firing rate: `_llm_escalate` requires
+`overlap.measure(...).rate == 0.0`, i.e. **not one** disclosed segment appearing
+anywhere in the top-50 window, so a single overlapping segment among several
+keeps the gate shut. The real rate is therefore well below the string-level
+complement, and under the leaky bracket it is exactly zero. What would substantiate it is perturbing the disclosed
 strings off verbatim and showing the routed layer recovers what BM25 + the
 cross-encoder lose. Without that, it is a designed mechanism with a measured
 gate, not a proven win.
