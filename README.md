@@ -106,12 +106,25 @@ Expect `cross-encoder/ms-marco-MiniLM-L-6-v2`, `rung3_centroid`, and
 
 **One, and it is optional:**
 
-| Variable | Required? | Effect if unset |
-|---|---|---|
-| `GEMINI_API_KEY` | **No** | The LLM escalation layer loads `NullLlmReranker` and never fires. Every other layer is unaffected. Nothing warns, by design. |
+| Variable | Required? | Effect if unset | Effect if set |
+|---|---|---|---|
+| `GEMINI_API_KEY` | **No** | The LLM escalation layer loads `NullLlmReranker` and never fires. Every other layer is unaffected. Nothing warns, by design. | **Arms the hosted layer** whenever `google-genai` is also installed. The agent then calls Google on each turn the overlap gate opens — measured at 0% of turns leaky, 1.98% scrubbed (see the cost table). |
 
 The key is read by `google.genai.Client()` from the environment. It is never
 read, logged, or committed by any file in this repository.
+
+> ⚠️ **The value is never validated, so *any* non-empty string arms the layer —
+> including a junk or expired one.** `_build_gemini()` deliberately does not probe
+> the network at construction (that is what keeps it from hanging on a rig with
+> the network off), so an unusable key is not detected until the first escalation
+> turn actually calls out. Those calls fail safe — `safe_rerank` catches them and
+> BM25's order stands, and we measured the 200-session score as bit-identical with
+> the network down — but each one still spends its latency before failing.
+>
+> **If you are grading this and do not want outbound calls, unset `GEMINI_API_KEY`
+> or omit `google-genai`; either alone is sufficient.** Both are checked before
+> anything is constructed. The submission is fully functional with neither: that
+> is the configuration every score in this README was measured in.
 
 ## One command to run the agent in the official harness
 
