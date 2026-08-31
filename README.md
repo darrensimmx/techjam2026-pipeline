@@ -106,12 +106,25 @@ Expect `cross-encoder/ms-marco-MiniLM-L-6-v2`, `rung3_centroid`, and
 
 **One, and it is optional:**
 
-| Variable | Required? | Effect if unset |
-|---|---|---|
-| `GEMINI_API_KEY` | **No** | The LLM escalation layer loads `NullLlmReranker` and never fires. Every other layer is unaffected. Nothing warns, by design. |
+| Variable | Required? | Effect if unset | Effect if set |
+|---|---|---|---|
+| `GEMINI_API_KEY` | **No** | The LLM escalation layer loads `NullLlmReranker` and never fires. Every other layer is unaffected. Nothing warns, by design. | **Arms the hosted layer** whenever `google-genai` is also installed. The agent then calls Google on each turn the overlap gate opens — measured at 0% of turns leaky, 1.98% scrubbed (see the cost table). |
 
 The key is read by `google.genai.Client()` from the environment. It is never
 read, logged, or committed by any file in this repository.
+
+> ⚠️ **The value is never validated, so *any* non-empty string arms the layer —
+> including a junk or expired one.** `_build_gemini()` deliberately does not probe
+> the network at construction (that is what keeps it from hanging on a rig with
+> the network off), so an unusable key is not detected until the first escalation
+> turn actually calls out. Those calls fail safe — `safe_rerank` catches them and
+> BM25's order stands, and we measured the 200-session score as bit-identical with
+> the network down — but each one still spends its latency before failing.
+>
+> **If you are grading this and do not want outbound calls, unset `GEMINI_API_KEY`
+> or omit `google-genai`; either alone is sufficient.** Both are checked before
+> anything is constructed. The submission is fully functional with neither: that
+> is the configuration every score in this README was measured in.
 
 ## One command to run the agent in the official harness
 
@@ -145,7 +158,9 @@ path.
 ## Reproducing our results
 
 ```bash
-# full test suite -- 390 tests. Check the count before believing green.
+# full test suite. Check the count before believing green: 496 at c9a7139 (main).
+# Anchor the number to a commit when updating it -- a bare count goes stale on
+# the next added test, which is how the previous "390" survived here.
 python -m unittest discover -s tests -p "test_*.py" -t .
 
 # score the submission. --bracket both reports the leaky/scrubbed spread.
@@ -359,11 +374,11 @@ it has one path with one optional re-ordering step.
 | Disclosure | Value |
 |---|---|
 | **Token usage — core** | `0` prompt, `0` completion, every turn. Truthfully, because no model is called. |
-| **Token usage — LLM layer, when it fires** | ~4,640 prompt (top-50 window), ~30 completion (10 integer indices, no rationale). Measured on the one successful live smoke call: 212 prompt / 9 completion on a 5-candidate synthetic query. Reported honestly through `usage.prompt_tokens` / `usage.completion_tokens`; `(0, 0)` on every turn it does not fire. |
-| **Estimated model cost** | **$0.00** for the core and both local checkpoints. The LLM layer is ~**$0.011 per turn it fires on**, and against this simulator it fires on ≈5.5% of turns by construction. |
+| **Token usage — LLM layer, when it fires** | **Measured live on a real top-50 window (1 Sep 2026, `public_0002`): 4,238 prompt / 56 completion.** This supersedes the earlier 212/9 smoke figure, which was a 5-candidate *synthetic* query and not representative. The ~4,640 prompt estimate held (4,238 actual); the ~30 completion estimate did not (56 actual, ~2×) — the model returns more than the ten bare integers the contract asks for. Reported honestly through `usage.prompt_tokens` / `usage.completion_tokens`; `(0, 0)` on every turn it does not fire. |
+| **Estimated model cost** | **$0.00** for the core and both local checkpoints. The LLM layer is ~**$0.011 per turn it fires on**. Measured firing rate against this simulator (1 Sep 2026, 200 sessions): **0% of turns leaky (0/571)**, **1.98% scrubbed (24/1214)** — so ~**$0.00 per leaky session** and ~**$0.0013 per scrubbed session**. A superseded ≈5.5% estimate is corrected under "Limitations"; it was a per-string figure, and the gate needs *zero* overlap across all disclosed segments. |
 | **Latency — core** | Index build ~1.16 s once at construction; ~**19 ms per turn** end to end. 200 sessions / 571 turns in 9.7 s. |
 | **Latency — with the cross-encoder** | ~**1.2 s per turn** (single rig, top-50 window). This is a timeout/disqualification risk against a per-turn budget the organizers have never published — it is **not** a score cost, since Efficiency is turn-based and wall-clock never enters `TechnicalScore`. |
-| **Latency — LLM layer** | ~0.14–0.42 s added on the turns it fires. Pinned to `thinking_budget=0`: reasoning mode is disqualifying on latency (Gemini 3.5 Flash at `high` effort is 15.28 s to first token). |
+| **Latency — LLM layer** | **Measured live: 1.87 s** added on the one turn it fired (`public_0002`, 50-candidate window, `thinking_budget=0`). This is **4–13× the ~0.14–0.42 s previously disclosed**, which was extrapolated from a 5-candidate synthetic call and did not survive contact with a real top-50 window. n=1 — treat as an order-of-magnitude correction, not a distribution. Still pinned to `thinking_budget=0`: reasoning mode is far worse (Gemini 3.5 Flash at `high` effort is 15.28 s to first token). **Read this next to the cross-encoder row: a turn where both fire is ~3 s, and the organizers have never published a per-turn budget.** It remains a timeout/disqualification risk, not a score cost — Efficiency is turn-based and wall-clock never enters `TechnicalScore`. |
 | **Memory** | One in-memory SQLite FTS5 index over the 50,000-product catalog. No vector store, no external index — the spec's "must run entirely in-memory" constraint is satisfied by construction. The two local checkpoints add their own footprint when loaded (~22M and ~8M parameters respectively). |
 | **API credentials** | One optional environment variable, `GEMINI_API_KEY`. Never committed, never logged, never read by any file in this repo — `google.genai.Client()` reads it from the environment directly. |
 
@@ -460,9 +475,25 @@ sweep is the first thing we would run with more time.
 
 **The paraphrase probe is the layer's real falsifier and it has not run.** The
 honest claim for the escalation is *real-world robustness*, not local score:
-against this simulator it fires on ~5.5% of turns by construction, so its
-expected `TechnicalScore` delta is ≈0. We disclose that up front rather than let
-a reader infer a gain. What would substantiate it is perturbing the disclosed
+against this simulator it almost never fires, so its expected `TechnicalScore`
+delta is ≈0. We disclose that up front rather than let a reader infer a gain.
+
+**Measured firing rate, 1 Sep 2026**: **0 of 571 turns leaky (0%)** and **24 of
+1214 turns scrubbed (1.98%)**. Conditions: 200 public sessions, `gemini-3.5-flash`
+made live against a stubbed client so every call site is counted, cross-encoder
+and Tier 2 inert (deps absent). The cross-encoder's absence does **not** bias
+this: steps 14 and 15 are order-only and `_same_multiset_or_original` enforces
+it, so the *membership* of the window `overlap.measure` sees is `fresh[:50]`
+either way. Tier 2 could shift it, since a recovered decode changes the segments
+and the query — so read these as the stdlib-config rate, not a universal one. An earlier estimate of
+~5.5% appears in `docs/todo.md` and was reasoned from "94.5% of disclosed
+constraint strings are verbatim substrings of the target listing, so the
+complement is ~5.5%". That figure is a per-*string* complement and does not
+transfer to a per-*turn* firing rate: `_llm_escalate` requires
+`overlap.measure(...).rate == 0.0`, i.e. **not one** disclosed segment appearing
+anywhere in the top-50 window, so a single overlapping segment among several
+keeps the gate shut. The real rate is therefore well below the string-level
+complement, and under the leaky bracket it is exactly zero. What would substantiate it is perturbing the disclosed
 strings off verbatim and showing the routed layer recovers what BM25 + the
 cross-encoder lose. Without that, it is a designed mechanism with a measured
 gate, not a proven win.

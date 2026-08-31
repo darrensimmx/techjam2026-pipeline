@@ -57,7 +57,9 @@ Always run from the repo root — `src`, `starter`, `evaluator`, and `cli` are
 imported as top-level packages, and tests resolve paths relative to the root.
 
 ```powershell
-# Full suite (438 tests). Check the count before believing green.
+# Full suite. Check the count before believing green: 496 at c9a7139 (main).
+# ANCHOR THE NUMBER TO A COMMIT when you update it -- a bare count is stale the
+# next time anyone adds a test, which is how 438 and 390 survived here so long.
 python -m unittest discover -s tests -p "test_*.py" -t .
 
 # One class / one test
@@ -145,15 +147,36 @@ just as silently. So:
   catches only `ImportError` — a module-level `re.compile` that throws would kill
   the run before `Agent` exists. Keep module scope free of anything that can fail.
 
-Three optional layers already exist as typed seams with inert null
-implementations: `src/rerank.py` (cross-encoder), `src/semantic.py` (Tier 2
-intent fallback), `src/llm_rerank.py` (LLM ranking escalation), plus
-`src/askyield.py` (adaptive ask ordering). **Every flag is `False` and each loader
-checks its flag BEFORE it checks for a dependency**, so installing
-`requirements-optional.txt` changes nothing. Enabling any of them is a
-submission-level decision with a disclosure attached, not a line edit — and the
-same contract applies: its own try/except, a local fallback, never on the
-critical path. `src/` is standard library only; keep it that way.
+Four optional layers exist as typed seams behind master switches:
+`src/rerank.py` (cross-encoder), `src/semantic.py` (Tier 2 intent fallback),
+`src/llm_rerank.py` (LLM ranking escalation), plus `src/askyield.py` (adaptive
+ask ordering). **Three of the four now default to enabled** — `cfd6841` flipped
+them. Note the switches are not uniform in kind: two are module constants, one
+is a parameter default with no named constant at all.
+
+| module | switch | default | selected | needs |
+|---|---|---|---|---|
+| `src/rerank.py` | `load_reranker(enabled=True)` — **param default, no constant** | on | `ms-marco-MiniLM-L-6-v2` | `sentence-transformers` + `data/models/` checkpoint |
+| `src/semantic.py` | `TIER2_ENABLED` | `True` | `rung3_centroid` | `model2vec` + `data/models/potion-base-8m` |
+| `src/llm_rerank.py` | `LLM_RERANK_ENABLED` | `True` | `gemini-3.5-flash` | `google-genai` + `GEMINI_API_KEY` |
+| `src/askyield.py` | `ADAPTIVE_ENABLED` | `False` | off | — |
+
+**A flipped flag is necessary but not sufficient**: each loader checks its flag,
+then its dependency, then that the built object is usable, and falls back to its
+null implementation if any of those fails. So on a bare stdlib checkout — no
+optional deps, no checkpoints, no key — all three still load `NullReranker` /
+`NullSemanticDecoder` / `NullLlmReranker` and the graded path is byte-for-byte
+the stdlib BM25 pipeline. **This means the flags alone do not tell you what ran.
+Check the loader return, not the constant** (`Agent._deps`, or
+`scripts/evaluate_src.py`'s printed `degraded`).
+
+The consequence to keep in mind: installing `requirements-optional.txt` now
+*does* change behaviour, and for `llm_rerank` it puts a hosted API call on the
+graded path. Verified 1 Sep 2026 that this degrades safely — with the layer
+live and the network down, all escalations fail and the 200-session score is
+bit-identical to the stdlib baseline (`0.497383` scrubbed). The same contract
+still binds every layer: its own try/except, a local fallback, never load-bearing
+on the critical path. `src/` itself is standard library only; keep it that way.
 
 `evaluator/` is **vendored from the competition kit and never edited.**
 `scripts/leak_controlled_benchmark.py` needs to change `intent_card()` and honors
@@ -190,8 +213,17 @@ is the equivalent for `src/` and is the one that matters now. CI names its test
 modules explicitly rather than discovering them, so **a new test file is silently
 not run until it is added to `.github/workflows/ci.yml`.** And `python -m unittest
 discover` reports `Ran 0 tests ... OK` if `tests/__init__.py` is ever deleted —
-check the count before believing green (it is 438). `docs/windows-dev-setup.md` §7
-has the full list.
+check the count before believing green (496 at `c9a7139`).
+`docs/windows-dev-setup.md` §7 has the full list.
+
+**A passing count is not a covered count, and this file has been wrong about it
+twice.** Two live examples, both found 1 Sep 2026: `test_load_llm_reranker_defaults_to_null`
+asserted an *unconditional* null, so it stayed green in CI while asserting
+nothing about the flag it was named for (fixed in `85f9f53`); and the whole of
+`CentroidSemanticDecoder` is dead code on any checkout without `model2vec` and
+the potion-8m weights, so a full green suite there exercises **none** of it. If
+a module's dependency is absent, its tests are not failing — they are not
+running. Say which configuration a green run was green *in*.
 
 ## Silent failure to check first
 
