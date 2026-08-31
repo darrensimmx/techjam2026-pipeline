@@ -47,6 +47,14 @@ there is no committed baseline artifact, so every run appends one line to
 `--note`. The commit carries a trailing `*` when tracked files were modified,
 because such a row does not correspond to that commit alone.
 
+**One bracket per row.** Under `--bracket both` the row records the leaky arm --
+score AND metrics -- and its note reads `[both -> leaky]`. Every row's score must
+be derivable from its own columns as
+`0.50*hit@10 + 0.30*mrr + 0.20*((11 - mttc)/10)`; if it is not, the row is a
+bracket-mixing bug, not a measurement. The scrubbed arm is not lost: it is in the
+printed LEAK BRACKET summary and in a `<output>.scrubbed.json` dump beside
+`--output`.
+
 Usage:
     python3 scripts/evaluate_src.py --note "ws-a index wired up"
     python3 -m scripts.evaluate_src --catalog tests/fixtures/catalog.jsonl \
@@ -260,8 +268,14 @@ def print_zero_alarm(degraded: bool, rows: int | None) -> None:
 
 
 def append_results_md(*, score: float, result: dict, note: str, degraded: bool,
-                      dataset: str, path: Path = RESULTS_MD) -> None:
-    """Append one row, newest first. Creates the file with a header if absent."""
+                      dataset: str, reference_bracket: str = "leaky",
+                      path: Path = RESULTS_MD) -> None:
+    """Append one row, newest first. Creates the file with a header if absent.
+
+    `score` and `result` MUST come from the same bracket -- pairing a leaky
+    score with scrubbed metrics produces a row whose score is not derivable
+    from the columns beside it. `reference_bracket` names which one they are.
+    """
     when = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M")
     safe_note = " ".join(str(note).split()).replace("|", "\\|") or "(no note)"
     if degraded:
@@ -269,10 +283,19 @@ def append_results_md(*, score: float, result: dict, note: str, degraded: bool,
     if dataset:
         safe_note = f"{safe_note} [dataset: {Path(dataset).name}]"
 
+    # Both reference constants were measured under the leak, so a delta against
+    # them is only meaningful for a leaky score. A scrubbed score gets `--`
+    # rather than a number that silently compares across brackets.
+    if reference_bracket == "leaky":
+        vs_starter = _delta(score, STARTER_TECHNICAL_SCORE)
+        vs_baseline = _delta(score, BASELINE_TECHNICAL_SCORE)
+    else:
+        vs_starter = vs_baseline = "--"
+
     row = (
         f"| {when} | `{git_commit()}` | `{git_branch()}` | **{score:.6f}** | "
-        f"{_delta(score, STARTER_TECHNICAL_SCORE)} | "
-        f"{_delta(score, BASELINE_TECHNICAL_SCORE)} | "
+        f"{vs_starter} | "
+        f"{vs_baseline} | "
         f"{result.get('hit_rate_at_10', 0.0):.4f} | "
         f"{result.get('mrr', 0.0):.6f} | "
         f"{result.get('mttc', 0.0)} | {safe_note} |\n"
@@ -390,7 +413,7 @@ def main() -> int:
 
     brackets = ("leaky", "scrubbed") if args.bracket == "both" else (args.bracket,)
     scores: dict[str, float] = {}
-    result = None
+    results: dict[str, dict] = {}
     for bracket_name in brackets:
         if len(brackets) > 1:
             print()
@@ -398,26 +421,40 @@ def main() -> int:
             print(f"BRACKET: {bracket_name}")
             print(_RULE)
         with bracket(bracket_name):
-            result = evaluate(agent, samples, catalog_ids, categories, products)
-        scores[bracket_name] = float(result["recommended_technical_score"])
+            outcome = evaluate(agent, samples, catalog_ids, categories, products)
+        results[bracket_name] = outcome
+        scores[bracket_name] = float(outcome["recommended_technical_score"])
         if len(brackets) > 1:
-            metrics = {k: v for k, v in result.items() if k != "sessions"}
-            print(f"  hit@10 {metrics['hit_rate_at_10']:.4f}  mrr {metrics['mrr']:.6f}  "
-                  f"mttc {metrics['mttc']:.3f}  score {scores[bracket_name]:.6f}")
+            print(f"  hit@10 {outcome['hit_rate_at_10']:.4f}  mrr {outcome['mrr']:.6f}  "
+                  f"mttc {outcome['mttc']:.3f}  score {scores[bracket_name]:.6f}")
+
     # Both reference scores were measured under the leak, so only a leaky
     # score is comparable to them. Comparing a scrubbed run against a leaky
     # reference mixes brackets -- the exact error this project forbids.
-    score = scores.get("leaky", scores[brackets[-1]])
+    #
+    # That error is just as easy to make INSIDE this function, and was: `result`
+    # used to be the loop variable, so after `--bracket both` it held the LAST
+    # bracket (scrubbed) while `score` held the leaky one. Every printout below,
+    # the per-session dump and the results_src.md row then paired a leaky score
+    # with scrubbed metrics -- a row whose score is not derivable from the
+    # numbers beside it. Read the score and the result out of the SAME dict.
     reference_bracket = "leaky" if "leaky" in scores else brackets[-1]
+    score = scores[reference_bracket]
+    result = results[reference_bracket]
 
     # Exactly the shape evaluator/local_evaluator.py:308 prints: headline
     # metrics plus the four per-scenario breakdowns, minus the per-session dump.
+    # Both blocks are labelled with their bracket, because an unlabelled table
+    # is how a scrubbed number ends up quoted as a leaky one.
     print()
+    print(_RULE)
+    print(f"HEADLINE METRICS -- bracket: {reference_bracket}")
+    print(_RULE)
     print(json.dumps({key: value for key, value in result.items() if key != "sessions"}, indent=2))
 
     print()
     print(_RULE)
-    print("PER-SCENARIO BREAKDOWN")
+    print(f"PER-SCENARIO BREAKDOWN -- bracket: {reference_bracket}")
     print(_RULE)
     print(f"  {'scenario':<18}{'n':>5}{'hit@10':>10}{'mrr':>10}{'mttc':>9}")
     for name, metrics in sorted(result.get("scenario_metrics", {}).items()):
@@ -433,15 +470,30 @@ def main() -> int:
     if round(score, 5) == 0.0:
         print_zero_alarm(degraded, rows)
 
-    try:
-        Path(args.output).write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
-        print(f"\nfull per-session result written to {args.output}")
-    except Exception as error:
-        print(f"\n!! could not write {args.output}: {type(error).__name__}: {error}")
+    # The reference bracket goes to --output. Any OTHER bracket that ran is
+    # written beside it with its name in the filename rather than being dropped
+    # on the floor -- under `--bracket both` the second run is not free, and
+    # silently discarding it is what made the old dump disagree with the row.
+    for name, outcome in results.items():
+        destination = Path(args.output)
+        if name != reference_bracket:
+            destination = destination.with_name(
+                f"{destination.stem}.{name}{destination.suffix}")
+        try:
+            destination.write_text(json.dumps(outcome, indent=2) + "\n", encoding="utf-8")
+            print(f"\nfull per-session result ({name}) written to {destination}")
+        except Exception as error:
+            print(f"\n!! could not write {destination}: {type(error).__name__}: {error}")
 
-    bracket_note = f"[{args.bracket}] {args.note}".strip()
+    # The row records ONE bracket's score next to that SAME bracket's metrics.
+    # When both ran, say so and name the one the score came from, so `[both]`
+    # can never again be read as "these numbers belong together somehow".
+    label = (f"{args.bracket} -> {reference_bracket}"
+             if len(brackets) > 1 else reference_bracket)
+    bracket_note = f"[{label}] {args.note}".strip()
     append_results_md(score=score, result=result, note=bracket_note,
-                      degraded=degraded, dataset=args.dataset)
+                      degraded=degraded, dataset=args.dataset,
+                      reference_bracket=reference_bracket)
 
     return 1 if (degraded or round(score, 5) == 0.0) else 0
 

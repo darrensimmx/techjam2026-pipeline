@@ -12,4 +12,5 @@ does not correspond to the commit alone.
 
 | when (UTC) | commit | branch | score | delta | hit@10 | mrr | mttc | note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-08-31 02:11 | `6e4c32b*` | `src-rebuild` | **0.692586** | +0.000000 | 0.8000 | 0.525619 | 4.255 | control for src/ PR verification |
 | 2026-08-30 16:43 | `70165ff` | `main` | **0.692586** | — | 0.8000 | 0.525619 | 4.255 | control: pre-rebuild, starter/ untouched |
