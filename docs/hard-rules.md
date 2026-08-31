@@ -1,6 +1,14 @@
 # Hard rules — implementation constraints
 
-**Status:** ✅ current. **Normative for `starter/`.**
+**Status:** ✅ current. **Normative for `src/`** — the submission.
+
+The rules were written on 28 Aug 2026 against `starter/`, which was the
+submission then. The `src/` rebuild landed 30 Aug 2026 and every rule survived it
+unchanged — they are properties of the organizer's evaluator, not of any
+particular implementation. Only the `*Binds:*` clauses moved, and they are
+restated below against `src/`. **`starter/` is frozen**: it is retained as the
+superseded baseline, so these rules no longer bind it in the sense of demanding
+work there. Do not edit it to satisfy a rule.
 
 **Authoritative source: `techjam2026-docs/project/hard-rules.md`.** That file carries the
 evidence, the measurements, and the scope limits. This file is the short list of what
@@ -21,7 +29,7 @@ be correct, and one measuring positive can still be wrong. Precedents on the rec
 `"other"` declined at **+0.004**, clock-gated withholding declined at **+0.018602**, and
 the ledger content-free filter **kept at −0.030232** because the score it gave up was
 bought with noise tokens that will not transfer to a private set.
-*Binds:* every change to `starter/`. State the architectural and feasibility read
+*Binds:* every change to `src/`. State the architectural and feasibility read
 alongside any number. "It measures ~0" does not justify dropping robustness work —
 thread safety, degraded-mode signals and offline verification are Feasibility evidence,
 scored, just not by the formula. Evidence: docs repo `project/hard-rules.md` → A0.
@@ -31,8 +39,10 @@ scored, just not by the formula. Evidence: docs repo `project/hard-rules.md` →
    is unchanged and the turn teaches nothing. Asking costs nothing in the scoring, so a
    null ask is weakly dominated. Measured: the 160 null turns currently sent across
    turns 7-10 gained 0 constraints and produced 0 hits.
-   *Binds:* `starter/scheduler.py` must not return `None` while any askable attribute
-   remains.
+   *Binds:* `src/askpolicy.py::next_attribute` and `src/askyield.py::next_attribute`
+   must not return `None` while any askable attribute remains. Both are total today
+   and terminate at `FIXED_SCHEDULE[0]`; `src/pipeline.py::_choose_attribute` is the
+   third net. Keep all three.
 
 2. **Ship the full top-10 every turn — as policy, not because the harness requires it.**
    Sending fewer is *legal* (the contract has `maxItems: 100` and no `minItems`), so the
@@ -42,22 +52,30 @@ scored, just not by the formula. Evidence: docs repo `project/hard-rules.md` →
    **+0.004**. Do not implement a gate on the turn clock. A K chosen from a *measured
    confidence signal* is a different object: **open, not forbidden**, and parked until
    the architecture lands (docs repo `open-questions.md` item 11).
-   *Binds:* `starter/agent.py` recommendation slice.
+   *Binds:* `src/pipeline.py::_assemble`. Note `src/shown.py` returns
+   `partition()`, never `filter()`, so the never-repeat rule reorders rather than
+   removes and the top-10 stays full — that is what keeps this rule and never-repeat
+   compatible.
 
 3. **Parse customer replies with regex. Never a model.** Every customer utterance is one
    of 8 f-strings in `local_evaluator.py`. A classifier cannot beat a substring check
    already at 100%, and would put a model dependency on the critical path — the
    "don't score zero" failure mode.
-   *Binds:* `starter/ledger.py`. No model import, no network call, on this path.
+   *Binds:* `src/frames.py`. No model import, no network call, on this path —
+   asserted by `tests/test_src_no_network.py`. `src/semantic.py` is the Tier 2 seam
+   and is inert (`TIER2_ENABLED = False`); when it is ever enabled it must stay an
+   encoder, never a generative model.
 
-4. **Split the two declines.** `_CONTENT_FREE_PATTERNS[0]` currently matches both the
-   boundary refusal and genuine exhaustion via `(?:a|an\s+additional)`. They mean
-   opposite things: the refusal returns at `local_evaluator.py:169` *before* the
-   constraint filter runs (bucket never opened), while exhaustion returns at `:183`
-   *after* it ran and found nothing (bucket verified empty). Discriminate on the literal
-   token `additional`. Both still get dropped from the query; only the classification
-   differs.
-   *Binds:* `starter/ledger.py:23-31`.
+4. **Split the two declines.** They mean opposite things: the refusal returns at
+   `local_evaluator.py:169` *before* the constraint filter runs (bucket never opened),
+   while exhaustion returns at `:183` *after* it ran and found nothing (bucket verified
+   empty). Discriminate on the literal token `additional`. Both still get dropped from
+   the query; only the classification differs.
+   *Satisfied in `src/`.* `starter/ledger.py`'s `_CONTENT_FREE_PATTERNS[0]` collapsed
+   the two via `(?:a|an\s+additional)` — that is the defect this rule was written
+   against, and it stays uncorrected in the frozen baseline.
+   *Binds:* `src/frames.py` — `_F4_REFUSAL` vs `_F6_EXHAUSTION`, tried in that order,
+   and `src/askpolicy.py::AskState.record_reply`, where only `exhaustion` retires.
 
 5. **After an ask that got no answer, ALWAYS re-ask that attribute — unconditionally.**
    Not conditionally, not "if the ledger looks thin". **Two events burn an ask, and this
@@ -88,13 +106,18 @@ scored, just not by the formula. Evidence: docs repo `project/hard-rules.md` →
    *The mirror image is equally binding:* **never re-ask an exhausted attribute.** The
    filter ran and found nothing, and `disclosed` only grows, so it can never refill.
    Provably worthless, not merely unlikely.
-   *Binds:* `starter/scheduler.py` tail policy, `starter/ledger.py` yield tracking.
+   *Binds:* `src/askpolicy.py` — the `burned` / `burned_reasked` latch and rung 2.i of
+   the ladder — and `src/pipeline.py::_ask_bookkeeping`, which decides which frame
+   burns an ask. Timing note above still holds: the fixed schedule owns turns 1-7, so
+   the re-ask lands on the first free turn, not immediately.
 
 6. **Accumulate constraints verbatim. Never erase on intent override.** `old_value` and
    `new_value` are both generated from the same target listing, and `old_value` is never
    added to `disclosed` — so the "abandoned" preference still describes the target and
    still helps retrieval. Implementing Pillar II's literal "slot erasure" loses score.
-   *Binds:* `starter/ledger.py` — append-only, no invalidation path.
+   *Binds:* `src/ledger.py` — append-only, enforced by the absence of any deletion
+   method. Do not add one. `src/slots.py::apply_override` clears the conflicting
+   *slot* only; it never touches the ledger.
 
 7. **Do not build a scenario classifier.** Type is determined for free by the first ask:
    the opening message identifies buying and intent_override, and browsing vs boundary
@@ -108,11 +131,12 @@ Added 29 Aug 2026. Authoritative source: `techjam2026-docs/project/glossary.md`.
 
 - **intent classifier** — the shipping component: a regex **frame decode** (which reply
   branch emitted this string) plus a semantic fallback for the paraphrase case. In this
-  repo the Tier 1 half is `starter/ledger.py`'s `_CONTENT_FREE_PATTERNS`. Tier 2 is not
-  approved to build.
+  repo the Tier 1 half is `src/frames.py`. Tier 2 (`src/semantic.py`) is seamed but
+  **not approved to build**, and is inert.
 - **decline split** — refusal vs. exhaustion on the token `additional`. **An output of
   the frame decode, not a component.** Do not give it its own module or diagram box.
-  Rule 5 above is the rule; `_CONTENT_FREE_PATTERNS[0]` currently collapses both.
+  Rule 4 above is the rule; `src/frames.py` implements it as `_F6_EXHAUSTION` tried
+  ahead of `_F4_REFUSAL`.
 - **scenario classifier** — reserved for the thing rule 7 says not to build. Scenario type
   is a free byproduct of the frame decode.
 - **intent trajectory** — the per-turn label sequence and drift check, 🔴 demoted

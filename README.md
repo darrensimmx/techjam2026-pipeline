@@ -53,7 +53,7 @@ resolve relative to the repository root.
 | **Models used** | **None.** No LLM, no SLM, no neural model of any kind runs on the graded path. |
 | **Network access** | **None required, and none attempted.** Enforced by an AST test over every `src/` module (`tests/test_src_no_network.py`). |
 | **API credentials** | None. The system cannot fail for want of a key. |
-| **Offline verified** | Full 200-session run under `sandbox-exec -f scripts/no-network.sb` with networking revoked: **identical score, 0.872057**. A control probe in the same sandbox confirms the block is real, not vacuous. |
+| **Offline verified** | Full 200-session run under `sandbox-exec -f scripts/no-network.sb` with networking revoked: **scores identical to the networked run — `0.872057` leaky / `0.497383` scrubbed** (see Results below; never quote one end alone). A control probe in the same sandbox confirms the block is real, not vacuous. |
 | **Reported token usage** | `0` prompt, `0` completion, every turn — truthfully, because no model is called. |
 | **Estimated model cost** | **$0.00.** |
 | **Latency** | Index build **1.16 s** once at construction; **~19 ms per turn** end to end. 200 sessions / 571 turns complete in **9.7 s**. |
@@ -115,9 +115,20 @@ evaluator falls back to building the "hidden" customer preferences out of the
 verbatim substrings of the target's indexed text. Leaky is as-shipped; scrubbed
 patches that leak. The organizer's held-out set should land between them.
 
-Against the superseded `starter/` system, measured under the same conditions:
-**+0.179 leaky, +0.299 scrubbed.** The gain is *larger* with the leak removed,
-which is the opposite of a measurement artifact.
+Against the superseded `starter/` system, measured under the same conditions on
+the same day:
+
+| bracket | `starter/` | `src/` | delta |
+|---|---|---|---|
+| leaky | 0.692586 | 0.872057 | **+0.179471** |
+| scrubbed | 0.198439 | 0.497383 | **+0.298944** |
+
+The gain is *larger* with the leak removed, which is the opposite of a
+measurement artifact. Both `starter/` rows are reproducible:
+`.claude/skills/run-sol/bench.py eval` gives the leaky one, and the scrubbed one
+comes from running `scripts/evaluate_src.py`'s `bracket()` contextmanager against
+`starter.agent.Agent` — no committed tool does that, so the row is recorded here
+rather than in a run log.
 
 ## Limitations
 
