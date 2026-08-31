@@ -193,16 +193,33 @@ of the target's indexed text. **Never quote a local number without saying which
 bracket it came from.** `scripts/evaluate_src.py --bracket both` reports the spread;
 `scripts/leak_controlled_benchmark.py` is the older single-arm tool.
 
-Measured 31 Aug 2026 over the 200 public sessions, both arms, for reference:
+Over the 200 public sessions, both arms. **Each row is a different
+CONFIGURATION, not a rerun of the same one** — the third row is the stdlib-only
+core, which is what you get on a checkout with no optional dependency installed,
+and it is not what ships:
 
-| system | leaky (upper) | scrubbed (lower) |
+| system configuration | leaky (upper) | scrubbed (lower) |
 |---|---|---|
-| `src/` (the submission) | 0.872057 | 0.497383 |
+| **full 3-layer hybrid — the submission** | **0.9143** | **0.72783** |
+| cross-encoder core (`minilm-l6` over BM25's top-50) | 0.8842 | 0.72290 |
+| base lexical engine (`src/` BM25, stdlib only) | 0.872057 | 0.497383 |
 | `starter/` (superseded) | 0.692586 | 0.198439 |
+| organizer starter baseline | 0.106710 | — |
 
-The rebuild's gain is *larger* with the leak removed (+0.299 scrubbed vs +0.179
-leaky), which is the opposite of a measurement artifact. A leaky hit@10 of 0.995 is
-still an upper bound, not a score.
+The scrubbed column is the one that separates the layers, and the split is
+uneven: the cross-encoder is worth **+0.225517** of the +0.230447 total lift
+over the lexical base, leaving **+0.00493** for the centroid and LLM gate
+together. That is expected, not a disappointment — the gate opens on 1.98% of
+scrubbed turns and Tier 2 never fires on this simulator at all (all eight
+utterances are f-strings Tier 1 decodes). **Both exist for the private set.**
+
+Every gap is *wider* with the leak removed, which is the opposite of a
+measurement artifact. A leaky hit@10 of 0.995 is still an upper bound, not a score.
+
+**When you quote one of these, name the configuration AND the bracket.** Two
+rows differing only by which layers were installed is exactly the kind of pair
+that gets mixed, and `results_src.md` already carries two rows annotated
+`BRACKET-MIXED -- do not quote` from the last time it happened.
 
 **A green test run proves less than it looks like.** `tests/fixtures/catalog.jsonl`
 has 6 products against `top_k=10`, so any query matching one term returns the whole
