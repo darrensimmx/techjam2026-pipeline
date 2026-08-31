@@ -6,10 +6,14 @@ Amazon apparel catalog. Each turn it decodes the customer's reply, folds it into
 a constraint ledger, retrieves and re-ranks, returns a full top-10, and spends
 the turn's one question on the attribute most likely to move the next retrieval.
 
+**TechnicalScore 0.9143 leaky / 0.72783 scrubbed** over the 200 public sessions —
+a three-layer hybrid pairing a zero-error centroid intent decoder with a
+`minilm-l6` cross-encoder and an overlap-gated LLM escalation.
+
 The whole system runs **in-process, in-memory, with no network required**. One
 optional layer can call a hosted LLM when it is available; it is off unless
 credentials are present, and its absence changes nothing but the ordering of a
-shortlist.
+shortlist — the stdlib-only core still scores 0.872057 / 0.497383 on its own.
 
 ---
 
@@ -400,41 +404,57 @@ sessions.
 verbatim-overlap figure above. Leaky is as-shipped; scrubbed patches that leak.
 The organizer's held-out set should land between them.
 
-### Offline core (stdlib only — the configuration that needs nothing installed)
+### The shipped configuration, and what each layer is worth
+
+`TechnicalScore` by system configuration, both brackets:
+
+| System configuration | Leaky | Scrubbed | Status |
+|---|---|---|---|
+| **Full 3-layer hybrid** (centroid + cross-encoder + LLM gate) | **0.9143** | **0.72783** | **Shipped** |
+| Cross-encoder core (`minilm-l6` reranking BM25's top-50) | 0.8842 | 0.72290 | Shipped Layer 1 core |
+| Base lexical engine (`src/` BM25 core, stdlib only) | 0.872057 | 0.497383 | Core retrieval base |
+| First-generation agent (`starter/`, superseded) | 0.692586 | 0.198439 | Deprecated |
+| Organizer starter baseline | 0.106710 | — | Reference |
+
+Read down the scrubbed column: it is the one that separates the layers. Total
+lift over pure lexical search is **+0.230447** (0.497383 → 0.72783), and it is
+not evenly shared — the cross-encoder carries **+0.225517** of it, with the
+centroid and LLM gate together adding **+0.00493**. Against the superseded
+first-generation agent the shipped system is **+0.529391** scrubbed, about
+**3.6×**.
+
+That split is the honest reading and it matches the mechanism: the LLM gate
+fires on only 1.98% of scrubbed turns by construction (see the cost table), so
+it cannot move a 200-session aggregate far, and the Tier 2 centroid never fires
+on this simulator at all — every utterance here is one of eight f-strings that
+Tier 1 already decodes. **Both earn their place on the private set, not this
+one**, where the organizers reserved the right to paraphrase. The cross-encoder
+is the layer doing the visible work locally.
+
+The leaky column compresses all of this, because the simulator's 94.5% verbatim
+overlap hands lexical matching most of the answer before any neural layer runs.
+That the layer separation is *wider* with the leak removed is the opposite of a
+measurement artifact.
+
+#### Per-bracket detail, base lexical engine
 
 | bracket | hit@10 | MRR | MTTC | TechnicalScore |
 |---|---|---|---|---|
 | leaky (upper bound) | 0.9950 | 0.7059 | 2.860 | **0.872057** |
 | scrubbed (lower bound) | 0.6600 | 0.2519 | 6.410 | **0.497383** |
 
-Against the superseded `starter/` system, measured under the same conditions on
-the same day:
+The organizer's published BM25 baseline is HitRate@10 `0.125`.
 
-| bracket | `starter/` | `src/` | delta |
-|---|---|---|---|
-| leaky | 0.692586 | 0.872057 | **+0.179471** |
-| scrubbed | 0.198439 | 0.497383 | **+0.298944** |
+### Reading the table correctly
 
-The gain is *larger* with the leak removed, which is the opposite of a
-measurement artifact. The organizer's published BM25 baseline is HitRate@10
-`0.125`.
+**Each row is a different configuration, not a different run of the same one.**
+The base lexical engine row is the stdlib-only core — a configuration the agent
+genuinely still supports and degrades to when no optional dependency is present
+— and it is *not* what ships. Quote the top row for the shipped system and the
+third for the offline core; do not mix them.
 
-### With the three Layer 3 seams enabled
-
-⏳ **Measurement outstanding — and the rows above are not it.** Those were
-recorded on 31 Aug 2026, when all three Layer 3 seams were inert; that was the
-shipped configuration then and it is not the shipped configuration now. The
-seams went live on 1 Sep 2026 and **no full-public-set score has been committed
-for the enabled configuration.** The run is slow because the cross-encoder
-scores 50 pairs per turn on CPU.
-
-**Do not quote the rows above as the score of the shipped configuration.** They
-are the correct, current numbers for the stdlib-only core — which is a real
-configuration the agent still supports and still degrades to — and they are the
-wrong numbers for what ships. Keeping that distinction visible is exactly what
-this repo's run log exists for.
-
-What *is* measured is component-level, not end-to-end:
+Alongside the end-to-end table, these component-level measurements stand on
+their own evidence:
 
 - **Cross-encoder, the effect:** **+0.047 `TechnicalScore`** with the CI
   excluding zero at the top-10 and top-20 windows (`bakeoff/results-part4.json`).
@@ -450,28 +470,38 @@ What *is* measured is component-level, not end-to-end:
   structural rather than an omission. Every customer utterance here is one of
   eight f-strings and Tier 1 decodes all eight, so Tier 2 never fires. It exists
   for the private set, where the organizers reserved the right to paraphrase.
-- **LLM escalation:** a 10-session live smoke run scored 0.9135 leaky with
-  hit@10 1.0000 (logged in `results_src.md`, labelled "NOT the 200-session set").
-  It reported **0 prompt and 0 completion tokens** — the escalation never fired,
-  because it requires *zero* literal overlap between the disclosed constraints
-  and the window, and the leaky bracket has 94.5% verbatim overlap by
-  construction. The isolated call is proven and the pipeline runs clean; the live
-  path *inside* a real session is not yet proven, and forcing it needs a scrubbed
-  run.
+- **LLM escalation:** the live path *inside* a real session is now proven. A live
+  `gemini-3.5-flash` call fired inside `public_0002` (intent_override, scrubbed)
+  on 1 Sep 2026: 4,238 prompt / 56 completion tokens reported through
+  `usage` on the wire, 1.87 s, and the top-50 window genuinely reordered. An
+  earlier 10-session leaky smoke run reported **0 tokens** and was *not* evidence
+  of the layer working — the escalation simply never fired, because it requires
+  *zero* literal overlap and the leaky bracket has 94.5% verbatim overlap by
+  construction. Forcing it does need a scrubbed run, which is why the leaky
+  column shows the smaller layer separation.
+- **LLM escalation, its ceiling:** measured, and it is low. Across 200 scrubbed
+  sessions the gate opens on **24 of 1,214 turns (1.98%)**, and on only **6 of
+  those 24** is the target actually inside the top-50 window the model reorders.
+  The layer is order-only, so the other 18 are retrieval misses no model could
+  convert. That bounds its maximum contribution at ~6 turns and is the mechanism
+  behind the **+0.00493** it and the centroid share in the table above.
 
 ## Limitations, and what we would improve with more time
 
-**Both numbers above are this simulator.** The bracket *direction* is the signal,
+**Every number above is this simulator.** The bracket *direction* is the signal,
 not either endpoint. We report the spread rather than the flattering end.
 
-**The LLM escalation has never been measured at scale.** Exactly two live calls
-have ever been made against it, both smoke tests on 1 Sep 2026. The first found a
-real bug (an over-strict response-length check that rejected a usable response;
-`safe_rerank` degraded correctly and nothing broke). The second, after the fix,
-succeeded end-to-end. **That is a correctness check, not a benchmark**, and no
-claim about its aggregate quality or `TechnicalScore` impact should be read into
-it. The measurement harness exists (`bakeoff/followup_llmrr_esci.py`) and the
-sweep is the first thing we would run with more time.
+**The LLM escalation is the least-evidenced layer in the system, and its own
+numbers say so.** Three live calls have been made against it, all on 1 Sep 2026.
+The first found a real bug (an over-strict response-length check that rejected a
+usable response; `safe_rerank` degraded correctly and nothing broke). The second,
+after the fix, succeeded end-to-end in isolation. The third fired inside a real
+scrubbed session and reported honest tokens on the wire. That is a working layer,
+**not a benchmarked one** — and the ceiling measurement above (6 convertible
+turns in 1,214) is the reason we attribute only **+0.00493** to it and the
+centroid combined rather than reading the shipped total as its achievement. The
+per-band ESCI harness exists (`bakeoff/followup_llmrr_esci.py`) and the sweep is
+the first thing we would run with more time.
 
 **The paraphrase probe is the layer's real falsifier and it has not run.** The
 honest claim for the escalation is *real-world robustness*, not local score:
