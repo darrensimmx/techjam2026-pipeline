@@ -439,6 +439,148 @@ class BracketLabelling(DemoFixture):
                 self.assertFalse(record["hidden_card"]["visible_to_agent"])
 
 
+class CasesMode(DemoFixture):
+    """The default demo unit is one session per scenario, not one long session."""
+
+    def test_cases_mode_runs_one_session_per_scenario_in_order(self):
+        records = run_frontend(self, trace.LEAKY, cases=True)
+        opens = [r for r in records if r["type"] == trace.SESSION_OPEN]
+
+        from demo.frontend import CASES
+        expected = [scenario for scenario, _, _ in CASES]
+        self.assertEqual(expected, [r["scenario_type"] for r in opens],
+                         "cases did not run one per scenario, in CASES order")
+
+        for index, record in enumerate(opens, start=1):
+            with self.subTest(case=index):
+                self.assertEqual(index, record["case_index"])
+                self.assertEqual(len(expected), record["case_total"])
+                self.assertTrue(record["case_note"], "a case carried no description")
+
+    def test_cases_is_the_default_but_explicit_selection_wins(self):
+        from demo import frontend
+
+        default_args = frontend.parse_args(["--bracket", "leaky"])
+        self.assertTrue(frontend.wants_cases(default_args))
+
+        for override in (["--sample-id", "x"], ["--scenario", "buying"],
+                         ["--sessions", "1"], ["--no-cases"]):
+            args = frontend.parse_args(["--bracket", "leaky"] + override)
+            with self.subTest(override=override):
+                self.assertFalse(frontend.wants_cases(args),
+                                 "%s should turn cases mode off" % override)
+
+    def test_a_missing_curated_id_falls_back_to_its_scenario(self):
+        """A changed public_set.jsonl must degrade, not crash."""
+        from demo.frontend import CASES, choose_cases
+
+        # Same scenarios, none of the curated ids present.
+        samples = [{"sample_id": "other_%d" % i, "scenario_type": scenario}
+                   for i, (scenario, _, _) in enumerate(CASES)]
+        chosen = choose_cases(samples)
+        self.assertEqual([c[0] for c in CASES],
+                         [s["scenario_type"] for s, _ in chosen])
+
+    def test_no_known_scenario_at_all_exits_cleanly(self):
+        from demo.frontend import choose_cases
+
+        with self.assertRaises(SystemExit):
+            choose_cases([{"sample_id": "z", "scenario_type": "not_a_scenario"}])
+
+
+class TopCut(unittest.TestCase):
+    """--top trims the list, but never hides the target."""
+
+    def _render(self, ranked, target, top):
+        import io
+        from contextlib import redirect_stdout
+
+        from demo import ansi, frontend
+
+        ansi.configure(no_color=True)
+        payload = {
+            "turn": 1, "user_message": "hello", "target": target,
+            "response": {"message": "hi", "ask_attribute": "material"},
+            "ranked": ranked, "target_rank": (ranked.index(target) + 1
+                                              if target in ranked else None),
+            "hit_counted": target in ranked, "hit_suppressed_by_override": False,
+        }
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            frontend.render_turn(100, payload, {}, trace.LEAKY, top)
+        return buffer.getvalue()
+
+    def test_target_below_the_cut_is_still_printed(self):
+        ranked = ["A%d" % i for i in range(10)]
+        out = self._render(ranked, "A9", top=5)
+        self.assertIn("A9", out, "the target was cut from its own demo")
+        self.assertIn("TARGET", out)
+        self.assertIn("...", out, "no elision marker before the out-of-order row")
+        self.assertIn("10", out, "the target's real rank was not shown")
+
+    def test_the_cut_actually_trims(self):
+        ranked = ["A%d" % i for i in range(10)]
+        out = self._render(ranked, "A0", top=3)
+        self.assertIn("A2", out)
+        self.assertNotIn("A7", out, "--top did not trim")
+
+    def test_top_ten_shows_everything(self):
+        ranked = ["A%d" % i for i in range(10)]
+        out = self._render(ranked, "A0", top=10)
+        for asin in ranked:
+            self.assertIn(asin, out)
+        self.assertNotIn("...", out)
+
+
+class PacingIsInertWhenPiped(DemoFixture):
+    """Not cosmetic: without this the demo tests would take minutes."""
+
+    def test_configure_refuses_to_pace_a_non_tty(self):
+        import io
+
+        from demo import pacing
+
+        self.assertFalse(pacing.configure(0.5, stream=io.StringIO()))
+        self.assertFalse(pacing.enabled())
+
+    def test_zero_delay_disables_pacing_even_on_a_tty(self):
+        import io
+
+        from demo import pacing
+
+        class FakeTTY(io.StringIO):
+            def isatty(self):
+                return True
+
+        self.assertTrue(pacing.configure(0.01, stream=FakeTTY()))
+        self.assertFalse(pacing.configure(0, stream=FakeTTY()))
+
+    def test_say_splits_multi_line_blocks(self):
+        """A straight print -> say swap must pace pre-joined blocks correctly."""
+        import io
+        from contextlib import redirect_stdout
+
+        from demo import pacing
+
+        pacing.configure(0, stream=io.StringIO())
+        buffer = io.StringIO()
+        with redirect_stdout(buffer):
+            pacing.say("a\nb\nc")
+        self.assertEqual(["a", "b", "c"], buffer.getvalue().splitlines())
+
+    def test_a_full_captured_frontend_run_stays_fast(self):
+        """The guard that keeps CI honest, measured rather than assumed."""
+        import time as clock
+
+        started = clock.perf_counter()
+        run_frontend(self, trace.LEAKY)
+        elapsed = clock.perf_counter() - started
+        self.assertLess(
+            elapsed, 10.0,
+            "a captured run took %.1fs -- pacing is not being disabled under "
+            "redirected stdout, and CI will crawl" % elapsed)
+
+
 class BackendIndependence(DemoFixture):
     """The renderer must not need src/ -- that is why run_open republishes."""
 
@@ -470,7 +612,7 @@ class BackendIndependence(DemoFixture):
 # Helpers.
 # --------------------------------------------------------------------------
 
-def run_frontend(case, bracket: str) -> list:
+def run_frontend(case, bracket: str, cases: bool = False) -> list:
     """Run the real frontend over the fixture and return the parsed trace.
 
     Plain ``assert`` rather than ``case.assertEqual``: this is called from
@@ -483,18 +625,24 @@ def run_frontend(case, bracket: str) -> list:
     from demo import frontend
 
     run_dir = Path(tempfile.mkdtemp())
+    argv = [
+        "--bracket", bracket,
+        "--catalog", str(case.catalog_path),
+        "--dataset", str(case.dataset_path),
+        "--delay", "0",
+        "--line-delay", "0",
+        "--top", "10",
+        "--no-color",
+        "--run-dir", str(run_dir),
+    ]
+    # --sessions is an explicit selection and turns cases mode off, so the two
+    # are mutually exclusive here on purpose.
+    argv += ["--cases"] if cases else ["--sessions", str(len(case.samples))]
+
     # The frontend renders a full transcript; swallow it so the test output
     # stays readable. The trace file is what we are checking, not the screen.
     with redirect_stdout(io.StringIO()):
-        code = frontend.main([
-            "--bracket", bracket,
-            "--catalog", str(case.catalog_path),
-            "--dataset", str(case.dataset_path),
-            "--sessions", str(len(case.samples)),
-            "--delay", "0",
-            "--no-color",
-            "--run-dir", str(run_dir),
-        ])
+        code = frontend.main(argv)
     assert code == 0, "frontend exited %s" % code
 
     path = trace.discover_run(run_dir)

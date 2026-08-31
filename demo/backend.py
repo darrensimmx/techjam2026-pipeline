@@ -29,7 +29,8 @@ import json
 import sys
 import time
 
-from demo import ansi, trace
+from demo import ansi, pacing, trace
+from demo.pacing import say
 
 BLOCKS = "ABCDEFGH"
 
@@ -68,10 +69,10 @@ class Renderer:
         left = "%s  %s" % (ansi.paint(letter, ansi.BOLD, ansi.BLUE),
                            ansi.paint(name, ansi.BOLD))
         gap = self.width - ansi.visible_len(left) - len(stages)
-        print("\n" + left + " " * max(1, gap) + ansi.paint(stages, ansi.DIM))
+        say("\n" + left + " " * max(1, gap) + ansi.paint(stages, ansi.DIM))
 
     def row(self, text: str) -> None:
-        print("   " + text)
+        say("   " + text)
 
     # -- records ----------------------------------------------------------
 
@@ -81,16 +82,16 @@ class Renderer:
         self.bracket = str(record.get("bracket", "?"))
         rows = record.get("index_rows")
         if isinstance(rows, int) and rows < trace.SMALL_CATALOG_ROWS:
-            print(ansi.banner(
+            say(ansi.banner(
                 "SMALL CATALOG (%d rows) -- not representative; any single-term "
                 "match returns nearly everything" % rows,
                 self.width, ansi.ON_YELLOW, ansi.BLACK))
         if record.get("agent_degraded"):
-            print(ansi.banner(
+            say(ansi.banner(
                 "AGENT DEGRADED -- the index did not build; every turn will be empty",
                 self.width, ansi.ON_RED, ansi.BOLD))
         if not record.get("patch_targets_ok", True):
-            print(ansi.banner("TRACER PATCH TARGETS DID NOT VERIFY",
+            say(ansi.banner("TRACER PATCH TARGETS DID NOT VERIFY",
                               self.width, ansi.ON_RED, ansi.BOLD))
 
     def on_session_open(self, record: dict) -> None:
@@ -102,9 +103,20 @@ class Renderer:
             self.bracket = trace.SCRUBBED
         elif "leaky" in source:
             self.bracket = trace.LEAKY
-        print()
-        print(ansi.titled_rule("session %s  (%s)" % (
-            record.get("sample_id"), record.get("scenario_type")), self.width, "="))
+        say()
+        # The frontend puts the case number on the wire, so both terminals show
+        # the same "case 2/4" without this file knowing anything about CASES.
+        index, total = record.get("case_index"), record.get("case_total")
+        if index and total and total > 1:
+            heading = "case %s/%s · %s  (%s)" % (
+                index, total, record.get("scenario_type"), record.get("sample_id"))
+        else:
+            heading = "session %s  (%s)" % (
+                record.get("sample_id"), record.get("scenario_type"))
+        say(ansi.paint(ansi.titled_rule(heading, self.width, "="), ansi.BOLD, ansi.BLUE))
+        if record.get("case_note"):
+            for line in ansi.wrap(str(record["case_note"]), self.width - 6, "    "):
+                say(ansi.paint(line, ansi.DIM))
         truth = record.get("ground_truth") or {}
         self.row("target   %-12s %s" % (
             truth.get("parent_asin"),
@@ -120,20 +132,22 @@ class Renderer:
         level = str(record.get("level", "info"))
         codes = {"error": (ansi.ON_RED, ansi.BOLD),
                  "warn": (ansi.ON_YELLOW, ansi.BLACK)}.get(level, (ansi.DIM,))
-        print(ansi.banner("%s: %s" % (record.get("code"), record.get("text")),
+        say(ansi.banner("%s: %s" % (record.get("code"), record.get("text")),
                           self.width, *codes))
 
     def on_session_close(self, record: dict) -> None:
         verdict = (ansi.paint("HIT", ansi.GREEN, ansi.BOLD) if record.get("hit")
                    else ansi.paint("MISS", ansi.RED))
-        print("\n" + ansi.titled_rule("session end", self.width, "="))
+        total = (self.session or {}).get("case_total") or 1
+        say("\n" + ansi.titled_rule(
+            "case end" if total > 1 else "session end", self.width, "="))
         self.row("%s  first_hit_turn %s  best_rank %s  rr %.4f  turns %s  (%s)  %s" % (
             verdict, record.get("first_hit_turn"), record.get("best_rank"),
             record.get("reciprocal_rank") or 0.0, record.get("turns_run"),
             record.get("stop_reason"), self.tag()))
 
     def on_run_close(self, record: dict) -> None:
-        print("\n" + ansi.titled_rule("run end", self.width, "="))
+        say("\n" + ansi.titled_rule("run end", self.width, "="))
         if record.get("sample_count"):
             self.row("score  %s  %s n=%s   %s" % (
                 ansi.paint("%.6f" % (record.get("recommended_technical_score") or 0.0),
@@ -143,14 +157,14 @@ class Renderer:
             record.get("patch_restore_ok"), record.get("tracer_record_errors"),
             record.get("wall_seconds")))
         for warning in record.get("warnings") or []:
-            print(ansi.banner("warning: " + str(warning), self.width,
+            say(ansi.banner("warning: " + str(warning), self.width,
                               ansi.ON_YELLOW, ansi.BLACK))
 
     # -- the turn ---------------------------------------------------------
 
     def on_turn(self, record: dict) -> None:
         if self.raw:
-            print(json.dumps(record, indent=2)[:20000])
+            say(json.dumps(record, indent=2)[:20000])
             return
 
         titles = record.get("titles") or {}
@@ -171,7 +185,7 @@ class Renderer:
             self.block_g(record)
         if "H" in self.only:
             self.block_h(record, titles)
-        print()
+        say()
 
     def print_turn_header(self, record: dict) -> None:
         seams = self.run.get("seams") or {}
@@ -190,7 +204,7 @@ class Renderer:
                 "   " + ansi.paint("NARROW MODE: titles hidden", ansi.DIM)
                 if self.narrow else ""),
         ]
-        print("\n".join(ansi.box(lines, self.width, "BACKEND - pipeline - %s - turn %s/%s" % (
+        say("\n".join(ansi.box(lines, self.width, "BACKEND - pipeline - %s - turn %s/%s" % (
             record.get("sample_id"), record.get("turn"),
             self.constants.get("MAX_TURNS", 10)))))
 
@@ -310,7 +324,7 @@ class Renderer:
         pool = retrieval.get("pool") or []
         size = retrieval.get("pool_size")
         if not size:
-            print(ansi.banner(
+            say(ansi.banner(
                 "POOL EMPTY -- the query matched nothing%s" % (
                     ": " + str(retrieval.get("search_skipped_reason"))
                     if retrieval.get("search_skipped_reason") else ""),
@@ -363,7 +377,7 @@ class Renderer:
             self.row("           cross-check vs _hydrate arg / _assemble arg: %s"
                      % ansi.paint("OK", ansi.GREEN))
         else:
-            print(ansi.banner(
+            say(ansi.banner(
                 "SPLIT MISMATCH -- the derived slice disagrees with what the "
                 "pipeline was handed; every window number below is suspect",
                 self.width, ansi.ON_RED, ansi.BOLD))
@@ -467,7 +481,7 @@ class Renderer:
                 ask.get("rung_predicted_attribute"), ask.get("policy_return"),
                 ansi.paint("OK", ansi.GREEN)))
         else:
-            print(ansi.banner("RUNG MISMATCH -- the label is a DERIVATION and it is "
+            say(ansi.banner("RUNG MISMATCH -- the label is a DERIVATION and it is "
                               "wrong here", self.width, ansi.ON_RED, ansi.BOLD))
             self.row("         derived %r != policy %r. The agent used %r. "
                      "Trust the policy row." % (
@@ -508,7 +522,7 @@ class Renderer:
         else:
             self.row("hit         %s   %s" % (ansi.paint("no", ansi.DIM), self.tag()))
         if wire.get("degraded_plan_fired"):
-            print(ansi.banner(
+            say(ansi.banner(
                 "_degraded_plan FIRED -- run_turn's outer except caught something. "
                 "THIS TRACE IS NOT THE SCORED AGENT.",
                 self.width, ansi.ON_RED, ansi.BOLD))
@@ -547,6 +561,12 @@ def parse_args(argv=None):
                         help="pause after each turn (safe -- the file buffers)")
     parser.add_argument("--only", default="",
                         help="render a subset of blocks, e.g. --only A,C,F,G")
+    # Deliberately faster than the frontend's 0.045: the backend emits roughly
+    # seven times as many lines per turn, so a shared value would put the two
+    # terminals badly out of step. ~110 lines * 0.012 lands near a second.
+    parser.add_argument("--line-delay", type=float, default=0.012,
+                        help="pause between output lines, so a turn unfolds "
+                             "instead of landing whole; 0 disables (default 0.012)")
     parser.add_argument("--width", type=int, default=0)
     parser.add_argument("--run-dir", default=str(trace.DEFAULT_RUN_DIR))
     parser.add_argument("--no-color", action="store_true")
@@ -574,7 +594,9 @@ def dispatch(renderer: Renderer, record: dict, args) -> None:
                 input(ansi.paint("   [enter for the next turn] ", ansi.DIM))
             except (EOFError, KeyboardInterrupt):
                 raise SystemExit(0)
-        elif args.replay and args.speed > 0:
+        elif args.replay and args.speed > 0 and not pacing.enabled():
+            # Only when the line reveal is off. With pacing on, the per-line
+            # delays already carry the replay and this would double the wait.
             time.sleep(min(2.0, 0.6 / args.speed))
     elif kind == trace.SESSION_CLOSE:
         renderer.on_session_close(record)
@@ -587,6 +609,12 @@ def dispatch(renderer: Renderer, record: dict, args) -> None:
 def main(argv=None) -> int:
     args = parse_args(argv)
     ansi.configure(no_color=args.no_color)
+    # --speed scales the reveal, so "--replay x --speed 2" really is twice as
+    # fast rather than only shortening a per-turn pause.
+    line_delay = args.line_delay
+    if args.replay and args.speed and args.speed > 0:
+        line_delay = line_delay / float(args.speed)
+    pacing.configure(line_delay)
     width = args.width or ansi.terminal_width()
 
     path = trace.discover_run(args.run_dir, args.replay or args.run)

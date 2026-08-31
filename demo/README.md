@@ -11,7 +11,10 @@ python -m demo.backend                  python -m demo.frontend --bracket leaky 
 
 Start the backend first — it waits for a run to appear. Then start the frontend.
 The frontend appends a JSONL trace to `demo/runs/`; the backend tails it and
-renders each turn's nineteen pipeline stages as they land.
+renders each turn's nineteen pipeline stages as they land, line by line.
+
+By default you get **four cases — one session per scenario type** — not one long
+session.
 
 ## The two-terminal recipe
 
@@ -19,24 +22,37 @@ renders each turn's nineteen pipeline stages as they land.
 # terminal 2 — the pipeline explainer, waits for a run
 python3 -m demo.backend
 
-# terminal 1 — the conversation, one turn per keypress
-python3 -m demo.frontend --bracket leaky --sample-id public_0001 --step
+# terminal 1 — the four cases, one turn per keypress
+python3 -m demo.frontend --bracket leaky --step
 ```
 
 Nobody types the customer's replies. The conversation is **scripted replay**:
 the evaluator's own simulated customer drives it from `data/public_set.jsonl`,
 so what you see is a session the scorer would actually have produced.
 
+Output reveals **line by line** rather than landing in one block, so a turn
+looks like it is being computed. Pacing is off automatically whenever stdout is
+not a terminal, so piping and redirecting stay instant.
+
 Useful variations:
 
 ```bash
-# a random hard session of a given scenario, reproducibly
+# one specific session instead of the four cases
+python3 -m demo.frontend --bracket leaky --sample-id public_0001
+
+# a session of a given scenario, reproducibly
 python3 -m demo.frontend --bracket scrubbed --scenario intent_override --seed 7
 
-# hands-free, 2s per turn
-python3 -m demo.frontend --bracket leaky --delay 2
+# hands-free, and slower
+python3 -m demo.frontend --bracket leaky --delay 2 --line-delay 0.08
 
-# re-render a finished run afterwards
+# instant, no reveal (what CI and pipes get anyway)
+python3 -m demo.frontend --bracket leaky --line-delay 0
+
+# the full ten recommendations per turn
+python3 -m demo.frontend --bracket leaky --top 10
+
+# re-render a finished run afterwards, twice as fast
 python3 -m demo.backend --replay demo/runs/<run>.jsonl --speed 2
 
 # just the query and the picks
@@ -44,6 +60,43 @@ python3 -m demo.backend --only C,F
 ```
 
 `python3` on macOS/Linux, `python` on Windows (`docs/windows-dev-setup.md`).
+
+## The four cases
+
+By default the frontend runs **one session per scenario type** rather than one
+long session, because the interesting thing about this agent is that it behaves
+differently across them. Passing `--sample-id`, `--scenario`, `--sessions` or
+`--no-cases` selects explicitly instead.
+
+| case | scenario | what it shows |
+|---|---|---|
+| 1 | `buying` | the straightforward path — the customer states a requirement, and it is found |
+| 2 | `browsing` | opens with no constraint at all; every constraint has to be asked for |
+| 3 | `boundary` | the customer refuses once — that ask is burned, but the bucket stays live |
+| 4 | `intent_override` | the customer changes their mind; the hit check is OFF until the override lands |
+
+The four `sample_id`s are curated in `CASES` (`demo/frontend.py`), each verified
+to hit; between them they span ranks 1/10/2/1 at turns 3/2/4/7. A missing id
+falls back to the first session of its scenario, so a changed `public_set.jsonl`
+degrades rather than crashes. Each case ends with its own verdict, and the run
+ends with a four-row summary and the aggregate score.
+
+Each turn prints `--top` recommendations (**default 5**) — **plus the target row
+if it falls below that cut**, marked and out of sequence. Case 2 hits at rank 10,
+so without that exception the demo would hide its own best moment.
+
+## Pacing
+
+| flag | frontend | backend |
+|---|---|---|
+| `--line-delay` | `0.045` | `0.012` |
+| `--delay` (between turns) | `0.5` | — |
+| `--step` | wait for Enter per turn | wait for Enter per turn |
+
+The two differ on purpose: the backend emits roughly seven times as many lines
+per turn, so one shared value would put the terminals badly out of step. Neither
+is guaranteed to stay in lockstep — the backend header prints a live `behind N`
+indicator, and `--step` on either side gives a presenter full control.
 
 ## `--bracket` is required, and here is why
 

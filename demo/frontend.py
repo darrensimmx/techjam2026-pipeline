@@ -26,10 +26,30 @@ import sys
 import time
 from pathlib import Path
 
-from demo import ansi, driver, trace, tracer
+from demo import ansi, driver, pacing, trace, tracer
+from demo.pacing import say
 
 TOP_K = 10
 MAX_TURNS = 10
+
+# The four cases. One session per scenario type, because the interesting thing
+# about this agent is that it behaves DIFFERENTLY across them -- a single long
+# session shows one behaviour and hides the other three.
+#
+# These ids are curated, not arbitrary: each was verified to hit while checking
+# demo/driver.py against the vendored evaluator, and between them they span
+# ranks 1/10/2/1 at turns 3/2/4/7. A missing id falls back to the first sample
+# of its scenario, so a changed public_set.jsonl degrades instead of crashing.
+CASES = (
+    ("buying", "public_0001",
+     "the straightforward path -- the customer states a requirement, and it is found"),
+    ("browsing", "public_0006",
+     "opens with no constraint at all; every constraint has to be asked for"),
+    ("boundary", "public_0035",
+     "the customer refuses once -- that ask is burned, but the bucket stays live"),
+    ("intent_override", "public_0002",
+     "the customer changes their mind; the hit check is OFF until the override lands"),
+)
 
 
 # --------------------------------------------------------------------------
@@ -45,44 +65,73 @@ def render_header(width: int, bracket: str, run_id: str, path: Path,
     lines = [ansi.paint("BRACKET: " + tag, colour, ansi.BOLD)]
     for chunk in ansi.wrap(note, width - 6):
         lines.append(ansi.paint(chunk, colour))
-    print("\n".join(ansi.box(
+    say("\n".join(ansi.box(
         lines, width, "SOL - conversational search - FRONTEND - run " + run_id)))
 
-    print(" sample %s - scenario %s - category %s - difficulty %s" % (
+    say(" sample %s - scenario %s - category %s - difficulty %s" % (
         sample.get("sample_id"), sample.get("scenario_type"),
         sample.get("category_bucket"), sample.get("difficulty_bucket")))
     degraded_text = ansi.paint("True", ansi.RED, ansi.BOLD) if degraded else "False"
-    print(" catalog %s (%s rows) - agent.degraded %s" % (catalog, rows, degraded_text))
-    print(" trace   %s" % (path,))
+    say(" catalog %s (%s rows) - agent.degraded %s" % (catalog, rows, degraded_text))
+    say(" trace   %s" % (path,))
     if plan.get("override"):
-        print(" %s override lands at turn %s" % (
+        say(" %s override lands at turn %s" % (
             ansi.paint("note", ansi.MAGENTA), plan["override"].get("turn")))
-    print()
+    say()
 
 
-def render_turn(width: int, payload: dict, titles: dict, bracket: str) -> None:
+def render_case(width: int, index: int, total: int, sample: dict, note: str) -> None:
+    """The banner that opens one case."""
+    say()
+    say(ansi.paint(ansi.titled_rule(
+        "case %d/%d · %s" % (index, total, sample.get("scenario_type")),
+        width, "="), ansi.BOLD, ansi.BLUE))
+    if note:
+        for line in ansi.wrap(note, width - 6, "    "):
+            say(ansi.paint(line, ansi.DIM))
+    say()
+
+
+def render_turn(width: int, payload: dict, titles: dict, bracket: str,
+                top: int = TOP_K) -> None:
     turn = payload["turn"]
     response = payload["response"]
     ranked = payload["ranked"]
 
-    print(ansi.titled_rule("turn %d" % turn, width))
+    say(ansi.titled_rule("turn %d" % turn, width))
     _speaker("customer", payload["user_message"], width, ansi.CYAN)
     _speaker("agent", str(response.get("message", "")), width, ansi.BOLD)
 
     ask = response.get("ask_attribute")
     if ask:
-        print(_label("asking") + ansi.paint(str(ask), ansi.YELLOW))
+        say(_label("asking") + ansi.paint(str(ask), ansi.YELLOW))
 
-    print(_label("top-%d" % len(ranked)).rstrip())
+    target = payload["target"]
+    top = max(1, int(top))
+    shown = ranked[:top]
+    label = ("top-%d of %d" % (len(shown), len(ranked)) if len(shown) < len(ranked)
+             else "top-%d" % len(ranked))
+    say(_label(label).rstrip())
+
     title_width = max(20, width - 22)
-    for i, asin in enumerate(ranked, start=1):
-        marker = ansi.paint("  <- TARGET", ansi.GREEN, ansi.BOLD) \
-            if asin == payload["target"] else ""
-        print("   %3d  %-12s %s%s" % (
-            i, asin, ansi.truncate(titles.get(asin, ""), title_width), marker))
+    for i, asin in enumerate(shown, start=1):
+        say(_result_row(i, asin, titles, title_width, asin == target))
 
-    print(_label("status") + status_line(payload, bracket))
-    print()
+    # The target always gets a row, even below the cut. Without this exception
+    # --top would hide the exact moment the demo exists to show.
+    if target in ranked and target not in shown:
+        say(ansi.paint("        ...", ansi.DIM))
+        say(_result_row(ranked.index(target) + 1, target, titles, title_width, True))
+
+    say(_label("status") + status_line(payload, bracket))
+    say()
+
+
+def _result_row(rank: int, asin: str, titles: dict, title_width: int,
+                is_target: bool) -> str:
+    marker = ansi.paint("  <- TARGET", ansi.GREEN, ansi.BOLD) if is_target else ""
+    return "   %3d  %-12s %s%s" % (
+        rank, asin, ansi.truncate(titles.get(asin, ""), title_width), marker)
 
 
 LABEL_WIDTH = 9
@@ -97,7 +146,7 @@ def _speaker(label: str, text: str, width: int, *codes: str) -> None:
     """One labelled, wrapped utterance; the label sits on the first line only."""
     prefix = _label(label)
     for i, line in enumerate(ansi.wrap(text, max(20, width - len(prefix)))):
-        print("%s%s" % (prefix if i == 0 else " " * len(prefix),
+        say("%s%s" % (prefix if i == 0 else " " * len(prefix),
                         ansi.paint(line, *codes)))
 
 
@@ -127,39 +176,95 @@ def status_line(payload: dict, bracket: str) -> str:
         ansi.paint("miss - target not in top-10", ansi.DIM), turn, tag)
 
 
-def render_close(width: int, result: dict, metrics: dict, titles: dict,
-                 bracket: str, path: Path, size: int, records: int) -> None:
+def render_session_close(width: int, result: dict, titles: dict, bracket: str) -> None:
+    """One case's verdict."""
     tag = "[%s]" % bracket
-    print(ansi.titled_rule("session end", width))
+    say(ansi.titled_rule("case end", width))
     verdict = (ansi.paint("hit yes", ansi.GREEN, ansi.BOLD) if result["hit"]
                else ansi.paint("hit no", ansi.RED))
-    print(" %s - first_hit_turn %s - best_rank %s - rr %.4f - %s" % (
+    say(" %s - first_hit_turn %s - best_rank %s - rr %.4f - %s" % (
         verdict, result["first_hit_turn"], result["best_rank"],
         result["reciprocal_rank"], tag))
     target = result["plan"]["target"]
-    print(" target  %-12s %s" % (
+    say(" target  %-12s %s" % (
         target, ansi.truncate(titles.get(target, result["plan"]["target_title"]),
                               max(20, width - 24))))
+    say()
+
+
+def render_run_summary(width: int, results: list, metrics: dict, bracket: str,
+                       path: Path, size: int, records: int) -> None:
+    """The four cases side by side, then the aggregate."""
+    say()
+    say(ansi.paint(ansi.titled_rule("summary", width, "="), ansi.BOLD))
+    widths = [4, 14, 17, 7, 5, 6]
+    say(ansi.paint(" " + ansi.columns(
+        ["#", "sample", "scenario", "turns", "hit", "rank"], widths), ansi.DIM))
+    for index, result in enumerate(results, start=1):
+        hit = (ansi.paint("yes", ansi.GREEN, ansi.BOLD) if result["hit"]
+               else ansi.paint("no", ansi.DIM))
+        say(" " + ansi.columns([
+            str(index), result["sample_id"], result["scenario_type"],
+            str(result["turns_run"]), hit,
+            str(result["best_rank"] or "-")], widths))
+    say()
     # Never a bare number: bracket and n travel with every score in this repo.
-    print(" score   0.50*%.4f + 0.30*%.4f + 0.20*%.4f = %s  [%s, n=%d]" % (
+    say(" score   0.50*%.4f + 0.30*%.4f + 0.20*%.4f = %s  [%s, n=%d]" % (
         metrics["hit_rate_at_10"], metrics["mrr"], metrics["efficiency"],
         ansi.paint("%.6f" % metrics["recommended_technical_score"], ansi.BOLD),
         bracket, metrics["sample_count"]))
-    print(" trace   %s (%d bytes, %d records)" % (path, size, records))
-    print()
+    say(" trace   %s (%d bytes, %d records)" % (path, size, records))
+    say()
 
 
 # --------------------------------------------------------------------------
 # Selection.
 # --------------------------------------------------------------------------
 
+def wants_cases(args) -> bool:
+    """Cases mode is the default, unless the caller selected something explicitly.
+
+    So the documented demo command shows the four scenarios, while
+    ``--sample-id`` / ``--scenario`` / ``--sessions`` still mean what they
+    always did.
+    """
+    if args.no_cases:
+        return False
+    if args.cases:
+        return True
+    explicit = (args.sample_id or args.scenario or args.difficulty
+                or args.category or args.sessions is not None)
+    return not explicit
+
+
+def choose_cases(samples: list) -> list:
+    """One session per scenario, in CASES order. Returns (sample, note) pairs."""
+    by_id = {s.get("sample_id"): s for s in samples}
+    chosen = []
+    for scenario, sample_id, note in CASES:
+        sample = by_id.get(sample_id)
+        if sample is None or sample.get("scenario_type") != scenario:
+            # The curated id is gone or has been re-typed; take any session of
+            # this scenario rather than dropping the case entirely.
+            sample = next((s for s in samples
+                           if s.get("scenario_type") == scenario), None)
+        if sample is not None:
+            chosen.append((sample, note))
+    if not chosen:
+        raise SystemExit(
+            "no session of any known scenario type in this dataset -- "
+            "expected one of %s" % ([c[0] for c in CASES],))
+    return chosen
+
+
 def choose_samples(samples: list, args) -> list:
     pool = samples
+    sessions = args.sessions if args.sessions is not None else 1
     if args.sample_id:
         pool = [s for s in pool if s.get("sample_id") == args.sample_id]
         if not pool:
             raise SystemExit("no sample with sample_id %r" % (args.sample_id,))
-        return pool[: args.sessions]
+        return pool[:sessions]
 
     if args.scenario:
         pool = [s for s in pool if s.get("scenario_type") == args.scenario]
@@ -173,7 +278,7 @@ def choose_samples(samples: list, args) -> list:
     rng = random.Random(args.seed)
     pool = list(pool)
     rng.shuffle(pool)
-    return pool[: args.sessions]
+    return pool[:sessions]
 
 
 def usable_samples(chosen: list, catalog_ids: set, width: int) -> list:
@@ -236,9 +341,23 @@ def parse_args(argv=None):
                                                "intent_override"))
     parser.add_argument("--difficulty")
     parser.add_argument("--category")
-    parser.add_argument("--sessions", type=int, default=1)
+    # default=None, not 1: wants_cases() needs to tell "asked for one session"
+    # apart from "did not say", so the default can be cases mode.
+    parser.add_argument("--sessions", type=int, default=None)
+    parser.add_argument("--cases", action="store_true",
+                        help="one session per scenario type (the default)")
+    parser.add_argument("--no-cases", action="store_true",
+                        help="a single session, as selected by the other flags")
+    parser.add_argument("--top", type=int, default=5,
+                        help="recommendations to print per turn; the target is "
+                             "always shown even below this cut (default 5)")
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--delay", type=float, default=1.2)
+    parser.add_argument("--delay", type=float, default=0.5,
+                        help="pause between turns; the line reveal supplies most "
+                             "of the pacing now (default 0.5)")
+    parser.add_argument("--line-delay", type=float, default=0.045,
+                        help="pause between output lines, so a turn unfolds "
+                             "instead of landing whole; 0 disables (default 0.045)")
     parser.add_argument("--step", action="store_true",
                         help="wait for Enter before each turn (presenter control)")
     parser.add_argument("--catalog", default="data/catalog.jsonl")
@@ -290,6 +409,7 @@ def main(argv=None) -> int:
         return 2
 
     ansi.configure(no_color=args.no_color)
+    pacing.configure(args.line_delay)
     width = ansi.terminal_width()
     guard_dataset(args.dataset)
 
@@ -307,7 +427,14 @@ def main(argv=None) -> int:
 
     samples = load_jsonl(args.dataset)
     catalog_ids, categories, products = catalog_index(args.catalog)
-    chosen = usable_samples(choose_samples(samples, args), catalog_ids, width)
+    if wants_cases(args):
+        selected = choose_cases(samples)
+    else:
+        selected = [(s, "") for s in choose_samples(samples, args)]
+
+    keep = {s.get("sample_id")
+            for s in usable_samples([s for s, _ in selected], catalog_ids, width)}
+    selected = [(s, n) for s, n in selected if s.get("sample_id") in keep]
 
     writer = trace.TraceWriter(run_dir=args.run_dir)
     active = tracer.Tracer()
@@ -369,18 +496,19 @@ def main(argv=None) -> int:
             print(ansi.banner(text, width, ansi.ON_YELLOW, ansi.BLACK))
 
         with bracket_ctx(args.bracket):
-            for sample in chosen:
+            for index, (sample, note) in enumerate(selected, start=1):
                 results.append(run_one(
                     writer, active, agent, sample, catalog_ids, categories,
-                    products, args, width, warnings))
+                    products, args, width, warnings,
+                    case=(index, len(selected), note)))
 
         metrics = driver.summarise([
             {k: r[k] for k in ("sample_id", "scenario_type", "hit",
                                "first_hit_turn", "best_rank", "reciprocal_rank")}
             for r in results])
         if results:
-            render_close(width, results[-1], metrics, results[-1]["titles"],
-                         args.bracket, writer.path, writer.size_bytes(), writer.seq)
+            render_run_summary(width, results, metrics, args.bracket,
+                               writer.path, writer.size_bytes(), writer.seq)
     finally:
         restored = active.restore()
         # evaluator/ is vendored and never edited; bracket() monkeypatches the
@@ -444,15 +572,19 @@ def seams(agent) -> dict:
 
 
 def run_one(writer, active, agent, sample, catalog_ids, categories, products,
-            args, width, warnings) -> dict:
+            args, width, warnings, case=(1, 1, "")) -> dict:
     """Drive one session, emitting session_open / turn... / session_close."""
     plan = driver.session_plan(sample, categories, products)
     card_source = trace.CARD_SOURCE[args.bracket]
+    case_index, case_total, case_note = case
 
     writer.emit(
         trace.SESSION_OPEN,
         session_id=sample["sample_id"],
         sample_id=sample["sample_id"],
+        # So the backend can print the same "case 2/4 - browsing" banner
+        # without importing anything or knowing about CASES.
+        case_index=case_index, case_total=case_total, case_note=case_note,
         scenario_type=sample.get("scenario_type"),
         category_bucket=sample.get("category_bucket"),
         difficulty_bucket=sample.get("difficulty_bucket"),
@@ -509,11 +641,15 @@ def run_one(writer, active, agent, sample, catalog_ids, categories, products,
         emit_turn_notes(writer, record, empty_pools, warnings)
 
         if not rendered["header"]:
-            render_header(width, args.bracket, writer.run_id, writer.path,
-                          args.catalog, len(catalog_ids),
-                          bool(getattr(agent, "degraded", False)), sample, plan)
+            # The run header prints once, before the first case; each case then
+            # gets its own banner.
+            if case_index == 1:
+                render_header(width, args.bracket, writer.run_id, writer.path,
+                              args.catalog, len(catalog_ids),
+                              bool(getattr(agent, "degraded", False)), sample, plan)
+            render_case(width, case_index, case_total, sample, case_note)
             rendered["header"] = True
-        render_turn(width, payload, titles, args.bracket)
+        render_turn(width, payload, titles, args.bracket, args.top)
         pace(args)
 
     result = driver.run_session(agent, sample, catalog_ids, categories, products,
@@ -527,6 +663,7 @@ def run_one(writer, active, agent, sample, catalog_ids, categories, products,
         reciprocal_rank=result["reciprocal_rank"], turns_run=result["turns_run"],
         stop_reason=result["stop_reason"],
     )
+    render_session_close(width, result, titles, args.bracket)
     return result
 
 
@@ -590,4 +727,10 @@ def pace(args) -> None:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except KeyboardInterrupt:
+        # Ctrl-C during a paced render is a normal way to stop a demo, not a
+        # crash. The finally in main() has already restored the patches.
+        print("\ninterrupted.")
+        raise SystemExit(130)

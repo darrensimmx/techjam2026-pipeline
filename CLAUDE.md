@@ -57,7 +57,7 @@ Always run from the repo root — `src`, `starter`, `evaluator`, and `cli` are
 imported as top-level packages, and tests resolve paths relative to the root.
 
 ```powershell
-# Full suite (427 tests). Check the count before believing green.
+# Full suite (438 tests). Check the count before believing green.
 python -m unittest discover -s tests -p "test_*.py" -t .
 
 # One class / one test
@@ -190,7 +190,7 @@ is the equivalent for `src/` and is the one that matters now. CI names its test
 modules explicitly rather than discovering them, so **a new test file is silently
 not run until it is added to `.github/workflows/ci.yml`.** And `python -m unittest
 discover` reports `Ran 0 tests ... OK` if `tests/__init__.py` is ever deleted —
-check the count before believing green (it is 427). `docs/windows-dev-setup.md` §7
+check the count before believing green (it is 438). `docs/windows-dev-setup.md` §7
 has the full list.
 
 ## Silent failure to check first
