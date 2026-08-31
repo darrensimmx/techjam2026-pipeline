@@ -41,6 +41,7 @@ MODELS = {
     "minilm-l12": "cross-encoder/ms-marco-MiniLM-L-12-v2",
     "mminilm-l12": "cross-encoder/mmarco-mMiniLMv2-L12-H384-v1",
     "distilroberta": "cross-encoder/qnli-distilroberta-base",
+    "zerank-1-small": "zeroentropy/zerank-1-small",  # 1.7B ZeroEntropy reranker
 }
 
 
@@ -54,7 +55,9 @@ class CrossEncoderReranker:
         self.depth = depth
 
         print(f"  Loading model: {model_path}")
-        self.model = CrossEncoder(model_path, max_length=256, device="cpu")
+        # ZeroEntropy models require trust_remote_code
+        trust_code = model_name.startswith("zerank")
+        self.model = CrossEncoder(model_path, max_length=256, device="cpu", trust_remote_code=trust_code)
 
         # Load catalog documents for scoring
         asins, documents = catalog_documents(ROOT / "data" / "catalog.jsonl")
@@ -153,15 +156,22 @@ def evaluate_shipping_criteria(results: dict) -> dict:
     return criteria
 
 
-def report(ledger: str) -> dict:
+def report(ledger: str, sample_size: int = 50) -> dict:
     """Run checkpoint comparison for a given ledger."""
-    records = load_trajectories(ledger)
+    all_records = load_trajectories(ledger)
+    # Sample first N sessions for faster comparison
+    records = all_records[:sample_size]
+    print(f"  Using {len(records)} of {len(all_records)} sessions (sample)")
+
     baseline = play(records, bm25_ranker())
     base = score(baseline)
 
     print(f"\n{'=' * 96}")
     print(f"CHECKPOINT COMPARISON - DEPTH {DEPTH} (Rerank top-{DEPTH} to get top-10)")
-    print(f"Ledger: {ledger} | Models: {len(MODELS)} | Baseline TechnicalScore: {base['technical_score']:.6f}")
+    print(f"Ledger: {ledger} | Models: {len(MODELS)} | Sample: {sample_size}/{len(all_records)} sessions")
+    print(f"Baseline TechnicalScore: {base['technical_score']:.6f}")
+    print(f"{'=' * 96}")
+    print(f"NOTE: Using 50-session sample for faster comparison (~75% time savings)")
     print(f"{'=' * 96}\n")
 
     # Header
