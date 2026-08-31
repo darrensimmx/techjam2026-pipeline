@@ -37,11 +37,11 @@ every number came from.
 ## Slide 1 — Title
 
 **Says:** This is a conversational shopping agent that finds a hidden product in
-ten turns without a language model.
+ten turns with no model running on the graded path.
 
 **On the slide:**
 - Shopping Copilot — Track 4
-- *Ten turns. Fifty thousand products. No model.*
+- *Ten turns. Fifty thousand products. No model running.*
 - Team name, members
 - Repo link
 
@@ -49,11 +49,13 @@ ten turns without a language model.
 
 **Notes:** "Our agent talks to a shopper for up to ten turns, asks one useful
 question each turn, and has to have the exact product they had in mind inside
-its top ten. We do that with no LLM, no embeddings, and no network. Let me
-start with the one idea the whole system rests on, and then show you the
-numbers it earns."
+its top ten. We do that with nothing running but BM25 — no LLM, no embeddings,
+no network. The neural layers are built and deliberately switched off, and I'll
+show you that decision later. Let me start with the one idea the whole system
+rests on, and then show you the numbers it earns."
 
-**Source:** `README.md` §What ships; catalog size from `docs/windows-dev-setup.md` §1.
+**Source:** `README.md` §What ships and §Model choice, cost, tokens, latency,
+network; catalog size from `docs/windows-dev-setup.md` §1.
 
 ---
 
@@ -177,8 +179,8 @@ what convinced us the architecture is doing real work."
 
 ## Slide 5 — What it costs to run
 
-**Says:** Zero models, zero dollars, zero tokens, twenty milliseconds a turn,
-and it runs with the network physically revoked.
+**Says:** Zero models running, zero dollars, zero tokens, twenty milliseconds a
+turn, and it runs with the network physically revoked.
 
 **On the slide:**
 
@@ -190,6 +192,7 @@ and it runs with the network physically revoked.
 | Token usage reported | `0` prompt, `0` completion, every turn — truthfully |
 | Estimated model cost | **$0.00** |
 | Latency | index build **1.16 s** once; **~19 ms per turn**; 200 sessions / 571 turns in **9.7 s** |
+| Optional layers | Cross-encoder, semantic fallback, LLM ranking exist as **typed seams, every flag off** — each flag checked *before* its dependency, so installing `requirements-optional.txt` changes nothing. Enabling any one is a disclosed decision — see A4/A5 |
 | Dependencies | **Zero.** `requirements.txt` is comments only |
 | Offline verified | Full 200-session run under `sandbox-exec` with networking revoked — **scores identical** |
 
