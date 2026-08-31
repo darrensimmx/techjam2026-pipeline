@@ -158,7 +158,7 @@ path.
 ## Reproducing our results
 
 ```bash
-# full test suite. Check the count before believing green: 492 at cfd6841 (main).
+# full test suite. Check the count before believing green: 496 at c9a7139 (main).
 # Anchor the number to a commit when updating it -- a bare count goes stale on
 # the next added test, which is how the previous "390" survived here.
 python -m unittest discover -s tests -p "test_*.py" -t .
